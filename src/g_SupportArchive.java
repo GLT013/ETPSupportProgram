@@ -655,7 +655,7 @@ public class g_SupportArchive {
 		frmSupportArchive.getContentPane().add(label);
 		
 		label_2 = new JLabel("");
-		label_2.setText(g_MainMenu.version);
+		label_2.setText("1.0.6");
 		label_2.setHorizontalAlignment(SwingConstants.CENTER);
 		label_2.setBounds(596, 698, 72, 14);
 		frmSupportArchive.getContentPane().add(label_2);

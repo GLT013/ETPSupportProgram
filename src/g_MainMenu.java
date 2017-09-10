@@ -2,6 +2,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -16,7 +18,7 @@ import javax.swing.JOptionPane;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static String version = "v 1.0.6";
+	public static double version = 1.11;
 	public static boolean firstrun = true; 
 
 	/**
@@ -43,11 +45,18 @@ public class g_MainMenu {
 					return;
 				}
 				try {
-					@SuppressWarnings("unused")
-					g_MainMenu window = new g_MainMenu();
-					g_MainMenu.frmMainMenu.setVisible(true);
-					firstrun = false;
-					
+					if(!checkVersion())
+					{
+						JOptionPane.showMessageDialog(null, "There is a newer version of the program located on the I Drive!");
+						return;
+					}
+					else
+					{
+						@SuppressWarnings("unused")
+						g_MainMenu window = new g_MainMenu();
+						g_MainMenu.frmMainMenu.setVisible(true);
+						firstrun = false;
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -57,6 +66,28 @@ public class g_MainMenu {
 	/**
 	 * Run the Main Menu GUI
 	 */
+	
+	public static boolean checkVersion()
+	{
+		String _version = "SELECT Version from Version";
+		ResultSet rs = c_Query.ExecuteResultSet(_version);
+		try {
+			double _dbVersion = rs.getDouble("Version");
+			if(_dbVersion == version)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return true;	
+	}
 	
 	public static void run(JFrame frame) {
 		try {
