@@ -293,8 +293,12 @@ public class g_ViewEmployees {
 	
 	private void PopulateEmployees()
 	{	
-		
 		String commandText = "SELECT Name, Title, Email, Office_Phone, Mobile_Phone FROM EN_Employees WHERE Active = 'True' ORDER BY Name asc";
+		if(g_MainMenu.offlineMode)
+		{
+			commandText = "SELECT Name, Title, Email, Office_Phone, Mobile_Phone FROM EN_Employees WHERE Active = 1 ORDER BY Name asc";
+		}
+		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		try{
 

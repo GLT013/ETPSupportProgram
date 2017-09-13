@@ -328,6 +328,7 @@ public class g_ReportEmail {
 					if(rs.getString("CCNotified") != null)
 					{
 						ccNotifiedTime = rs.getString("CCNotified");
+						ccNotifiedTime = ccNotifiedTime.substring(0, ccNotifiedTime.length() - 2); //Format ccNotifiedTime string to remove last two digits '.0'
 					}
 				}
 			} catch (SQLException e) {

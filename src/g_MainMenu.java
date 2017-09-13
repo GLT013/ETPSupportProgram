@@ -1,7 +1,9 @@
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
@@ -13,13 +15,21 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import java.awt.Color;
+import java.awt.Font;
 //icons https://icons8.com/web-app/for/all/return
 //flaticon.com
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 1.11;
-	public static boolean firstrun = true; 
+	public static double version = 1.12;
+	public static boolean firstrun = true;
+	public static boolean offlineMode = false;
+	public static File SQLiteDB = new File("References/ETPSupport.db");
+	private static JButton btnSyncForOffline;
+	private static JMenuItem drop_Offline;
+	private static JMenuItem drop_Online;
+	private static JLabel lbl_Offline;
 
 	/**
 	 * Launch the application.
@@ -35,31 +45,47 @@ public class g_MainMenu {
 		} catch (Exception e) {
 		    // If Nimbus is not available, you can set the GUI to another look and feel.
 		}
-		EventQueue.invokeLater(new Runnable() {
-			
+		EventQueue.invokeLater(new Runnable() {			
 			@Override
-			public void run() {
+			public void run() 
+			{
 				if(c_ConnectToDatabase.Connect() == false)
 				{
-					JOptionPane.showMessageDialog(null, "Unable to connect to Support Database.");					
+					int reply = JOptionPane.showConfirmDialog(null, "Cannot connect to database. \n Continue in Offline Mode?" , "Offline Mode", JOptionPane.YES_NO_OPTION);
+			        if (reply == JOptionPane.YES_OPTION)
+			        {
+			        	offlineMode = true;
+			        	if(SQLiteDB.exists())
+			        	{
+			        		c_ConnectToDatabase.ConnectSQLite();
+			        	}
+			        	else
+			        	{
+			        		c_SyncForOfflineMode.CreateDatabase();
+			        		c_ConnectToDatabase.ConnectSQLite();
+			        		c_SyncForOfflineMode.CreateTables();
+			        	}
+			        }
+			        else
+			        {
+			        	return;
+			        }
+				}
+				
+		
+				if(!checkVersion())
+				{
+					JOptionPane.showMessageDialog(null, "There is a newer version of the program located on the I Drive!");
 					return;
 				}
-				try {
-					if(!checkVersion())
-					{
-						JOptionPane.showMessageDialog(null, "There is a newer version of the program located on the I Drive!");
-						return;
-					}
-					else
-					{
-						@SuppressWarnings("unused")
-						g_MainMenu window = new g_MainMenu();
-						g_MainMenu.frmMainMenu.setVisible(true);
-						firstrun = false;
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
+				else
+				{
+					@SuppressWarnings("unused")
+					g_MainMenu window = new g_MainMenu();
+					g_MainMenu.frmMainMenu.setVisible(true);
+					firstrun = false;
 				}
+				
 			}
 		});
 	}
@@ -69,24 +95,33 @@ public class g_MainMenu {
 	
 	public static boolean checkVersion()
 	{
-		String _version = "SELECT Version from Version";
-		ResultSet rs = c_Query.ExecuteResultSet(_version);
-		try {
-			double _dbVersion = rs.getDouble("Version");
-			if(_dbVersion == version)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+		if(!offlineMode)
+		{
+			String _version = "SELECT Version from Version";
+			ResultSet rs = c_Query.ExecuteResultSet(_version);
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		return true;	
+			try {
+				rs.next();
+				double _dbVersion = rs.getDouble("Version");			
+				if(_dbVersion == version)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+				
+			} catch (SQLException e) {		
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			return true;	
+		}
+		else
+		{
+			return true;
+		}
 	}
 	
 	public static void run(JFrame frame) {
@@ -134,11 +169,10 @@ public class g_MainMenu {
 			}
 		});
 		
-		
-
+	
 		//Version Number
 		JLabel lblV = new JLabel("");
-		lblV.setText("v 1.11");
+		lblV.setText("v " + version);
 		lblV.setHorizontalAlignment(SwingConstants.CENTER);
 		lblV.setBounds(340, 536, 54, 14);
 		frmMainMenu.getContentPane().add(lblV);
@@ -195,17 +229,96 @@ public class g_MainMenu {
 		btnSites.setBounds(106, 407, 187, 54);
 		frmMainMenu.getContentPane().add(btnSites);
 		
+		btnSyncForOffline = new JButton("Sync For Offline Mode");
+		btnSyncForOffline.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				c_SyncForOfflineMode.run();
+			}
+		});
+		btnSyncForOffline.setBounds(106, 496, 187, 54);
+		frmMainMenu.getContentPane().add(btnSyncForOffline);
+		
+		lbl_Offline = new JLabel("Offline!");
+		lbl_Offline.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lbl_Offline.setForeground(Color.RED);
+		lbl_Offline.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_Offline.setBounds(10, 536, 54, 14);
+		lbl_Offline.setVisible(false);
+		frmMainMenu.getContentPane().add(lbl_Offline);
+		if(offlineMode)
+		{
+			btnSyncForOffline.setEnabled(false);
+			lbl_Offline.setVisible(true);
+		}
+		
 		//Menubar for Main Menu
 		JMenuBar menuBar = new JMenuBar();
 		frmMainMenu.setJMenuBar(menuBar);		
 		JMenu mnSettings = new JMenu("Settings");
 		menuBar.add(mnSettings);		
-		JMenuItem mntmDatabase = new JMenuItem("Database");
-		mntmDatabase.addActionListener(new ActionListener() {
+		drop_Offline = new JMenuItem("Go Offline");		
+		drop_Offline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				
-				c_DatabaseSettings.run();
+			
+				GoOffline();
+				
 			}
 		});
-		mnSettings.add(mntmDatabase);
+		if(offlineMode)
+		{
+			drop_Offline.setEnabled(false);
+		}
+		else
+		{
+			drop_Offline.setEnabled(true);
+		}
+		
+		drop_Online = new JMenuItem("Go Online");
+		drop_Online.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				GoOnline();
+			}
+		});
+		mnSettings.add(drop_Online);
+		mnSettings.add(drop_Offline);
+		if(offlineMode)
+		{
+			drop_Online.setEnabled(true);
+		}
+		else
+		{
+			drop_Online.setEnabled(false);
+		}
+		
+	}
+	
+	private void GoOffline()
+	{		
+			offlineMode = true;
+			btnSyncForOffline.setEnabled(false);
+			drop_Offline.setEnabled(false);
+			drop_Online.setEnabled(true);
+			lbl_Offline.setVisible(true);
+			if(SQLiteDB.exists())
+        	{
+        		c_ConnectToDatabase.ConnectSQLite();
+        	}
+        	else
+        	{
+        		c_SyncForOfflineMode.CreateDatabase();
+        		c_ConnectToDatabase.ConnectSQLite();
+        		c_SyncForOfflineMode.CreateTables();
+        	}
+			
+	}
+	
+	private void GoOnline()
+	{
+		offlineMode = false;
+		btnSyncForOffline.setEnabled(true);
+		drop_Offline.setEnabled(true);
+		drop_Online.setEnabled(false);
+		lbl_Offline.setVisible(false);
+		
 	}
 }

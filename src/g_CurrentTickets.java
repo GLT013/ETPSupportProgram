@@ -676,9 +676,19 @@ public class g_CurrentTickets {
 		{
 			//do nothing
 		}
-			
-		String commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.rowID "
+		
+		String commandText = "";
+		
+		if(!g_MainMenu.offlineMode)
+		{
+		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
+		}
+		else
+		{
+			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, strftime('%Y %m %d %H %M %S %s','b.UpdateDate') as UpdateDate, strftime('%Y %m %d %H %M %S %s','b.CCNotified') as CCNotified, b.Resolution, b.rowID "
+					+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
+		}
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		
 		try
@@ -799,10 +809,17 @@ public class g_CurrentTickets {
 		{
 			//do nothing
 		}
-		
-		String commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.rowID "
+		String commandText = "";
+		if(!g_MainMenu.offlineMode)
+		{
+		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
-		
+		}
+		else
+		{
+			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, strftime('%Y %m %d %H %M %S %s','b.UpdateDate') as UpdateDate, strftime('%Y %m %d %H %M %S %s','b.CCNotified') as CCNotified, b.Resolution, b.rowID "
+					+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
+		}
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		
 		try
@@ -938,7 +955,15 @@ public class g_CurrentTickets {
 						{
 							DefaultMutableTreeNode proj;
 							DefaultMutableTreeNode projnum;
-							String commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and UpdateDate >= DATEADD(day,-1,GETDATE()) and EmailSent = 'False' ORDER BY Client ASC";
+							String commandText = "";
+							if(!g_MainMenu.offlineMode)
+							{
+								commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and UpdateDate >= DATEADD(day,-1,GETDATE()) and EmailSent = 'False' ORDER BY Client ASC";
+							}
+							else
+							{
+								commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and UpdateDate >= date('now','+1 day');  and EmailSent = 'False' ORDER BY Client ASC";
+							}
 							ResultSet rs = c_Query.ExecuteResultSet(commandText);
 							
 							while((rs!=null) && (rs.next()))
