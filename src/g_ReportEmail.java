@@ -1,8 +1,13 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
@@ -21,6 +26,9 @@ import java.net.URLEncoder;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import javax.swing.border.EtchedBorder;
+
+import net.sourceforge.jtds.jdbc.DateTime;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 
@@ -218,7 +226,7 @@ public class g_ReportEmail {
 		c_EmailRecipients emailRecipients = new c_EmailRecipients("Butane Support","butane.support@enengineering.com");
 		 EmailListModel.addElement(emailRecipients);
 		String commandText = "SELECT Name, Email FROM Sunoco_Contacts ORDER BY Name asc";
-		System.out.println(commandText);
+		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		try{
 
@@ -301,8 +309,10 @@ public class g_ReportEmail {
 		String issue = "";
 		String investigation = "";
 		String status = "";
-		String TOC = ""; //time of completion
+		Timestamp TOC = null; //time of completion
 		String duration = "";
+		String TOC_Formatted = "";
+		Date TOC_Date = null;
 		SupportEmail = "<html>";
 		
 		for(int i = 0; i < TicketList.size(); i++)
@@ -311,7 +321,8 @@ public class g_ReportEmail {
 			c_Query.ExecuteQuery(update);
 			String commandText = "SELECT Client,Site,Ticket,Description,Status,Resolution,UpdateDate,TimeSpent,CCNotified FROM SupportTickets WHERE Ticket = '" + TicketList.get(i) +"'";
 			ResultSet rs = c_Query.ExecuteResultSet(commandText);
-			String ccNotifiedTime = "N/A";
+			Timestamp ccNotifiedTime = null;
+			String ccNotifiedTime_Formatted  = "";
 			try {
 				while((rs!=null) && (rs.next()))
 				{
@@ -322,13 +333,67 @@ public class g_ReportEmail {
 					issue = rs.getString("Description");
 					investigation = rs.getString("Resolution");
 					status = rs.getString("Status");
-					TOC = rs.getString("UpdateDate");
-					TOC = TOC.substring(0, TOC.length() - 2); //Format TOC string to remove last two digits '.0'
+
+					if(!g_MainMenu.offlineMode)
+					{
+						TOC = rs.getTimestamp("UpdateDate");
+						TOC.setHours(TOC.getHours()+1); //Update to Eastern Time Zone.
+						TOC_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(TOC);
+					}
+					else
+					{
+						TOC_Formatted = rs.getString("UpdateDate");
+						
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //First put string into date format						
+						Date date = null;
+						try {
+							date = formatter.parse(TOC_Formatted);							
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();							
+						}						
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(date);							
+						cal.add(Calendar.HOUR_OF_DAY, 1); //Update to Eastern Time Zone		
+						SimpleDateFormat tmpFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm"); //Used to convert date format to email format.
+						TOC_Formatted = tmpFormat.format(cal.getTime());//Format to appropriate date format.												
+					}
+					
 					duration = rs.getString("TimeSpent");	
 					if(rs.getString("CCNotified") != null)
 					{
-						ccNotifiedTime = rs.getString("CCNotified");
-						ccNotifiedTime = ccNotifiedTime.substring(0, ccNotifiedTime.length() - 2); //Format ccNotifiedTime string to remove last two digits '.0'
+						if(!g_MainMenu.offlineMode)
+						{
+							//ccNotifiedTime = rs.getString("CCNotified");
+							ccNotifiedTime = rs.getTimestamp("CCNotified");
+							ccNotifiedTime.setHours(TOC.getHours()+1); //Update to Eastern Time Zone.
+							ccNotifiedTime_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(ccNotifiedTime);							
+						}
+						else
+						{
+							ccNotifiedTime_Formatted = rs.getString("CCNotified");
+							
+							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //First put string into date format						
+							Date date = null;
+							try {
+								date = formatter.parse(ccNotifiedTime_Formatted);							
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();							
+							}						
+							Calendar cal = Calendar.getInstance();
+							cal.setTime(date);							
+							cal.add(Calendar.HOUR_OF_DAY, 1); //Update to Eastern Time Zone		
+							SimpleDateFormat tmpFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm"); //Used to convert date format to email format.
+							ccNotifiedTime_Formatted = tmpFormat.format(cal.getTime());//Format to appropriate date format.						
+							
+							
+						}
+						
+					}
+					else
+					{
+						ccNotifiedTime_Formatted = "N/A";
 					}
 				}
 			} catch (SQLException e) {
@@ -340,9 +405,9 @@ public class g_ReportEmail {
 									"<b>Issue: </b>" + issue + "<br />" +
 									"<b>Investigation: </b>" + investigation + "<br />" +
 									"<b>Status: </b> " + status +"<br />" +
-									"<b>Time of Completion: </b>" + TOC + "<br />" +
+									"<b>Time of Completion: </b>" + TOC_Formatted + " EST.<br />" +
 									"<b>Duration: </b>" + duration + " hours. <br />" + 
-									"<b>CCNotified: </b>" + ccNotifiedTime + " <br /><br />";
+									"<b>CCNotified: </b>" + ccNotifiedTime_Formatted + " EST. <br /><br />";
 		}
 		
 		SupportEmail = SupportEmail + "</html>";

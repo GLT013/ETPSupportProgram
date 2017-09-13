@@ -2,9 +2,11 @@ import it.cnr.imaa.essi.lablib.gui.checkboxtree.CheckboxTree;
 import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
@@ -195,7 +197,7 @@ public class g_CurrentTickets {
 		panel_1.add(lbl_Problem);
 		
 		panel_Internal = new JPanel();
-		panel_Internal.setBounds(10, 322, 648, 324);
+		panel_Internal.setBounds(1000, 322, 648, 324);
 		panel_1.add(panel_Internal);
 		panel_Internal.setLayout(null);
 		panel_Internal.setVisible(false);
@@ -429,6 +431,18 @@ public class g_CurrentTickets {
 		chckbxCcNotified = new JCheckBox("CC Notified");
 		chckbxCcNotified.setBounds(466, 696, 97, 23);
 		panel_1.add(chckbxCcNotified);
+		
+		JLabel lblOffline = new JLabel("Offline!");
+		lblOffline.setForeground(Color.RED);
+		lblOffline.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lblOffline.setBounds(294, 11, 97, 20);
+		panel_1.add(lblOffline);
+		lblOffline.setVisible(false);
+		if(g_MainMenu.offlineMode)
+		{
+			lblOffline.setVisible(true);
+		}
+			
 		
 		panel_2 = new JPanel();
 		panel_2.setBounds(264, 747, 668, 54);
@@ -686,7 +700,7 @@ public class g_CurrentTickets {
 		}
 		else
 		{
-			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, strftime('%Y %m %d %H %M %S %s','b.UpdateDate') as UpdateDate, strftime('%Y %m %d %H %M %S %s','b.CCNotified') as CCNotified, b.Resolution, b.rowID "
+			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, b.UpdateDate, b.CCNotified, b.Resolution, b.rowID "
 					+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		}
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -741,6 +755,8 @@ public class g_CurrentTickets {
 				txt_Update.setText(rs.getString("Resolution"));
 				txt_Internal.setText(rs.getString("Internal"));
 				lbl_UpdateDate.setText(rs.getString("UpdateDate"));
+				
+				
 				rowID = rs.getInt("rowID");
 
 				tree_closed.clearSelection();
@@ -817,7 +833,7 @@ public class g_CurrentTickets {
 		}
 		else
 		{
-			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, strftime('%Y %m %d %H %M %S %s','b.UpdateDate') as UpdateDate, strftime('%Y %m %d %H %M %S %s','b.CCNotified') as CCNotified, b.Resolution, b.rowID "
+			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, b.UpdateDate, b.CCNotified, b.Resolution, b.rowID "
 					+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		}
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -916,8 +932,10 @@ public class g_CurrentTickets {
 							while((rs!=null) && (rs.next()))
 							{
 								String projectname = rs.getString(1);
-								proj = new DefaultMutableTreeNode(projectname);								
-									String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 and Client ='" + projectname + "'"; ;
+								proj = new DefaultMutableTreeNode(projectname);
+									
+									String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 and Client ='" + projectname + "'";
+									
 									ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
 									boolean emailSent = false;
 									while((rs2!=null) && (rs2.next()))
@@ -925,11 +943,11 @@ public class g_CurrentTickets {
 										emailSent = rs2.getBoolean("EmailSent");
 										if(emailSent)
 										{
-											projnum = new DefaultMutableTreeNode("<html><div style=background-color:#FF5733;>" + rs2.getString(1) + " ("  + rs2.getString(2) +  ")</div></html>");
+											projnum = new DefaultMutableTreeNode("<html><div style=background-color:#FF5733;>" + rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")</div></html>");
 										}
 										else
 										{
-											projnum = new DefaultMutableTreeNode(rs2.getString(1) + " ("  + rs2.getString(2) +  ")");											
+											projnum = new DefaultMutableTreeNode(rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")");											
 										}
 																				
 										proj.add(projnum);										
@@ -962,15 +980,23 @@ public class g_CurrentTickets {
 							}
 							else
 							{
-								commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and UpdateDate >= date('now','+1 day');  and EmailSent = 'False' ORDER BY Client ASC";
+								commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and UpdateDate >= date('now','+1 day') and EmailSent = 'False' ORDER BY Client ASC";
 							}
 							ResultSet rs = c_Query.ExecuteResultSet(commandText);
 							
 							while((rs!=null) && (rs.next()))
 							{
 								String projectname = rs.getString(1);
-								proj = new DefaultMutableTreeNode(projectname);								
-									String commandText2 = "SELECT Site, Ticket from SupportTickets WHERE Status = 'Complete' and UpdateDate >= DATEADD(day,-1,GETDATE()) and EmailSent = 'False' and Client ='" + projectname + "'"; ;
+								proj = new DefaultMutableTreeNode(projectname);	
+									String commandText2 = "";
+									if(!g_MainMenu.offlineMode)
+									{
+										commandText2 = "SELECT Site, Ticket from SupportTickets WHERE Status = 'Complete' and UpdateDate >= DATEADD(day,-1,GETDATE()) and EmailSent = 'False' and Client ='" + projectname + "'"; ;
+									}
+									else
+									{
+										commandText2 = "SELECT Site, Ticket from SupportTickets WHERE Status = 'Complete' and UpdateDate >= date('now','+1 day') and EmailSent = 'False' and Client ='" + projectname + "'"; ;
+									}
 									ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
 									
 									while((rs2!=null) && (rs2.next()))
@@ -1072,9 +1098,19 @@ public class g_CurrentTickets {
 		 TreeSelectionModel test = (TreeSelectionModel)tree_active.getSelectionModel();
 		 TreePath tpath = test.getSelectionPath();
 		 
-		 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-		 Date date = new Date();
-		 String testDate = dateFormat.format(date);		 
+		 String testDate = "";
+		 DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm");
+		 if(!g_MainMenu.offlineMode)
+		 {			 
+			 Date date = new Date();
+			 testDate = dateFormat.format(date);	
+		 }
+		 else
+		 {						
+			 Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+			 testDate = dateFormat.format(currentTimestamp);	
+		 }
+		 	 
 		 String commandText = "";
 		 String resolution = txt_Update.getText();
 		 resolution = c_CleanString.Clean_String(resolution);

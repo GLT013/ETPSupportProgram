@@ -1,5 +1,6 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import javax.swing.JOptionPane;
 
@@ -123,9 +124,9 @@ public class c_SyncForOfflineMode {
 				"	[Internal] [text] NULL,\r\n" + 
 				"	[Active] [bit] NULL,\r\n" + 
 				"	[EmailSent] [bit] NULL,\r\n" + 
-				"	[UpdateDate] [datetime] NULL,\r\n" + 
+				"	[UpdateDate] [text] NULL,\r\n" + 
 				"	[TimeSpent] [text] NULL,\r\n" + 
-				"	[CCNotified] [datetime] NULL)";
+				"	[CCNotified] [text] NULL)";
 		
 		String Version = "CREATE TABLE IF NOT EXISTS [Version](\r\n" + 
 				"	[ID] [nchar](10) NOT NULL UNIQUE,\r\n" + 
@@ -168,8 +169,11 @@ public class c_SyncForOfflineMode {
 	
 	public static void CopyENEmployees()
 	{
+		
 		String commandText = "SELECT Name,Title,Email,Office_Phone,Mobile_Phone,Active FROM EN_Employees";
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
+		String SQLite_Delete = "DELETE FROM EN_Employees";
+		c_Query.SQLiteExecuteQuery(SQLite_Delete);
 		String SQLite_Insert = "INSERT INTO EN_Employees(Name,Title,Email,Office_Phone,Mobile_Phone,Active) VALUES";
 		String tmp = "";
 		try{
@@ -202,6 +206,8 @@ public class c_SyncForOfflineMode {
 	{
 		String commandText = "SELECT Name, Company, Email, Mobile_Phone FROM Sunoco_Contacts ORDER BY Name asc";
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
+		String SQLite_Delete = "DELETE FROM Sunoco_Contacts";
+		c_Query.SQLiteExecuteQuery(SQLite_Delete);
 		String SQLite_Insert = "INSERT INTO Sunoco_Contacts(Name,Company,Email,Mobile_Phone) VALUES";
 		String tmp = "";
 		try{
@@ -237,6 +243,8 @@ public class c_SyncForOfflineMode {
 		String tmp = "";
 		try{
 			rs.next();
+			
+			
 			tmp = "('" + rs.getString("Client") + "','" + rs.getString("Site") + "','" + rs.getString("State") + "','" + rs.getString("SiteID") + "','" + rs.getString("ClientAbbrv") + "','" + rs.getString("SiteAbbrv") + "','" + rs.getString("iDracIP") + "','" + rs.getString("HostIP") + "','" + rs.getString("ViewIP") + "','" + rs.getString("SQLIP") + "','" + rs.getString("DevIP") + "','" + rs.getString("Generation") + "','" + rs.getString("HMI") + "','" + rs.getString("Address") + "','" + rs.getString("Phone") + "','" + rs.getString("Field_Tech") + "','" + rs.getString("Field_Supervisor") + "','" + rs.getString("Twic") + "','" + rs.getString("Timezone")  + "','" + rs.getString("HighPerformance") + "')";
 			while ((rs!=null) && (rs.next()))
 			{
