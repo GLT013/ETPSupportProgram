@@ -31,6 +31,7 @@ import net.sourceforge.jtds.jdbc.DateTime;
 
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Toolkit;
 
 public class g_ReportEmail {
 
@@ -72,9 +73,19 @@ public class g_ReportEmail {
 	 */
 	private void initialize() {
 		frmReportEmail = new JFrame();
+		frmReportEmail.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ReportEmail.class.getResource("/icon.png")));
 		frmReportEmail.setBounds(100, 100, 800, 906);
 		frmReportEmail.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmReportEmail.getContentPane().setLayout(null);
+		if(g_MainMenu.offlineMode)
+		{
+			frmReportEmail.setTitle("Automated Support Program - OFFLINE");	
+		}
+		else
+		{
+			frmReportEmail.setTitle("Automated Support Program");
+		}
+		
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 38, 764, 469);
@@ -317,7 +328,7 @@ public class g_ReportEmail {
 		
 		for(int i = 0; i < TicketList.size(); i++)
 		{
-			String update = "Update SupportTickets SET EmailSent = 'True' WHERE Ticket = '" + TicketList.get(i) +"'";
+			String update = "Update SupportTickets SET EmailSent = 1 WHERE Ticket = '" + TicketList.get(i) +"'";
 			c_Query.ExecuteQuery(update);
 			String commandText = "SELECT Client,Site,Ticket,Description,Status,Resolution,UpdateDate,TimeSpent,CCNotified FROM SupportTickets WHERE Ticket = '" + TicketList.get(i) +"'";
 			ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -364,7 +375,7 @@ public class g_ReportEmail {
 					{
 						if(!g_MainMenu.offlineMode)
 						{
-							//ccNotifiedTime = rs.getString("CCNotified");
+
 							ccNotifiedTime = rs.getTimestamp("CCNotified");
 							ccNotifiedTime.setHours(TOC.getHours()+1); //Update to Eastern Time Zone.
 							ccNotifiedTime_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(ccNotifiedTime);							
@@ -385,7 +396,7 @@ public class g_ReportEmail {
 							cal.setTime(date);							
 							cal.add(Calendar.HOUR_OF_DAY, 1); //Update to Eastern Time Zone		
 							SimpleDateFormat tmpFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm"); //Used to convert date format to email format.
-							ccNotifiedTime_Formatted = tmpFormat.format(cal.getTime());//Format to appropriate date format.						
+							ccNotifiedTime_Formatted = tmpFormat.format(cal.getTime()) + " EST.";//Format to appropriate date format.						
 							
 							
 						}
@@ -407,7 +418,7 @@ public class g_ReportEmail {
 									"<b>Status: </b> " + status +"<br />" +
 									"<b>Time of Completion: </b>" + TOC_Formatted + " EST.<br />" +
 									"<b>Duration: </b>" + duration + " hours. <br />" + 
-									"<b>CCNotified: </b>" + ccNotifiedTime_Formatted + " EST. <br /><br />";
+									"<b>CCNotified: </b>" + ccNotifiedTime_Formatted + " <br /><br />";
 		}
 		
 		SupportEmail = SupportEmail + "</html>";

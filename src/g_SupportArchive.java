@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
+import java.awt.Toolkit;
 
 
 public class g_SupportArchive {	
@@ -487,11 +488,20 @@ public class g_SupportArchive {
 	
 	private void initialize() {
 		frmSupportArchive = new JFrame();
+		frmSupportArchive.setIconImage(Toolkit.getDefaultToolkit().getImage(g_SupportArchive.class.getResource("/icon.png")));
 		frmSupportArchive.setTitle("Support Ticket Lookup");		
 		frmSupportArchive.setSize(710,789);
 		frmSupportArchive.setLocationRelativeTo(null);	
 		frmSupportArchive.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSupportArchive.getContentPane().setLayout(null);
+		if(g_MainMenu.offlineMode)
+		{
+			frmSupportArchive.setTitle("Automated Support Program - OFFLINE");	
+		}
+		else
+		{
+			frmSupportArchive.setTitle("Automated Support Program");
+		}
 		
 		
 		txtSearch = new JTextField();

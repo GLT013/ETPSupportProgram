@@ -35,5 +35,6 @@
 	<classpathentry kind="lib" path="img_jars/icons_rdp.jar"/>
 	<classpathentry kind="lib" path="img_jars/reload.jar"/>
 	<classpathentry kind="lib" path="References/sqlite-jdbc-3.20.0.jar"/>
+	<classpathentry kind="lib" path="img_jars/icon.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

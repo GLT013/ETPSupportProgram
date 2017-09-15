@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Color;
+import java.awt.Toolkit;
 
 public class g_ViewEmployees {
 
@@ -65,9 +66,18 @@ public class g_ViewEmployees {
 	 */
 	private void initialize() {
 		frmViewEmployees = new JFrame();
+		frmViewEmployees.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewEmployees.class.getResource("/icon.png")));
 		frmViewEmployees.setBounds(100, 100, 909, 441);
-		frmViewEmployees.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frmViewEmployees.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmViewEmployees.getContentPane().setLayout(null);
+		if(g_MainMenu.offlineMode)
+		{
+			frmViewEmployees.setTitle("Automated Support Program - OFFLINE");	
+		}
+		else
+		{
+			frmViewEmployees.setTitle("Automated Support Program");
+		}
 		
 		frmViewEmployees.addWindowListener(new java.awt.event.WindowAdapter() {
 			 @Override
@@ -158,19 +168,28 @@ public class g_ViewEmployees {
 		frmViewEmployees.getContentPane().add(lblMobile);
 		btnEdit.setToolTipText("Edit");
 		btnEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {				
-				lblName.setEditable(true);
-				lblTitle.setEditable(true);
-				lblEmail.setEditable(true);
-				lblOffice.setEditable(true);
-				lblMobile.setEditable(true);				
-			
-				btnEdit.setEnabled(false);
-				btnEdit.setVisible(false);
-				btnCancel.setVisible(true);
-				btnCancel.setEnabled(true);
-				btnAccept.setVisible(true);
-				btnAccept.setEnabled(true);
+			public void actionPerformed(ActionEvent arg0) {	
+				if(g_MainMenu.offlineMode)
+				{
+					
+					String err = c_EasterEggs.EasterEggs();					
+					JOptionPane.showMessageDialog(null, err);	
+					return;
+				}
+				{
+					lblName.setEditable(true);
+					lblTitle.setEditable(true);
+					lblEmail.setEditable(true);
+					lblOffice.setEditable(true);
+					lblMobile.setEditable(true);				
+				
+					btnEdit.setEnabled(false);
+					btnEdit.setVisible(false);
+					btnCancel.setVisible(true);
+					btnCancel.setEnabled(true);
+					btnAccept.setVisible(true);
+					btnAccept.setEnabled(true);
+				}
 			}
 		});     
 		btnEdit.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/edit.png")));
@@ -210,21 +229,29 @@ public class g_ViewEmployees {
 		JButton btnRemoveEmployee = new JButton("");
 		btnRemoveEmployee.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int index = list.getSelectedIndex();
-				String removalName = result.get(index).getName();				
-				int reply = JOptionPane.showConfirmDialog(null, "Really delete " + removalName + "?" , "Remove Employee", JOptionPane.YES_NO_OPTION);
-		        if (reply == JOptionPane.YES_OPTION)
-		        {
-		          String commandText = "DELETE FROM EN_Employees WHERE Name = '" + removalName + "'";
-		          c_Query.ExecuteQuery(commandText);
-		          result.remove(index);
-		          JOptionPane.showMessageDialog(null, removalName + " has been deleted. \n You monster.");
-		          RefreshList();
-		        }
-		        else
-		        {
-		        	//do nothing.
-		        }
+				if(g_MainMenu.offlineMode)
+				{
+					String err = c_EasterEggs.EasterEggs();					
+					JOptionPane.showMessageDialog(null, err);					
+					return;
+				}
+				{
+					int index = list.getSelectedIndex();
+					String removalName = result.get(index).getName();				
+					int reply = JOptionPane.showConfirmDialog(null, "Really delete " + removalName + "?" , "Remove Employee", JOptionPane.YES_NO_OPTION);
+			        if (reply == JOptionPane.YES_OPTION)
+			        {
+			          String commandText = "DELETE FROM EN_Employees WHERE Name = '" + removalName + "'";
+			          c_Query.ExecuteQuery(commandText);
+			          result.remove(index);
+			          JOptionPane.showMessageDialog(null, removalName + " has been deleted. \n You monster.");
+			          RefreshList();
+			        }
+			        else
+			        {
+			        	//do nothing.
+			        }
+				}
 			}
 		});
 		btnRemoveEmployee.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/Minus-48.png")));
@@ -233,8 +260,17 @@ public class g_ViewEmployees {
 		frmViewEmployees.getContentPane().add(btnRemoveEmployee);
 		btnNewEmployee.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_NewEmployee.run();
-				frmViewEmployees.dispose();
+				if(g_MainMenu.offlineMode)
+				{
+					String err = c_EasterEggs.EasterEggs();					
+					JOptionPane.showMessageDialog(null, err);
+					
+					return;
+				}
+				{
+					g_NewEmployee.run();
+					frmViewEmployees.dispose();
+				}
 			}
 		});
 		btnNewEmployee.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/Plus-48.png")));

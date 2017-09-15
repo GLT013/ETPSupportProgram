@@ -45,6 +45,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JCheckBox;
+import java.awt.Toolkit;
 /* http://stackoverflow.com/questions/16157529/how-do-i-pass-objects-between-classes */
 public class g_CurrentTickets {
 
@@ -122,6 +123,16 @@ public class g_CurrentTickets {
 	 */
 	private void initialize() {
 		frmCurrentTickets = new JFrame();
+		frmCurrentTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_CurrentTickets.class.getResource("/icon.png")));
+		
+		if(g_MainMenu.offlineMode)
+		{
+			frmCurrentTickets.setTitle("Automated Support Program - OFFLINE");	
+		}
+		else
+		{
+			frmCurrentTickets.setTitle("Automated Support Program");
+		}
 		frmCurrentTickets.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frmCurrentTickets.setBounds(100, 100, 982, 895);
 		frmCurrentTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -941,6 +952,7 @@ public class g_CurrentTickets {
 									while((rs2!=null) && (rs2.next()))
 									{
 										emailSent = rs2.getBoolean("EmailSent");
+										
 										if(emailSent)
 										{
 											projnum = new DefaultMutableTreeNode("<html><div style=background-color:#FF5733;>" + rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")</div></html>");

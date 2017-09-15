@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JCheckBox;
+import java.awt.Toolkit;
 
 public class g_ViewSites {
 
@@ -86,9 +87,18 @@ public class g_ViewSites {
 	 */
 	private void initialize() {
 		frmButaneSites = new JFrame();
+		frmButaneSites.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSites.class.getResource("/icon.png")));
 		frmButaneSites.setBounds(100, 100, 909, 730);
 		frmButaneSites.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frmButaneSites.getContentPane().setLayout(null);
+		if(g_MainMenu.offlineMode)
+		{
+			frmButaneSites.setTitle("Automated Support Program - OFFLINE");	
+		}
+		else
+		{
+			frmButaneSites.setTitle("Automated Support Program");
+		}
 		
 		frmButaneSites.addWindowListener(new java.awt.event.WindowAdapter() {
 			 @Override

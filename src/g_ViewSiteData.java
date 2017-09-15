@@ -14,10 +14,11 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import java.awt.Toolkit;
 
 public class g_ViewSiteData {
 
-	private JFrame frame;
+	private JFrame frmSiteData;
 	JPanel panel = new JPanel();
 	static JPanel panel_1 = new JPanel();	
 	private static c_SiteInfo siteInfo = new c_SiteInfo();
@@ -47,7 +48,7 @@ public class g_ViewSiteData {
 			public static void run(String site) {
 				try {
 					g_ViewSiteData window = new g_ViewSiteData(siteInfo);
-					window.frame.setVisible(true);
+					window.frmSiteData.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -72,15 +73,24 @@ public class g_ViewSiteData {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 869, 867);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmSiteData = new JFrame();
+		frmSiteData.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSiteData.class.getResource("/icon.png")));
+		frmSiteData.setBounds(100, 100, 869, 867);
+		frmSiteData.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmSiteData.getContentPane().setLayout(null);
+		if(g_MainMenu.offlineMode)
+		{
+			frmSiteData.setTitle("Automated Support Program - OFFLINE");	
+		}
+		else
+		{
+			frmSiteData.setTitle("Automated Support Program");
+		}
 		
 		
 		panel.setBackground(new Color(245, 245, 245));
 		panel.setBounds(0, 0, 850, 800);
-		frame.getContentPane().add(panel);
+		frmSiteData.getContentPane().add(panel);
 		panel.setLayout(null);
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		

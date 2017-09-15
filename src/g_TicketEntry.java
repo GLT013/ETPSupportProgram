@@ -26,7 +26,8 @@ import java.util.Properties;
 import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.JTextArea; 
+import javax.swing.JTextArea;
+import java.awt.Toolkit; 
 
 public class g_TicketEntry {
 
@@ -65,9 +66,19 @@ public class g_TicketEntry {
 	 */
 	private void initialize() {
 		frmTicketEntry = new JFrame();
+		frmTicketEntry.setIconImage(Toolkit.getDefaultToolkit().getImage(g_TicketEntry.class.getResource("/icon.png")));
 		frmTicketEntry.setBounds(100, 100, 726, 562);
 		frmTicketEntry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTicketEntry.getContentPane().setLayout(null);
+		if(g_MainMenu.offlineMode)
+		{
+			frmTicketEntry.setTitle("Automated Support Program - OFFLINE");	
+		}
+		else
+		{
+			frmTicketEntry.setTitle("Automated Support Program");
+		}
+		
 		cb_Site.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				

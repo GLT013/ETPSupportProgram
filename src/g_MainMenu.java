@@ -17,6 +17,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Toolkit;
 //icons https://icons8.com/web-app/for/all/return
 //flaticon.com
 public class g_MainMenu {
@@ -149,12 +150,21 @@ public class g_MainMenu {
 	private void initialize() {
 		//Main Frame
 		frmMainMenu = new JFrame();
+		frmMainMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(g_MainMenu.class.getResource("/icon.png")));
 		frmMainMenu.setTitle("Main Menu");
 		frmMainMenu.setBounds(0,0,410, 610);
 		frmMainMenu.setResizable(false);
 		frmMainMenu.setLocationRelativeTo(null);
 		frmMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMainMenu.getContentPane().setLayout(null);
+		if(offlineMode)
+		{
+			frmMainMenu.setTitle("Automated Support Program - OFFLINE");	
+		}
+		else
+		{
+			frmMainMenu.setTitle("Automated Support Program");
+		}
 		
 		//Quick Lookup Button
 		JButton btnQuickLookup = new JButton("Support Archive");

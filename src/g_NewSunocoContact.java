@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
 
 public class g_NewSunocoContact {
 
@@ -46,9 +47,18 @@ public class g_NewSunocoContact {
 	 */
 	private void initialize() {
 		frmNewSunocoContact = new JFrame();
+		frmNewSunocoContact.setIconImage(Toolkit.getDefaultToolkit().getImage(g_NewSunocoContact.class.getResource("/icon.png")));
 		frmNewSunocoContact.setBounds(100, 100, 626, 421);
 		frmNewSunocoContact.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNewSunocoContact.getContentPane().setLayout(null);
+		if(g_MainMenu.offlineMode)
+		{
+			frmNewSunocoContact.setTitle("Automated Support Program - OFFLINE");	
+		}
+		else
+		{
+			frmNewSunocoContact.setTitle("Automated Support Program");
+		}
 		
 		JLabel lblAddNewSunocoContact = new JLabel("Add New Contact");
 		lblAddNewSunocoContact.setBounds(228, 11, 189, 19);

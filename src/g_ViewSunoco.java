@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Color;
+import java.awt.Toolkit;
 
 public class g_ViewSunoco {
 
@@ -64,9 +65,18 @@ public class g_ViewSunoco {
 	 */
 	private void initialize() {
 		frmSunocoContacts = new JFrame();
+		frmSunocoContacts.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSunoco.class.getResource("/icon.png")));
 		frmSunocoContacts.setBounds(100, 100, 909, 441);
 		frmSunocoContacts.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frmSunocoContacts.getContentPane().setLayout(null);
+		if(g_MainMenu.offlineMode)
+		{
+			frmSunocoContacts.setTitle("Automated Support Program - OFFLINE");	
+		}
+		else
+		{
+			frmSunocoContacts.setTitle("Automated Support Program");
+		}
 		
 		frmSunocoContacts.addWindowListener(new java.awt.event.WindowAdapter() {
 			 @Override
@@ -127,22 +137,34 @@ public class g_ViewSunoco {
 		lblMobile.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		lblMobile.setBounds(442, 217, 310, 30);
 		frmSunocoContacts.getContentPane().add(lblMobile);
-		btnEdit.setToolTipText("Edit");
+		btnEdit.setToolTipText("Edit");	
+		
 		btnEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {				
-				lblName.setEditable(true);
-				lblCompany.setEditable(true);
-				lblEmail.setEditable(true);				
-				lblMobile.setEditable(true);				
-			
-				btnEdit.setEnabled(false);
-				btnEdit.setVisible(false);
-				btnCancel.setVisible(true);
-				btnCancel.setEnabled(true);
-				btnAccept.setVisible(true);
-				btnAccept.setEnabled(true);
+			public void actionPerformed(ActionEvent arg0) {		
+				if(g_MainMenu.offlineMode)
+				{
+					JOptionPane.showMessageDialog(null, "If you could go ahead and go online for edits, that'd be great.");
+					String err = c_EasterEggs.EasterEggs();					
+					JOptionPane.showMessageDialog(null, err);
+					return;
+				}
+				else
+				{
+					lblName.setEditable(true);
+					lblCompany.setEditable(true);
+					lblEmail.setEditable(true);				
+					lblMobile.setEditable(true);				
+				
+					btnEdit.setEnabled(false);
+					btnEdit.setVisible(false);
+					btnCancel.setVisible(true);
+					btnCancel.setEnabled(true);
+					btnAccept.setVisible(true);
+					btnAccept.setEnabled(true);
+				}
 			}
-		});     
+		});   
+		
 		btnEdit.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/edit.png")));
 		btnEdit.setBounds(828, 11, 32, 32);
 		
@@ -180,33 +202,53 @@ public class g_ViewSunoco {
 		JButton btnRemoveContact = new JButton("");
 		btnRemoveContact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int index = list.getSelectedIndex();
-				String removalName = result.get(index).getName();				
-				int reply = JOptionPane.showConfirmDialog(null, "Really delete " + removalName + "?" , "Remove Contact?", JOptionPane.YES_NO_OPTION);
-		        if (reply == JOptionPane.YES_OPTION)
-		        {
-		          String commandText = "DELETE FROM Sunoco_Contacts WHERE Name = '" + removalName + "'";
-		          c_Query.ExecuteQuery(commandText);
-		          result.remove(index);
-		          JOptionPane.showMessageDialog(null, removalName + " has been deleted. \n You monster.");
-		          RefreshList();
-		        }
-		        else
-		        {
-		        	//do nothing.
-		        }
+				if(g_MainMenu.offlineMode)
+				{
+					String err = c_EasterEggs.EasterEggs();					
+					JOptionPane.showMessageDialog(null, err);
+					return;
+				}
+				else
+				{
+					int index = list.getSelectedIndex();
+					String removalName = result.get(index).getName();				
+					int reply = JOptionPane.showConfirmDialog(null, "Really delete " + removalName + "?" , "Remove Contact?", JOptionPane.YES_NO_OPTION);
+			        if (reply == JOptionPane.YES_OPTION)
+			        {
+			          String commandText = "DELETE FROM Sunoco_Contacts WHERE Name = '" + removalName + "'";
+			          c_Query.ExecuteQuery(commandText);
+			          result.remove(index);
+			          JOptionPane.showMessageDialog(null, removalName + " has been deleted. \n You monster.");
+			          RefreshList();
+			        }
+			        else
+			        {
+			        	//do nothing.
+			        }
+				}
 			}
 		});
 		btnRemoveContact.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/Minus-48.png")));
 		btnRemoveContact.setToolTipText("Remove Contact");
 		btnRemoveContact.setBounds(198, 292, 32, 32);
-		frmSunocoContacts.getContentPane().add(btnRemoveContact);
-		btnNewContact.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				g_NewSunocoContact.run();
-				frmSunocoContacts.dispose();
-			}
-		});
+		frmSunocoContacts.getContentPane().add(btnRemoveContact);		
+			btnNewContact.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(g_MainMenu.offlineMode)
+					{
+						
+						String err = c_EasterEggs.EasterEggs();					
+						JOptionPane.showMessageDialog(null, err);
+						return;
+					}
+					else
+					{
+					g_NewSunocoContact.run();
+					frmSunocoContacts.dispose();
+					}
+				}
+			});
+		
 		btnNewContact.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/Plus-48.png")));
 		btnNewContact.setToolTipText("New Contact");
 		btnNewContact.setBounds(36, 292, 32, 32);
