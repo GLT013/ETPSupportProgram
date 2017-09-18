@@ -13,7 +13,7 @@ public class c_CreateSQLiteDB {
 	     */
 	    public static void createNewDatabase() {
 	 
-	        String url = "jdbc:sqlite:References/ETPSupport.db";
+	        String url = "jdbc:sqlite:C:\\\\Support Program\\\\ETPSupport.db";
 	 
 	        try (Connection conn = DriverManager.getConnection(url)) {
 	            if (conn != null) {

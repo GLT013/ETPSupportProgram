@@ -26,7 +26,7 @@ public class g_MainMenu {
 	public static double version = 2.00;
 	public static boolean firstrun = true;
 	public static boolean offlineMode = false;
-	public static File SQLiteDB = new File("References/ETPSupport.db");
+	public static File SQLiteDB = new File("C:\\\\Support Program\\\\ETPSupport.db");
 	private static JButton btnSyncForOffline;
 	private static JMenuItem drop_Offline;
 	private static JMenuItem drop_Online;
@@ -243,6 +243,7 @@ public class g_MainMenu {
 		btnSyncForOffline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				c_SyncForOfflineMode.run();
+				GoOffline();
 			}
 		});
 		btnSyncForOffline.setBounds(106, 496, 187, 54);
@@ -255,16 +256,6 @@ public class g_MainMenu {
 		lbl_Offline.setBounds(10, 536, 54, 14);
 		lbl_Offline.setVisible(false);
 		frmMainMenu.getContentPane().add(lbl_Offline);
-		
-		JButton btnOnline = new JButton("Online");
-		btnOnline.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				c_ConnectToDatabase.ConnectSQLite();
-				c_SyncForOnlineMode.run();
-			}
-		});
-		btnOnline.setBounds(330, 454, 64, 54);
-		frmMainMenu.getContentPane().add(btnOnline);
 		if(offlineMode)
 		{
 			btnSyncForOffline.setEnabled(false);
@@ -342,11 +333,19 @@ public class g_MainMenu {
 		}
 		else
 		{
+			c_ConnectToDatabase.Connect();
+		        
 			offlineMode = false;
 			btnSyncForOffline.setEnabled(true);
 			drop_Offline.setEnabled(true);
 			drop_Online.setEnabled(false);
 			lbl_Offline.setVisible(false);
+			int reply = JOptionPane.showConfirmDialog(null, "Sync Offline Changes To Online Support Database?" , "Sync Changes", JOptionPane.YES_NO_OPTION);
+	        if (reply == JOptionPane.YES_OPTION)
+	        {
+	        	c_SyncForOnlineMode.run();
+	        	JOptionPane.showMessageDialog(null, "Offline Synchronization Completed.");	        	
+	        }	
 		}
 	}
 }

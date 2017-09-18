@@ -259,28 +259,7 @@ public class g_TicketEntry {
 		}
 	}
 	
-	/*
-	private void PopulateSubCategory(String category){
-		cb_SubCategory.removeAllItems();
-		if(category.compareTo("")== 0)
-		{
-			cb_SubCategory.setEnabled(false);
-		}
-		else
-		{
-			cb_SubCategory.setEnabled(true);
-		}
-		if(category.compareTo("Injection") == 0){
-			cb_SubCategory.addItem("Injectors");
-			cb_SubCategory.addItem("Butane Meters");			
-		}
-		else if(category.compareTo("Sampling") == 0){
-			cb_SubCategory.addItem("Sample1");
-			cb_SubCategory.addItem("Sample2");
-		}
-		cb_SubCategory.setSelectedIndex(-1);
-	}
-	*/
+
 	private void SubmitTicket(){
 		String Client = cb_Client.getSelectedItem().toString();
 		String Site = cb_Site.getSelectedItem().toString();
@@ -288,15 +267,7 @@ public class g_TicketEntry {
 		
 		
 		
-		/*
-		try{
-			SubCategory = cb_SubCategory.getSelectedItem().toString();
-		}
-		catch (Exception e)
-		{
-			SubCategory = "";
-		}
-        */
+
 		
 		int testMonth = datePicker.getModel().getMonth();
 		testMonth++;

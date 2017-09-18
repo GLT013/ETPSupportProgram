@@ -120,7 +120,7 @@ public class g_ReportEmail {
 				}
 				String test = EmailList2.getModel().getElementAt(0).getEmail();
 				for(int i=1; i < EmailList2.getModel().getSize(); i++){
-				     test =  test + "," + EmailList2.getModel().getElementAt(i).getEmail();  
+				     test =  test + ";" + EmailList2.getModel().getElementAt(i).getEmail();  
 				     
 				}
 				
@@ -220,7 +220,7 @@ public class g_ReportEmail {
 			name = EmailList.getModel().getElementAt(i).getName().toString();
 		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
 		       name.compareTo("Jim Robbins") == 0 ||   name.compareTo("Joe Klems") == 0 ||
-		       name.compareTo("Mike Russo") == 0 || name.compareTo("Butane Support") == 0)
+		       name.compareTo("Chris Sheedy") == 0 || name.compareTo("Butane Support") == 0)
 		    {
 		    	addRecipients(i);
 		    	i--;
@@ -236,7 +236,7 @@ public class g_ReportEmail {
 		EmailListModel2 = new DefaultListModel<c_EmailRecipients>();
 		c_EmailRecipients emailRecipients = new c_EmailRecipients("Butane Support","butane.support@enengineering.com");
 		 EmailListModel.addElement(emailRecipients);
-		String commandText = "SELECT Name, Email FROM Sunoco_Contacts ORDER BY Name asc";
+		String commandText = "SELECT Name, Email FROM Sunoco_Contacts UNION ALL SELECT Name, Email FROM EN_Employees ORDER BY Name asc";
 		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		try{

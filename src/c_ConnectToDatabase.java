@@ -32,7 +32,7 @@ public class c_ConnectToDatabase {
 	public static boolean ConnectSQLite(){		 
 	    try {
 	      Class.forName("org.sqlite.JDBC");
-	      con_sqlite = DriverManager.getConnection("jdbc:sqlite:References/ETPSupport.db");
+	      con_sqlite = DriverManager.getConnection("jdbc:sqlite:C:\\\\Support Program\\\\ETPSupport.db");
 	    } catch ( Exception e ) {
 	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 	      return false;

@@ -992,14 +992,17 @@ public class g_CurrentTickets {
 							DefaultMutableTreeNode proj;
 							DefaultMutableTreeNode projnum;
 							String commandText = "";
+							/* Commented out as it didnt make sense to query the last day if an email was never sent.
 							if(!g_MainMenu.offlineMode)
 							{
-								commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and UpdateDate >= DATEADD(day,-1,GETDATE()) and EmailSent = 'False' ORDER BY Client ASC";
+								//commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and UpdateDate >= DATEADD(day,-1,GETDATE()) and EmailSent = 'False' ORDER BY Client ASC";
+								commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and EmailSent = 'False' ORDER BY Client ASC";
 							}
 							else
 							{
-								commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and UpdateDate >= date('now','+1 day') and EmailSent = 'False' ORDER BY Client ASC";
-							}
+								commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and EmailSent = 0 ORDER BY Client ASC";
+							}*/
+							commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and EmailSent = 0 ORDER BY Client ASC";
 							ResultSet rs = c_Query.ExecuteResultSet(commandText);
 							
 							while((rs!=null) && (rs.next()))
@@ -1007,14 +1010,18 @@ public class g_CurrentTickets {
 								String projectname = rs.getString(1);
 								proj = new DefaultMutableTreeNode(projectname);	
 									String commandText2 = "";
+									/*
 									if(!g_MainMenu.offlineMode)
 									{
 										commandText2 = "SELECT Site, Ticket from SupportTickets WHERE Status = 'Complete' and UpdateDate >= DATEADD(day,-1,GETDATE()) and EmailSent = 'False' and Client ='" + projectname + "'"; ;
 									}
 									else
 									{
-										commandText2 = "SELECT Site, Ticket from SupportTickets WHERE Status = 'Complete' and UpdateDate >= date('now','+1 day') and EmailSent = 'False' and Client ='" + projectname + "'"; ;
+										commandText2 = "SELECT Site, Ticket from SupportTickets WHERE Status = 'Complete' and EmailSent = 0 and Client ='" + projectname + "'"; ;
 									}
+									*/
+									
+									commandText2 = "SELECT Site, Ticket from SupportTickets WHERE Status = 'Complete' and EmailSent = 0 and Client ='" + projectname + "'"; ;
 									ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
 									
 									while((rs2!=null) && (rs2.next()))
@@ -1044,33 +1051,60 @@ public class g_CurrentTickets {
 	 
 	 public void CloseTicket()
 	 {		 
-		 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-		 Date date = new Date();
-		 String testDate = dateFormat.format(date);		 
+		 DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm");
+		 String testDate = "";
+		 if(!g_MainMenu.offlineMode)
+		 {			 
+			 Date date = new Date();
+			 testDate = dateFormat.format(date);	
+		 }
+		 else
+		 {						
+			 Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+			 testDate = dateFormat.format(currentTimestamp);	
+		 }
+		 	
+		// Date date = new Date();
+		 //String testDate = dateFormat.format(date);		 
 		 String resolution = txt_Update.getText();
 		 resolution = c_CleanString.Clean_String(resolution);
 		 String commandText = "";
-		 if(!CCNotifiedState && chckbxCcNotified.isSelected()) //If it wasn't originally selected and now is we need to stamp the time.
+		 boolean CCCompilation = false;
+		 if(!CCNotifiedState && chckbxCcNotified.isSelected())
 		 {
-			
-			 Date CCdate = new Date();
-			 String ccDateString = dateFormat.format(CCdate);		 
-			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() 
-					 + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() 
-					 + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 'False', CCNotified = '" + ccDateString + "' WHERE rowID = " + rowID;	
-			 
+			 CCCompilation = true;
 		 }
 		 else
 		 {
-			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() 
-					 + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() 
-					 + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 'False' WHERE rowID = " + rowID;	
+			 CCCompilation = false;
 		 }
 		 
-		 		
-		 c_Query.UpdateResultSet(commandText);
-		 commandText = "";
-			
+		 if(cb_Assigned.isVisible() == true && CCCompilation == true)
+		 {
+			 Date CCdate = new Date();
+			 String ccDateTime = dateFormat.format(CCdate);
+			 String assigned = cb_Assigned.getSelectedItem().toString();
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False', CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
+		 }
+		 else if(cb_Assigned.isVisible() == true && CCCompilation == false)
+		 {
+			 String assigned = cb_Assigned.getSelectedItem().toString();
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False' WHERE rowID = " + rowID;
+		 }
+		 else if(cb_Assigned.isVisible() == false && CCCompilation == true)
+		 {
+			 Date CCdate = new Date();
+			 String ccDateTime = dateFormat.format(CCdate);
+			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False', CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
+		 }
+		 else
+		 {
+			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False' WHERE rowID = " + rowID;
+		 }
+		 
+			c_Query.UpdateResultSet(commandText);
+
+			commandText = "";
 		 	
 			
 			/* Check if there is any files to upload from the internal window */
