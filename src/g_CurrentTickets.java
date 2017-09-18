@@ -46,6 +46,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.MatteBorder;
 /* http://stackoverflow.com/questions/16157529/how-do-i-pass-objects-between-classes */
 public class g_CurrentTickets {
 
@@ -134,21 +136,25 @@ public class g_CurrentTickets {
 			frmCurrentTickets.setTitle("Automated Support Program");
 		}
 		frmCurrentTickets.getContentPane().setBackground(Color.LIGHT_GRAY);
-		frmCurrentTickets.setBounds(100, 100, 982, 895);
+		frmCurrentTickets.setBounds(100, 100, 964, 895);
 		frmCurrentTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmCurrentTickets.getContentPane().setLayout(null);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 244, 372);
+		panel = new JPanel();
+		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel.setBounds(10, 11, 248, 477);
 		frmCurrentTickets.getContentPane().add(panel);
 		panel.setLayout(null);
 		
+		JScrollPane scrollPane_5 = new JScrollPane();
+		scrollPane_5.setBounds(0, 0, 248, 477);
+		panel.add(scrollPane_5);
+		
 		tree_active = new CheckboxTree();
+		scrollPane_5.setViewportView(tree_active);
 		tree_active.getCheckingModel().setCheckingMode(TreeCheckingModel.CheckingMode.PROPAGATE_PRESERVING_CHECK);
 		tree_active.setBackground(Color.WHITE);
-		tree_active.setBounds(0, 0, 244, 379);
 		tree_active.setBorder(UIManager.getBorder("DesktopIcon.border"));
-		panel.add(tree_active);
 		tree_active.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				PopulateActiveWindow();
@@ -157,7 +163,8 @@ public class g_CurrentTickets {
 	
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(264, 11, 668, 725);
+		panel_1.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+		panel_1.setBounds(265, 11, 668, 725);
 		frmCurrentTickets.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -208,7 +215,7 @@ public class g_CurrentTickets {
 		panel_1.add(lbl_Problem);
 		
 		panel_Internal = new JPanel();
-		panel_Internal.setBounds(1000, 322, 648, 324);
+		panel_Internal.setBounds(10, 322, 648, 324);
 		panel_1.add(panel_Internal);
 		panel_Internal.setLayout(null);
 		panel_Internal.setVisible(false);
@@ -233,7 +240,7 @@ public class g_CurrentTickets {
 		panel_Internal.add(btn_External);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(10, 239, 328, 74);
+		scrollPane_1.setBounds(0, 239, 328, 74);
 		panel_Internal.add(scrollPane_1);
 		
 		JList_FileList = new JList<c_Files>();
@@ -456,7 +463,8 @@ public class g_CurrentTickets {
 			
 		
 		panel_2 = new JPanel();
-		panel_2.setBounds(264, 747, 668, 54);
+		panel_2.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+		panel_2.setBounds(265, 747, 668, 54);
 		frmCurrentTickets.getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 		
@@ -595,17 +603,26 @@ public class g_CurrentTickets {
 		panel_2.add(lblHost);
 		
 		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(10, 393, 244, 408);
+		panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_3.setBounds(10, 497, 248, 304);
 		frmCurrentTickets.getContentPane().add(panel_3);
+		panel_3.setLayout(null);
+		
+		scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(0, 0, 248, 304);
+		panel_3.add(scrollPane_4);
 		
 		
 		tree_closed = new CheckboxTree();
-		tree_closed.setBounds(0, 0, 244, 408);
+		scrollPane_4.setViewportView(tree_closed);
 		tree_closed.getCheckingModel().setCheckingMode(TreeCheckingModel.CheckingMode.PROPAGATE_PRESERVING_CHECK);
-		panel_3.setLayout(null);
 		tree_closed.setBackground(Color.WHITE);
 		tree_closed.setBorder(UIManager.getBorder("DesktopIcon.border"));
-		panel_3.add(tree_closed);
+		tree_closed.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent e) {
+				PopulateRecentWindow();
+			}
+		});
 		
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
@@ -614,27 +631,14 @@ public class g_CurrentTickets {
 				frmCurrentTickets.dispose();
 			}
 		});
-		btnBack.setBounds(10, 812, 89, 23);
+		btnBack.setBounds(10, 822, 89, 23);
 		frmCurrentTickets.getContentPane().add(btnBack);
 		
-		JLabel btnRefresh = new JLabel("");
-		btnRefresh.setBounds(222, 803, 32, 32);
+		JButton btnRefresh = new JButton("");
+		btnRefresh.setBounds(203, 803, 50, 42);
 		frmCurrentTickets.getContentPane().add(btnRefresh);
-		btnRefresh.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				PopulateActiveWindow();
-				PopulateActiveTickets();
-				PopulateRecentTickets();				
-			}
-		});
 		btnRefresh.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/reload.png")));
 		btnRefresh.setToolTipText("Refresh");
-		tree_closed.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
-				PopulateRecentWindow();
-			}
-		});
 	}
 	
 	int tmp2[];
@@ -642,6 +646,8 @@ public class g_CurrentTickets {
 	private JButton btn_DeleteFile;
 	private JScrollPane scrollPane_2;
 	private JScrollPane scrollPane_3;
+	private JPanel panel;
+	private JScrollPane scrollPane_4;
 	
 	private void GetCheckboxes()
 	{
@@ -752,7 +758,7 @@ public class g_CurrentTickets {
 					cb_Status.setSelectedIndex(3); 	
 				}
 				
-				if(rs.getString("CCNotified") == null)
+				if(rs.getString("CCNotified") == null || (rs.getString("CCNotified").compareTo("null") == 0))
 				{
 					CCNotifiedState = false;
 					chckbxCcNotified.setSelected(false);						

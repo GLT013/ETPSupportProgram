@@ -15,7 +15,7 @@ public class c_ConnectToDatabase {
      {
          Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
          String connectionUrl = "jdbc:sqlserver://10.10.38.252;" +
-                                 "database=Support;" +
+                                 "database=Support_Beta;" +
                                  "user=sa;" +
                                  "password=Mce!2195";
          con = DriverManager.getConnection(connectionUrl);

@@ -113,8 +113,7 @@ public class c_SyncForOfflineMode {
 		String SupportTickets = "CREATE TABLE IF NOT EXISTS [SupportTickets](\r\n" + 
 				"	[Client] [text] NULL,\r\n" + 
 				"	[Site] [text] NULL,\r\n" + 
-				"	[Category] [text] NULL,\r\n" + 
-				"	[SubCategory] [text] NULL,\r\n" + 
+				"	[Category] [text] NULL,\r\n" +
 				"	[Ticket] [text] NOT NULL UNIQUE,\r\n" + 
 				"	[EnteredDate] [datetime] NULL,\r\n" + 
 				"	[Description] [text] NULL,\r\n" + 
@@ -165,6 +164,7 @@ public class c_SyncForOfflineMode {
 		CopyENEmployees();
 		CopySunocoContacts();
 		CopySites();
+		CopyTickets();
 	}
 	
 	public static void CopyENEmployees()
@@ -265,8 +265,46 @@ public class c_SyncForOfflineMode {
 		catch(Exception e)
 		{
 			e.printStackTrace();
+		}				
+	}
+	
+	public static void CopyTickets()
+	{
+		
+		String SQLite_Delete = "DELETE FROM SupportTickets";
+		c_Query.SQLiteExecuteQuery(SQLite_Delete);
+		String commandText = "SELECT * From SupportTickets WHERE Active = 1 OR (Active = 0 AND EmailSent = 0)";
+		ResultSet rs = c_Query.ExecuteResultSet(commandText);
+		String SQLite_Insert = "INSERT INTO SupportTickets(Client,Site,Category,Ticket,EnteredDate,Description,Assigned,Status,Resolution,Internal,Active,EmailSent,UpdateDate,TimeSpent,CCNotified) VALUES";
+		String tmp = "";
+		try
+		{
+			rs.next();
+			String clean_desc = c_CleanString.Clean_String(rs.getString("Description"));
+			String clean_res = c_CleanString.Clean_String(rs.getString("Resolution"));			
+			tmp = "('" + rs.getString("Client") + "','" + rs.getString("Site") + "','" + rs.getString("Category") + "','" + rs.getString("Ticket") + "','" + rs.getTimestamp("EnteredDate") + "','" + clean_desc + "','" + rs.getString("Assigned") + "','" + rs.getString("Status") + "','" + clean_res + "','" + rs.getString("Internal") + "','" + rs.getString("Active") + "','" + rs.getString("EmailSent") + "','" + rs.getTimestamp("UpdateDate") + "','" + rs.getString("TimeSpent") + "','" + rs.getTimestamp("CCNotified") + "')";
+			while((rs!=null) && (rs.next()))
+			{
+				clean_desc = c_CleanString.Clean_String(rs.getString("Description"));
+				clean_res = c_CleanString.Clean_String(rs.getString("Resolution"));
+				tmp = tmp + ",('" + rs.getString("Client") + "','" + rs.getString("Site") + "','" + rs.getString("Category") + "','" + rs.getString("Ticket") + "','" + rs.getTimestamp("EnteredDate") + "','" + clean_desc + "','" + rs.getString("Assigned") + "','" + rs.getString("Status") + "','" + clean_res + "','" + rs.getString("Internal") + "','" + rs.getString("Active") + "','" + rs.getString("EmailSent") + "','" + rs.getTimestamp("UpdateDate") + "','" + rs.getString("TimeSpent") + "','" + rs.getTimestamp("CCNotified") + "')";
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
 		}
 		
+		SQLite_Insert = SQLite_Insert + tmp;
+		
+		try
+		{
+			c_Query.SQLiteExecuteQuery(SQLite_Insert);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}		
 		
 	}
 }

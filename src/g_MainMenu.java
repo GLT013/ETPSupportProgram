@@ -23,7 +23,7 @@ import java.awt.Toolkit;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 1.12;
+	public static double version = 2.00;
 	public static boolean firstrun = true;
 	public static boolean offlineMode = false;
 	public static File SQLiteDB = new File("References/ETPSupport.db");
@@ -31,6 +31,8 @@ public class g_MainMenu {
 	private static JMenuItem drop_Offline;
 	private static JMenuItem drop_Online;
 	private static JLabel lbl_Offline;
+	public static String TitleOnline = "Automated Support Program v" + version + "";
+	public static String TitleOffline = "Automated Support Program v" + version + " - OFFLINE";
 
 	/**
 	 * Launch the application.
@@ -159,13 +161,13 @@ public class g_MainMenu {
 		frmMainMenu.getContentPane().setLayout(null);
 		if(offlineMode)
 		{
-			frmMainMenu.setTitle("Automated Support Program - OFFLINE");	
+			frmMainMenu.setTitle(TitleOffline);	
 		}
 		else
 		{
-			frmMainMenu.setTitle("Automated Support Program");
+			frmMainMenu.setTitle(TitleOnline);
 		}
-		
+
 		//Quick Lookup Button
 		JButton btnQuickLookup = new JButton("Support Archive");
 		btnQuickLookup.setBounds(106, 172, 187, 54);
@@ -202,8 +204,6 @@ public class g_MainMenu {
 			public void actionPerformed(ActionEvent e) {
 				g_TicketEntry.run();
 				frmMainMenu.dispose();
-				
-				
 			}
 		});
 		btnNewTicket.setBounds(106, 11, 187, 54);
@@ -255,6 +255,16 @@ public class g_MainMenu {
 		lbl_Offline.setBounds(10, 536, 54, 14);
 		lbl_Offline.setVisible(false);
 		frmMainMenu.getContentPane().add(lbl_Offline);
+		
+		JButton btnOnline = new JButton("Online");
+		btnOnline.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				c_ConnectToDatabase.ConnectSQLite();
+				c_SyncForOnlineMode.run();
+			}
+		});
+		btnOnline.setBounds(330, 454, 64, 54);
+		frmMainMenu.getContentPane().add(btnOnline);
 		if(offlineMode)
 		{
 			btnSyncForOffline.setEnabled(false);
@@ -324,11 +334,19 @@ public class g_MainMenu {
 	
 	private void GoOnline()
 	{
-		offlineMode = false;
-		btnSyncForOffline.setEnabled(true);
-		drop_Offline.setEnabled(true);
-		drop_Online.setEnabled(false);
-		lbl_Offline.setVisible(false);
-		
+		if(c_ConnectToDatabase.Connect() == false)
+		{
+			JOptionPane.showMessageDialog(null, "Unable to connect to online database.");
+			return;
+			
+		}
+		else
+		{
+			offlineMode = false;
+			btnSyncForOffline.setEnabled(true);
+			drop_Offline.setEnabled(true);
+			drop_Online.setEnabled(false);
+			lbl_Offline.setVisible(false);
+		}
 	}
 }

@@ -40,7 +40,7 @@ public class g_TicketEntry {
 	private JComboBox<String> cb_Assign;
 	private JDatePanelImpl datePanel; 
 	private JDatePickerImpl datePicker;
-	
+
 	
 
 			public static void run() {			
@@ -72,11 +72,11 @@ public class g_TicketEntry {
 		frmTicketEntry.getContentPane().setLayout(null);
 		if(g_MainMenu.offlineMode)
 		{
-			frmTicketEntry.setTitle("Automated Support Program - OFFLINE");	
+			frmTicketEntry.setTitle(g_MainMenu.TitleOffline);	
 		}
 		else
 		{
-			frmTicketEntry.setTitle("Automated Support Program");
+			frmTicketEntry.setTitle(g_MainMenu.TitleOnline);
 		}
 		
 		cb_Site.addItemListener(new ItemListener() {
@@ -201,6 +201,7 @@ public class g_TicketEntry {
 	private void PopulateClientCB(){
 		 String commandText = "SELECT DISTINCT Client FROM Sites ORDER BY Client Asc";        
 	        ResultSet rs = c_Query.ExecuteResultSet(commandText);
+	        	     
 	        try {
 				while((rs!=null) && (rs.next()))
 				{					
@@ -286,7 +287,7 @@ public class g_TicketEntry {
 		String Category = cb_Category.getSelectedItem().toString();
 		
 		
-		String SubCategory = "";
+		
 		/*
 		try{
 			SubCategory = cb_SubCategory.getSelectedItem().toString();
@@ -374,8 +375,8 @@ public class g_TicketEntry {
 				return;	        	
 	        }
 		
-		String commandText = "INSERT INTO SupportTickets (Client,Site,Category,Subcategory,Ticket,EnteredDate,Description,Assigned,Status,Resolution,Active,UpdateDate) "
-				+ "VALUES ('" + Client + "', '" + Site + "', '" + Category + "', '" + SubCategory + "', '" + TicketNum + "', '" + strDate + "', '" + Description + "', '" + Assigned + "', 'Investigating', '', 1, '" + strDate +"')";
+		String commandText = "INSERT INTO SupportTickets (Client,Site,Category,Ticket,EnteredDate,Description,Assigned,Status,Resolution,Active,UpdateDate) "
+				+ "VALUES ('" + Client + "', '" + Site + "', '" + Category + "', '" + TicketNum + "', '" + strDate + "', '" + Description + "', '" + Assigned + "', 'Investigating', '', 1, '" + strDate +"')";
 		
 		
 		c_Query.UpdateResultSet(commandText);

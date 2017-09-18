@@ -371,7 +371,7 @@ public class g_ReportEmail {
 					}
 					
 					duration = rs.getString("TimeSpent");	
-					if(rs.getString("CCNotified") != null)
+					if((rs.getString("CCNotified") != null) && (rs.getString("CCNotified").compareTo("null") != 0))
 					{
 						if(!g_MainMenu.offlineMode)
 						{
@@ -382,8 +382,7 @@ public class g_ReportEmail {
 						}
 						else
 						{
-							ccNotifiedTime_Formatted = rs.getString("CCNotified");
-							
+							ccNotifiedTime_Formatted = rs.getString("CCNotified");							
 							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //First put string into date format						
 							Date date = null;
 							try {

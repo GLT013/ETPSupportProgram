@@ -204,7 +204,5 @@ public class g_NewEmployee {
 		txt_Phone.setText("");
 		txt_Mobile.setText("");
 		cb_Title.setSelectedIndex(-1);
-		
-		
 	}
 }
