@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -167,7 +169,7 @@ public class g_MainMenu {
 		{
 			frmMainMenu.setTitle(TitleOnline);
 		}
-
+		System.out.println(LocalTime.now());
 		//Quick Lookup Button
 		JButton btnQuickLookup = new JButton("Support Archive");
 		btnQuickLookup.setBounds(106, 172, 187, 54);

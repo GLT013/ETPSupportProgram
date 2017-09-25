@@ -635,6 +635,14 @@ public class g_CurrentTickets {
 		frmCurrentTickets.getContentPane().add(btnBack);
 		
 		JButton btnRefresh = new JButton("");
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				PopulateActiveWindow();
+				PopulateActiveTickets();
+				PopulateRecentTickets();
+				
+			}
+		});
 		btnRefresh.setBounds(203, 803, 50, 42);
 		frmCurrentTickets.getContentPane().add(btnRefresh);
 		btnRefresh.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/reload.png")));
@@ -836,7 +844,6 @@ public class g_CurrentTickets {
 		try{
 		String tmp = tree_closed.getSelectionPath().getLastPathComponent().toString();		
 		TicketNum = tmp.split("[\\(\\)]")[1];		
-
 		}
 		catch (Exception e)
 		{
@@ -1084,22 +1091,22 @@ public class g_CurrentTickets {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False', CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == true && CCCompilation == false)
 		 {
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0 WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == false && CCCompilation == true)
 		 {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
-			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False', CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
 		 }
 		 else
 		 {
-			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False' WHERE rowID = " + rowID;
+			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0 WHERE rowID = " + rowID;
 		 }
 		 
 			c_Query.UpdateResultSet(commandText);
@@ -1181,22 +1188,22 @@ public class g_CurrentTickets {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False', CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == true && CCCompilation == false)
 		 {
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0 WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == false && CCCompilation == true)
 		 {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
-			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False', CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
 		 }
 		 else
 		 {
-			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 'False' WHERE rowID = " + rowID;
+			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0 WHERE rowID = " + rowID;
 		 }
 		 
 			c_Query.UpdateResultSet(commandText);
@@ -1241,7 +1248,7 @@ public class g_CurrentTickets {
 			}
 
 			PopulateActiveWindow();
-			PopulateActiveTickets(); //Added to refresh window after update has been made. Will clear email sent flag.
+			//PopulateActiveTickets(); //Added to refresh window after update has been made. Will clear email sent flag.
 			tree_active.getExpandsSelectedPaths();
 			tree_active.setSelectionPath(tpath);
 			tree_active.scrollPathToVisible(tpath);

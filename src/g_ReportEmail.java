@@ -220,7 +220,8 @@ public class g_ReportEmail {
 			name = EmailList.getModel().getElementAt(i).getName().toString();
 		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
 		       name.compareTo("Jim Robbins") == 0 ||   name.compareTo("Joe Klems") == 0 ||
-		       name.compareTo("Chris Sheedy") == 0 || name.compareTo("Butane Support") == 0)
+		       name.compareTo("Chris Sheedy") == 0 || name.compareTo("Butane Support") == 0 ||
+		       name.compareTo("James McClintock") == 0)
 		    {
 		    	addRecipients(i);
 		    	i--;

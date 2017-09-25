@@ -71,7 +71,7 @@ public class c_SyncForOnlineMode {
 						{
 							ccNotified = "\'" + rs.getString("CCNotified") + "\'"; 
 						}
-						UpdateQuery = "UPDATE SupportTickets SET Assigned = '" + rs.getString("Assigned") + "', Status= '" + rs.getString("Status") + "', Resolution= '" + clean_res + "', Internal= '" + clean_internal + "', Active= '" + rs.getString("Active") + "', EmailSent = '" + rs.getString("EmailSent") + "', UpdateDate = '" + rs.getString("UpdateDate") + "', TimeSpent = '" + rs.getString("TimeSpent") + "', CCNotified = " + ccNotified + " WHERE Ticket = '" + rs.getString("Ticket") + "'";
+						UpdateQuery = "UPDATE SupportTickets SET Assigned = '" + rs.getString("Assigned") + "', Status= '" + rs.getString("Status") + "', Resolution= '" + clean_res + "', Internal= '" + clean_internal + "', Active= '" + rs.getBoolean("Active") + "', EmailSent = '" + rs.getBoolean("EmailSent") + "', UpdateDate = '" + rs.getString("UpdateDate") + "', TimeSpent = '" + rs.getString("TimeSpent") + "', CCNotified = " + ccNotified + " WHERE Ticket = '" + rs.getString("Ticket") + "'";
 						
 						c_Query.ExecuteQuery(UpdateQuery);
 					}
@@ -106,9 +106,9 @@ public class c_SyncForOnlineMode {
 						clean_res = c_CleanString.Clean_String(rs.getString("Resolution"));
 						clean_internal = c_CleanString.Clean_String(rs.getString("Internal"));
 						commandText2 = "INSERT INTO SupportTickets(Client,Site,Category,Ticket,EnteredDate,Description,Assigned,Status,Resolution,Internal,Active,EmailSent,UpdateDate,TimeSpent,CCNotified) VALUES"
-							+ "('" + rs.getString("Client") + "','" + rs.getString("Site") + "','" + rs.getString("Category") + "','" + rs.getString("Ticket") + "','" + EnteredDate + "','"  + rs.getString("Description") + "','" + rs.getString("Assigned") + "','" + rs.getString("Status") + "','" + rs.getString("Resolution") + "','" + rs.getString("Internal") + "','" + rs.getString("Active") + "','" + rs.getString("EmailSent") + "','" + rs.getString("UpdateDate") + "','" + rs.getString("TimeSpent") + "'," + ccNotified + ")";
+							+ "('" + rs.getString("Client") + "','" + rs.getString("Site") + "','" + rs.getString("Category") + "','" + rs.getString("Ticket") + "','" + EnteredDate + "','"  + rs.getString("Description") + "','" + rs.getString("Assigned") + "','" + rs.getString("Status") + "','" + rs.getString("Resolution") + "','" + rs.getString("Internal") + "','" + rs.getBoolean("Active") + "','" + rs.getBoolean("EmailSent") + "','" + rs.getString("UpdateDate") + "','" + rs.getString("TimeSpent") + "'," + ccNotified + ")";
 						c_Query.ExecuteQuery(commandText2);
-						System.out.println(commandText2);
+						
 					}
 					catch(Exception e2)
 					{
@@ -120,7 +120,7 @@ public class c_SyncForOnlineMode {
 			}
 			
 		}
-		catch (Exception e) //Ticket does not exist in online database.
+		catch (Exception e) 
 		{
 			e.printStackTrace();
 

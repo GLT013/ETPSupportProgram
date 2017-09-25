@@ -15,6 +15,9 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import javax.swing.JTextField;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -272,8 +275,10 @@ public class g_TicketEntry {
 		int testMonth = datePicker.getModel().getMonth();
 		testMonth++;
 		int testDay = datePicker.getModel().getDay();			
-		int testYear = datePicker.getModel().getYear(); 
-		String strDate = testYear + "-" + testMonth + "-" + testDay;
+		int testYear = datePicker.getModel().getYear();
+		
+
+		String strDate = testYear + "-" + testMonth + "-" + testDay + " " + LocalTime.now().toString();
 		String TicketNum = txt_TicketNum.getText();
 		
 		/*
