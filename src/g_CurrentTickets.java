@@ -48,6 +48,7 @@ import javax.swing.JCheckBox;
 import java.awt.Toolkit;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.JTabbedPane;
 /* http://stackoverflow.com/questions/16157529/how-do-i-pass-objects-between-classes */
 public class g_CurrentTickets {
 
@@ -91,10 +92,14 @@ public class g_CurrentTickets {
 	private int DevIP; 
 	private int iDracIP;
 	private int hostIP; 
+	private String client;
+	private String site;
+	private int siteid;
 	private boolean highperformance;
 	private static JCheckBox chckbxCcNotified;
 	private static String CCNotified;
 	private static boolean CCNotifiedState = false;
+	
 	
 
 	
@@ -174,13 +179,13 @@ public class g_CurrentTickets {
 		panel_1.add(lbl_ClientSite);
 		
 		lbl_Ticket = new JLabel("(Ticket #)");
-		lbl_Ticket.setBounds(572, 11, 86, 20);
+		lbl_Ticket.setBounds(544, 11, 114, 20);
 		lbl_Ticket.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
 		panel_1.add(lbl_Ticket);
 		
 		lbl_Assigned = new JLabel("");
 		lbl_Assigned.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		lbl_Assigned.setBounds(25, 687, 134, 20);
+		lbl_Assigned.setBounds(25, 687, 231, 20);
 		panel_1.add(lbl_Assigned);
 		
 		btnSave = new JButton("Update");
@@ -406,6 +411,7 @@ public class g_CurrentTickets {
 		panel_Update.add(lblhours);
 		
 		JButton btn_SiteData = new JButton("Site Data");
+		btn_SiteData.setEnabled(false);
 		btn_SiteData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//ViewSiteData();
@@ -602,6 +608,72 @@ public class g_CurrentTickets {
 		lblHost.setBounds(275, 34, 32, 14);
 		panel_2.add(lblHost);
 		
+		btnSearch = new JButton("");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ReactivateTicket();			    
+			}
+			
+		});
+		btnSearch.setBounds(350, 3, 32, 32);
+		panel_2.add(btnSearch);
+		btnSearch.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/file.png")));
+		btnSearch.setToolTipText("Reactivate Ticket");
+		
+		JLabel lblTicketLookup = new JLabel("Archive Activation");
+		lblTicketLookup.setBounds(325, 34, 98, 14);
+		panel_2.add(lblTicketLookup);
+		
+		JButton button = new JButton("");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				if (client.compareTo("Kinder Morgan") == 0 || client.compareTo("Phillips 66") == 0 ||
+					client.compareTo("Motiva") == 0 || client.compareTo("Chevron") == 0 ||
+					client.compareTo("Caljet") == 0 || client.compareTo("Shell") == 0 ||
+					client.compareTo("Sinclair") == 0 || client.compareTo("Cummins") == 0)
+				{
+					//JOptionPane.showMessageDialog(null, "Phone #281-637-6472");
+					int reply = JOptionPane.showConfirmDialog(null, "Phone #281-637-6472 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
+			        if (reply == JOptionPane.YES_OPTION)
+			        {
+			        	try {
+
+							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 19134064092"});
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+			        }
+			        
+				}
+				else
+				{
+					int reply = JOptionPane.showConfirmDialog(null, "Phone #281-637-6473 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
+			        if (reply == JOptionPane.YES_OPTION)
+			        {
+			        	try {
+
+							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 19134064092"});
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+			        }
+				}
+				
+				
+				
+			}
+		});
+		button.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/telephone.png")));
+		button.setToolTipText("Call CC");
+		button.setBounds(447, 3, 32, 32);
+		panel_2.add(button);
+		
+		JLabel lblControlCenter = new JLabel("Control Center");
+		lblControlCenter.setBounds(425, 34, 79, 14);
+		panel_2.add(lblControlCenter);
+		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_3.setBounds(10, 497, 248, 304);
@@ -640,13 +712,26 @@ public class g_CurrentTickets {
 				PopulateActiveWindow();
 				PopulateActiveTickets();
 				PopulateRecentTickets();
-				
 			}
 		});
 		btnRefresh.setBounds(203, 803, 50, 42);
 		frmCurrentTickets.getContentPane().add(btnRefresh);
 		btnRefresh.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/reload.png")));
 		btnRefresh.setToolTipText("Refresh");
+		
+		btnTicketAdd = new JButton("");
+		btnTicketAdd.setBackground(Color.LIGHT_GRAY);
+		btnTicketAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				g_MainMenu.CurrentTicketsNav = true;
+				g_TicketEntry.run();
+				frmCurrentTickets.dispose();
+			}
+		});
+		btnTicketAdd.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/document.png")));
+		btnTicketAdd.setToolTipText("Add Ticket");
+		btnTicketAdd.setBounds(120, 803, 50, 42);
+		frmCurrentTickets.getContentPane().add(btnTicketAdd);
 	}
 	
 	int tmp2[];
@@ -656,6 +741,75 @@ public class g_CurrentTickets {
 	private JScrollPane scrollPane_3;
 	private JPanel panel;
 	private JScrollPane scrollPane_4;
+	private JButton btnSearch;
+	private JButton btnTicketAdd;
+	
+	private void ReactivateTicket()
+	{
+		boolean success = true;
+		JFrame frame = new JFrame("Ticket Reactivation");
+	    String TicketNum = JOptionPane.showInputDialog(
+	        frame, 
+	        "Enter ticket number to be reactivated. (X-XXXXX)", 
+	        "Ticket Reactivation", 
+	        JOptionPane.QUESTION_MESSAGE);			    
+	    if(TicketNum.isEmpty())
+        {
+        	return;
+        }	
+	    else
+	    {
+	    String TicketCheck = "SELECT COUNT(*) as Total FROM SupportTickets WHERE Ticket = '" + TicketNum + "'";
+		 ResultSet rs = c_Query.ExecuteResultSet(TicketCheck);
+		 int count = 0;
+	        try {
+				while((rs!=null) && (rs.next()))
+				{					
+					count = rs.getInt("Total");
+					
+				}
+			} catch (SQLException e) {
+			}
+	        try {
+				rs.close();
+			} catch (SQLException e) {
+			
+			}
+	        		        
+	        if(count <= 0)
+	        {
+	        	JOptionPane.showMessageDialog(null, "Ticket Number Not Found.");
+				return;	        	
+	        }
+	        else
+	        {
+			    String TicketUpdate = "UPDATE SupportTickets SET Active = 1, EmailSent = 0, Status = 'Investigating' WHERE Ticket =  '" + TicketNum + "'";
+			    try
+			    {
+			    c_Query.ExecuteQuery(TicketUpdate);			 
+			    }
+			    catch(Exception e)
+			    {
+			    	success = false;
+			    	System.out.println(e.toString());
+			    }
+			    if(success)
+			    {
+				    JOptionPane.showMessageDialog(null, "Ticket #" + TicketNum + " has been reactivated.");
+				    PopulateActiveWindow();
+					PopulateActiveTickets();
+					PopulateRecentTickets();
+			    }
+			    else
+			    {
+			    	JOptionPane.showMessageDialog(null, "There was an error reactivating ticket..");
+			    }
+	        }
+	    }
+	    
+	}
+	
+	
 	
 	private void GetCheckboxes()
 	{
@@ -698,6 +852,13 @@ public class g_CurrentTickets {
 	
 	}
 	
+	public void RefreshAll()
+	{
+		PopulateActiveWindow();
+		PopulateActiveTickets();
+		PopulateRecentTickets();
+	}
+	
 
 	private void PopulateActiveWindow()
 	{		
@@ -720,12 +881,12 @@ public class g_CurrentTickets {
 		
 		if(!g_MainMenu.offlineMode)
 		{
-		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.rowID "
+		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		}
 		else
 		{
-			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, b.UpdateDate, b.CCNotified, b.Resolution, b.rowID "
+			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, b.UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.rowID "
 					+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		}
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -734,8 +895,10 @@ public class g_CurrentTickets {
 		{
 			while((rs!=null) && (rs.next()))
 			{
-				
-				lbl_ClientSite.setText(rs.getString("Client") + " " + rs.getString("Site") + " (" + rs.getInt("SiteID") + ")");
+				client = rs.getString("Client");
+				site = rs.getString("Site");
+				siteid = rs.getInt("SiteID");
+				lbl_ClientSite.setText(client + " " + site + " (" + siteid + ")");
 				siteID = rs.getString("SiteID");
 				viewIP = rs.getInt("ViewIP");
 				SQLIP = rs.getInt("SQLIP");
@@ -743,7 +906,7 @@ public class g_CurrentTickets {
 				iDracIP = rs.getInt("iDracIP");
 				hostIP = rs.getInt("HostIP");
 				highperformance = rs.getBoolean("HighPerformance");
-
+				
 				lbl_Ticket.setText("(#" + rs.getString("Ticket") + ")");
 				lbl_Assigned.setText(rs.getString("Assigned"));
 				
@@ -779,6 +942,7 @@ public class g_CurrentTickets {
 				txt_Issue.setText(rs.getString("Description"));
 				txt_Update.setText(rs.getString("Resolution"));
 				txt_Internal.setText(rs.getString("Internal"));
+				txt_TimeSpent.setText(rs.getString("TimeSpent"));
 				lbl_UpdateDate.setText(rs.getString("UpdateDate"));
 				
 				
@@ -1091,22 +1255,22 @@ public class g_CurrentTickets {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == true && CCCompilation == false)
 		 {
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0 WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == false && CCCompilation == true)
 		 {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
-			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else
 		 {
-			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0 WHERE rowID = " + rowID;
+			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 
 			c_Query.UpdateResultSet(commandText);
@@ -1186,24 +1350,24 @@ public class g_CurrentTickets {
 		 if(cb_Assigned.isVisible() == true && CCCompilation == true)
 		 {
 			 Date CCdate = new Date();
-			 String ccDateTime = dateFormat.format(CCdate);
+			 String ccDateTime = dateFormat.format(CCdate);			 
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == true && CCCompilation == false)
 		 {
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0 WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == false && CCCompilation == true)
 		 {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
-			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else
 		 {
-			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0 WHERE rowID = " + rowID;
+			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 
 			c_Query.UpdateResultSet(commandText);
@@ -1252,7 +1416,7 @@ public class g_CurrentTickets {
 			tree_active.getExpandsSelectedPaths();
 			tree_active.setSelectionPath(tpath);
 			tree_active.scrollPathToVisible(tpath);
-			//System.out.println(tpath);
+
 			
 			//tree_active.setSelectionPath((TreePath) selectedNode.getUserObject());
 

@@ -210,6 +210,24 @@ public class g_ReportEmail {
 		});
 		btnBack.setBounds(10, 834, 89, 23);
 		frmReportEmail.getContentPane().add(btnBack);
+		
+		JButton btnDayShift = new JButton("Day Shift");
+		btnDayShift.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				PopulateDayShiftEmails();
+			}
+		});
+		btnDayShift.setBounds(325, 823, 89, 23);
+		frmReportEmail.getContentPane().add(btnDayShift);
+		
+		JButton btnOffHours = new JButton("Off Hours");
+		btnOffHours.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PopulateOffHourEmails();
+			}
+		});
+		btnOffHours.setBounds(430, 823, 89, 23);
+		frmReportEmail.getContentPane().add(btnOffHours);
 	}
 	
 	private void PopulateDefaultEmails()
@@ -218,9 +236,41 @@ public class g_ReportEmail {
 		for(int i=0; i < EmailList.getModel().getSize(); i++)
 		{
 			name = EmailList.getModel().getElementAt(i).getName().toString();
+		    if(name.compareTo("Butane Support") == 0)
+		    {
+		    	addRecipients(i);
+		    	i--;
+		    }
+		}
+	}
+	
+	private void PopulateOffHourEmails()
+	{
+		String name = "";
+		for(int i=0; i < EmailList.getModel().getSize(); i++)
+		{
+			name = EmailList.getModel().getElementAt(i).getName().toString();
 		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
-		       name.compareTo("Jim Robbins") == 0 ||   name.compareTo("Joe Klems") == 0 ||
-		       name.compareTo("Chris Sheedy") == 0 || name.compareTo("Butane Support") == 0 ||
+		       name.compareTo("James Waymire") == 0 ||   name.compareTo("Joe Klems") == 0 ||
+		       name.compareTo("Chris Sheedy") == 0 || name.compareTo("Sean McCausland") == 0 ||
+		       name.compareTo("James McClintock") == 0 || name.compareTo("James Banks") == 0 ||
+		       name.compareTo("Elizabeth Parzanese") == 0)
+		    {
+		    	addRecipients(i);
+		    	i--;
+		    }
+		}
+	}
+	
+	
+	private void PopulateDayShiftEmails()
+	{
+		String name = "";
+		for(int i=0; i < EmailList.getModel().getSize(); i++)
+		{
+			name = EmailList.getModel().getElementAt(i).getName().toString();
+		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
+		       name.compareTo("Joe Klems") == 0 ||  name.compareTo("Chris Sheedy") == 0 || 
 		       name.compareTo("James McClintock") == 0)
 		    {
 		    	addRecipients(i);
@@ -329,6 +379,7 @@ public class g_ReportEmail {
 		
 		for(int i = 0; i < TicketList.size(); i++)
 		{
+			boolean ccnotified = true;
 			String update = "Update SupportTickets SET EmailSent = 1 WHERE Ticket = '" + TicketList.get(i) +"'";
 			c_Query.ExecuteQuery(update);
 			String commandText = "SELECT Client,Site,Ticket,Description,Status,Resolution,UpdateDate,TimeSpent,CCNotified FROM SupportTickets WHERE Ticket = '" + TicketList.get(i) +"'";
@@ -376,10 +427,9 @@ public class g_ReportEmail {
 					{
 						if(!g_MainMenu.offlineMode)
 						{
-
-							ccNotifiedTime = rs.getTimestamp("CCNotified");
-							ccNotifiedTime.setHours(TOC.getHours()+1); //Update to Eastern Time Zone.
-							ccNotifiedTime_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(ccNotifiedTime);							
+							ccNotifiedTime = rs.getTimestamp("CCNotified");							
+							ccNotifiedTime.setHours(ccNotifiedTime.getHours()+1); //Update to Eastern Time Zone.
+							ccNotifiedTime_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(ccNotifiedTime) + " EST.";
 						}
 						else
 						{
@@ -396,21 +446,22 @@ public class g_ReportEmail {
 							cal.setTime(date);							
 							cal.add(Calendar.HOUR_OF_DAY, 1); //Update to Eastern Time Zone		
 							SimpleDateFormat tmpFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm"); //Used to convert date format to email format.
-							ccNotifiedTime_Formatted = tmpFormat.format(cal.getTime()) + " EST.";//Format to appropriate date format.						
-							
-							
+							ccNotifiedTime_Formatted = tmpFormat.format(cal.getTime()) + " EST.";//Format to appropriate date format.													
 						}
 						
 					}
 					else
 					{
 						ccNotifiedTime_Formatted = "N/A";
+						ccnotified = false;
 					}
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			if(ccnotified)
+			{
 			
 			SupportEmail = SupportEmail + "<u>" + client + " " + site + " " + " #" + ticketnumber + ":" + "</u> <br />" +
 									"<b>Issue: </b>" + issue + "<br />" +
@@ -419,7 +470,19 @@ public class g_ReportEmail {
 									"<b>Time of Completion: </b>" + TOC_Formatted + " EST.<br />" +
 									"<b>Duration: </b>" + duration + " hours. <br />" + 
 									"<b>CCNotified: </b>" + ccNotifiedTime_Formatted + " <br /><br />";
+			}
+			else
+			{
+				SupportEmail = SupportEmail + "<u>" + client + " " + site + " " + " #" + ticketnumber + ":" + "</u> <br />" +
+						"<b>Issue: </b>" + issue + "<br />" +
+						"<b>Investigation: </b>" + investigation + "<br />" +
+						"<b>Status: </b> " + status +"<br />" +
+						"<b>Time of Completion: </b>" + TOC_Formatted + " EST.<br />" +
+						"<b>Duration: </b>" + duration + " hours. <br /> <br />"; 		
+			}
+				
 		}
+		
 		
 		SupportEmail = SupportEmail + "</html>";
 		

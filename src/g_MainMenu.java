@@ -1,6 +1,12 @@
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -8,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Properties;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -25,7 +32,7 @@ import java.awt.Toolkit;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 2.00;
+	public static double version = 2.01;
 	public static boolean firstrun = true;
 	public static boolean offlineMode = false;
 	public static File SQLiteDB = new File("C:\\\\Support Program\\\\ETPSupport.db");
@@ -35,6 +42,9 @@ public class g_MainMenu {
 	private static JLabel lbl_Offline;
 	public static String TitleOnline = "Automated Support Program v" + version + "";
 	public static String TitleOffline = "Automated Support Program v" + version + " - OFFLINE";
+	public static boolean CurrentTicketsNav;
+	public static String CurrentUser = "";
+	private static JLabel lblHello;
 
 	/**
 	 * Launch the application.
@@ -81,16 +91,16 @@ public class g_MainMenu {
 				if(!checkVersion())
 				{
 					JOptionPane.showMessageDialog(null, "There is a newer version of the program located on the I Drive!");
-					return;
-				}
-				else
-				{
+					//return;
+				}				
 					@SuppressWarnings("unused")
 					g_MainMenu window = new g_MainMenu();
-					g_MainMenu.frmMainMenu.setVisible(true);
+					g_MainMenu.frmMainMenu.setVisible(true);					
 					firstrun = false;
-				}
-				
+					CurrentUser = c_GetComputerName.getComputerName();
+					lblHello.setText("Hello " + CurrentUser + "!");
+					
+								
 			}
 		});
 	}
@@ -156,7 +166,7 @@ public class g_MainMenu {
 		frmMainMenu = new JFrame();
 		frmMainMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(g_MainMenu.class.getResource("/icon.png")));
 		frmMainMenu.setTitle("Main Menu");
-		frmMainMenu.setBounds(0,0,410, 610);
+		frmMainMenu.setBounds(0,0,410, 642);
 		frmMainMenu.setResizable(false);
 		frmMainMenu.setLocationRelativeTo(null);
 		frmMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -169,10 +179,10 @@ public class g_MainMenu {
 		{
 			frmMainMenu.setTitle(TitleOnline);
 		}
-		System.out.println(LocalTime.now());
+		
 		//Quick Lookup Button
 		JButton btnQuickLookup = new JButton("Support Archive");
-		btnQuickLookup.setBounds(106, 172, 187, 54);
+		btnQuickLookup.setBounds(106, 208, 187, 54);
 		frmMainMenu.getContentPane().add(btnQuickLookup);
 		btnQuickLookup.addActionListener(new ActionListener() {
 			@Override
@@ -188,7 +198,7 @@ public class g_MainMenu {
 		JLabel lblV = new JLabel("");
 		lblV.setText("v " + version);
 		lblV.setHorizontalAlignment(SwingConstants.CENTER);
-		lblV.setBounds(340, 536, 54, 14);
+		lblV.setBounds(340, 572, 54, 14);
 		frmMainMenu.getContentPane().add(lblV);
 		
 		JButton btnCurrentTickets = new JButton("Current Tickets");
@@ -198,17 +208,18 @@ public class g_MainMenu {
 				frmMainMenu.dispose();
 			}
 		});
-		btnCurrentTickets.setBounds(106, 90, 187, 54);
+		btnCurrentTickets.setBounds(106, 126, 187, 54);
 		frmMainMenu.getContentPane().add(btnCurrentTickets);
 		
 		JButton btnNewTicket = new JButton("New Ticket");
 		btnNewTicket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				CurrentTicketsNav = false;
 				g_TicketEntry.run();
 				frmMainMenu.dispose();
 			}
 		});
-		btnNewTicket.setBounds(106, 11, 187, 54);
+		btnNewTicket.setBounds(106, 47, 187, 54);
 		frmMainMenu.getContentPane().add(btnNewTicket);
 		
 		JButton btnViewEmployees = new JButton("EN Employees");
@@ -218,7 +229,7 @@ public class g_MainMenu {
 				frmMainMenu.dispose();
 			}
 		});
-		btnViewEmployees.setBounds(106, 247, 187, 54);
+		btnViewEmployees.setBounds(106, 283, 187, 54);
 		frmMainMenu.getContentPane().add(btnViewEmployees);
 		
 		JButton btnSunocoContacts = new JButton("Sunoco Contacts");
@@ -228,7 +239,7 @@ public class g_MainMenu {
 				frmMainMenu.dispose();
 			}
 		});
-		btnSunocoContacts.setBounds(106, 326, 187, 54);
+		btnSunocoContacts.setBounds(106, 362, 187, 54);
 		frmMainMenu.getContentPane().add(btnSunocoContacts);
 		
 		JButton btnSites = new JButton("Butane Sites");
@@ -238,7 +249,7 @@ public class g_MainMenu {
 				frmMainMenu.dispose();
 			}
 		});
-		btnSites.setBounds(106, 407, 187, 54);
+		btnSites.setBounds(106, 443, 187, 54);
 		frmMainMenu.getContentPane().add(btnSites);
 		
 		btnSyncForOffline = new JButton("Sync For Offline Mode");
@@ -248,16 +259,22 @@ public class g_MainMenu {
 				GoOffline();
 			}
 		});
-		btnSyncForOffline.setBounds(106, 496, 187, 54);
+		btnSyncForOffline.setBounds(106, 532, 187, 54);
 		frmMainMenu.getContentPane().add(btnSyncForOffline);
 		
 		lbl_Offline = new JLabel("Offline!");
 		lbl_Offline.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lbl_Offline.setForeground(Color.RED);
 		lbl_Offline.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_Offline.setBounds(10, 536, 54, 14);
+		lbl_Offline.setBounds(10, 572, 54, 14);
 		lbl_Offline.setVisible(false);
 		frmMainMenu.getContentPane().add(lbl_Offline);
+		
+		lblHello = new JLabel("Hello Travis Johnston!");
+		lblHello.setHorizontalAlignment(SwingConstants.CENTER);
+		lblHello.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblHello.setBounds(10, 11, 384, 25);
+		frmMainMenu.getContentPane().add(lblHello);
 		if(offlineMode)
 		{
 			btnSyncForOffline.setEnabled(false);

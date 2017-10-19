@@ -36,5 +36,7 @@
 	<classpathentry kind="lib" path="img_jars/reload.jar"/>
 	<classpathentry kind="lib" path="References/sqlite-jdbc-3.20.0.jar"/>
 	<classpathentry kind="lib" path="img_jars/icon.jar"/>
+	<classpathentry kind="lib" path="img_jars/document2.jar"/>
+	<classpathentry kind="lib" path="img_jars/telephone.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

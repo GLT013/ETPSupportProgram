@@ -143,7 +143,7 @@ public class g_ViewSunoco {
 			public void actionPerformed(ActionEvent arg0) {		
 				if(g_MainMenu.offlineMode)
 				{
-					JOptionPane.showMessageDialog(null, "If you could go ahead and go online for edits, that'd be great.");
+					//JOptionPane.showMessageDialog(null, "If you could go ahead and go online for edits, that'd be great.");
 					String err = c_EasterEggs.EasterEggs();					
 					JOptionPane.showMessageDialog(null, err);
 					return;

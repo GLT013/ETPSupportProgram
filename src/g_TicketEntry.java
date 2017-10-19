@@ -44,8 +44,6 @@ public class g_TicketEntry {
 	private JDatePanelImpl datePanel; 
 	private JDatePickerImpl datePicker;
 
-	
-
 			public static void run() {			
 				try {	
 					new g_TicketEntry();
@@ -154,9 +152,16 @@ public class g_TicketEntry {
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_MainMenu.run(frmTicketEntry);
-				frmTicketEntry.dispose();
-				
+				if(g_MainMenu.CurrentTicketsNav)
+				{
+					g_CurrentTickets.run();
+					frmTicketEntry.dispose();
+				}
+				else
+				{
+					g_MainMenu.run(frmTicketEntry);
+					frmTicketEntry.dispose();
+				}
 			}
 		});
 		btnBack.setBounds(32, 489, 107, 23);
@@ -321,7 +326,7 @@ public class g_TicketEntry {
 		
 		
 		if(Assigned.compareTo("") == 0){
-			Assigned = "Unassigned";
+			Assigned = g_MainMenu.CurrentUser;
 		}
 		
 		if(TicketNum.compareTo("") == 0){
@@ -356,24 +361,38 @@ public class g_TicketEntry {
 		
 		
 		c_Query.UpdateResultSet(commandText);
-		SendEmail(Assigned, Client, Site, TicketNum, Description);
+		//SendEmail(Assigned, Client, Site, TicketNum, Description);
 		JOptionPane.showMessageDialog(null, "Ticket # " + TicketNum + " entered successfully");	
-		g_MainMenu.run(frmTicketEntry);
-		frmTicketEntry.dispose();
+		if(g_MainMenu.CurrentTicketsNav)
+		{
+			g_CurrentTickets.run();
+			frmTicketEntry.dispose();
+		}
+		else
+		{
+			g_MainMenu.run(frmTicketEntry);
+			frmTicketEntry.dispose();
+		}
 	}
 	
 	
 	 public static void SendEmail(String Assigned, String Client, String Site, String Ticket, String Description){  
-		 final String username = "ENE.TJOHNSTON@gmail.com";
-			final String password = "Butane#Ops";
+		 //final String username = "ENE.TJOHNSTON@gmail.com";
+		 final String username = "butane.support@enengineering.com";
+			//final String password = "Butane#Ops";
+		 final String password = "Sunoco2017$";
 
 
 			Properties props = new Properties();
-			props.put("mail.smtp.auth", "true");
+			/*props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.starttls.enable", "true");
 			props.put("mail.smtp.host", "smtp.gmail.com");
 			props.put("mail.smtp.port", "587");
-
+			 */
+			props.put("mail.transport.protocol", "smtp");
+			props.put("mail.smtp.host", "mail.enengineering.com");
+			props.put("mail.smtp.port", "2525");
+			props.put("mail.smtp.auth", "true");
 			Session session = Session.getInstance(props,
 			  new javax.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
@@ -397,7 +416,8 @@ public class g_TicketEntry {
 			try {
 
 				Message message = new MimeMessage(session);
-				message.setFrom(new InternetAddress("travisreidjohnston@gmail.com"));
+				//message.setFrom(new InternetAddress("travisreidjohnston@gmail.com"));
+				message.setFrom(new InternetAddress("butane.support@enengineering.com"));
 				message.setRecipients(Message.RecipientType.TO,
 					InternetAddress.parse(emailAddr));
 				message.setSubject("New Ticket Assigned: " + Client + " - " + Site + ": #" + Ticket);
