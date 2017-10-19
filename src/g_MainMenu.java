@@ -32,7 +32,7 @@ import java.awt.Toolkit;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 2.01;
+	public static double version = 2.02;
 	public static boolean firstrun = true;
 	public static boolean offlineMode = false;
 	public static File SQLiteDB = new File("C:\\\\Support Program\\\\ETPSupport.db");

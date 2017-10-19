@@ -49,6 +49,9 @@ import java.awt.Toolkit;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.JTabbedPane;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
+import javax.swing.border.BevelBorder;
 /* http://stackoverflow.com/questions/16157529/how-do-i-pass-objects-between-classes */
 public class g_CurrentTickets {
 
@@ -99,6 +102,9 @@ public class g_CurrentTickets {
 	private static JCheckBox chckbxCcNotified;
 	private static String CCNotified;
 	private static boolean CCNotifiedState = false;
+	private static JRadioButton rdbtnAllTickets;
+	private static JRadioButton rdbtnMyTickets;
+	private static JLabel lblLastUpdatedByStr;
 	
 	
 
@@ -144,27 +150,6 @@ public class g_CurrentTickets {
 		frmCurrentTickets.setBounds(100, 100, 964, 895);
 		frmCurrentTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmCurrentTickets.getContentPane().setLayout(null);
-		
-		panel = new JPanel();
-		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel.setBounds(10, 11, 248, 477);
-		frmCurrentTickets.getContentPane().add(panel);
-		panel.setLayout(null);
-		
-		JScrollPane scrollPane_5 = new JScrollPane();
-		scrollPane_5.setBounds(0, 0, 248, 477);
-		panel.add(scrollPane_5);
-		
-		tree_active = new CheckboxTree();
-		scrollPane_5.setViewportView(tree_active);
-		tree_active.getCheckingModel().setCheckingMode(TreeCheckingModel.CheckingMode.PROPAGATE_PRESERVING_CHECK);
-		tree_active.setBackground(Color.WHITE);
-		tree_active.setBorder(UIManager.getBorder("DesktopIcon.border"));
-		tree_active.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
-				PopulateActiveWindow();
-			}
-		});
 	
 
 		JPanel panel_1 = new JPanel();
@@ -335,6 +320,16 @@ public class g_CurrentTickets {
 		scrollPane_2.setViewportView(txt_Internal);
 		txt_Internal.setLineWrap(true);
 		txt_Internal.setWrapStyleWord(true);
+		
+		lblLastUpdatedByStr = new JLabel("Assigned To:");
+		lblLastUpdatedByStr.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lblLastUpdatedByStr.setBounds(499, 275, 134, 20);
+		panel_Internal.add(lblLastUpdatedByStr);
+		
+		JLabel lblLastUpdatedBy = new JLabel("Last Updated By");
+		lblLastUpdatedBy.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lblLastUpdatedBy.setBounds(499, 239, 134, 20);
+		panel_Internal.add(lblLastUpdatedBy);
 		btnFileUpload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -638,7 +633,7 @@ public class g_CurrentTickets {
 			        {
 			        	try {
 
-							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 19134064092"});
+							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 12816376472"});
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -653,7 +648,7 @@ public class g_CurrentTickets {
 			        {
 			        	try {
 
-							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 19134064092"});
+							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 12816376473"});
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -732,6 +727,61 @@ public class g_CurrentTickets {
 		btnTicketAdd.setToolTipText("Add Ticket");
 		btnTicketAdd.setBounds(120, 803, 50, 42);
 		frmCurrentTickets.getContentPane().add(btnTicketAdd);
+		
+		panel = new JPanel();
+		panel.setBounds(10, 34, 248, 454);
+		frmCurrentTickets.getContentPane().add(panel);
+		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel.setLayout(null);
+		
+				JScrollPane scrollPane_5 = new JScrollPane();
+				scrollPane_5.setBounds(0, 0, 248, 477);
+				panel.add(scrollPane_5);
+				
+				tree_active = new CheckboxTree();
+				scrollPane_5.setViewportView(tree_active);
+				tree_active.getCheckingModel().setCheckingMode(TreeCheckingModel.CheckingMode.PROPAGATE_PRESERVING_CHECK);
+				tree_active.setBackground(Color.WHITE);
+				tree_active.setBorder(UIManager.getBorder("DesktopIcon.border"));
+				
+				JPanel panel_4 = new JPanel();
+				panel_4.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+				panel_4.setBackground(Color.WHITE);
+				panel_4.setBounds(10, 11, 248, 23);
+				frmCurrentTickets.getContentPane().add(panel_4);
+				panel_4.setLayout(null);
+				
+				rdbtnAllTickets = new JRadioButton("All Tickets");
+				rdbtnAllTickets.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						PopulateActiveTickets();
+					}
+				});
+				rdbtnAllTickets.setSelected(true);
+				buttonGroup.add(rdbtnAllTickets);
+				rdbtnAllTickets.setBackground(Color.WHITE);
+				rdbtnAllTickets.setBounds(17, 2, 96, 18);
+				panel_4.add(rdbtnAllTickets);
+				
+				rdbtnMyTickets = new JRadioButton("My Tickets");
+				rdbtnMyTickets.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						PopulateActiveTickets();
+					}
+				});
+				buttonGroup.add(rdbtnMyTickets);
+				rdbtnMyTickets.setBackground(Color.WHITE);
+				rdbtnMyTickets.setBounds(125, 3, 96, 15);
+				panel_4.add(rdbtnMyTickets);
+				
+				
+				
+				
+		tree_active.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent e) {
+				PopulateActiveWindow();
+			}
+		});
 	}
 	
 	int tmp2[];
@@ -743,6 +793,7 @@ public class g_CurrentTickets {
 	private JScrollPane scrollPane_4;
 	private JButton btnSearch;
 	private JButton btnTicketAdd;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
 	private void ReactivateTicket()
 	{
@@ -809,7 +860,10 @@ public class g_CurrentTickets {
 	    
 	}
 	
-	
+	private void ShowMyTickets()
+	{
+		
+	}
 	
 	private void GetCheckboxes()
 	{
@@ -881,12 +935,12 @@ public class g_CurrentTickets {
 		
 		if(!g_MainMenu.offlineMode)
 		{
-		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.rowID "
+		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		}
 		else
 		{
-			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, b.UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.rowID "
+			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, b.UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
 					+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		}
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -944,6 +998,7 @@ public class g_CurrentTickets {
 				txt_Internal.setText(rs.getString("Internal"));
 				txt_TimeSpent.setText(rs.getString("TimeSpent"));
 				lbl_UpdateDate.setText(rs.getString("UpdateDate"));
+				lblLastUpdatedByStr.setText(rs.getString("LastUpdatedBy"));
 				
 				
 				rowID = rs.getInt("rowID");
@@ -1105,51 +1160,101 @@ public class g_CurrentTickets {
 	
 	private void PopulateActiveTickets()
 	{
-		try {
-			
-			tree_active.setModel(new DefaultTreeModel(
-					new DefaultMutableTreeNode("Active Tickets") {
-						private static final long serialVersionUID = 1L;
-						{
-							DefaultMutableTreeNode proj;
-							
-							DefaultMutableTreeNode projnum;
-							String commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status != 'Complete' ORDER BY Client ASC";
-							ResultSet rs = c_Query.ExecuteResultSet(commandText);
-							
-							while((rs!=null) && (rs.next()))
+		if(rdbtnMyTickets.isSelected())
+		{
+			try {				
+				tree_active.setModel(new DefaultTreeModel(
+						new DefaultMutableTreeNode("Active Tickets") {
+							private static final long serialVersionUID = 1L;
 							{
-								String projectname = rs.getString(1);
-								proj = new DefaultMutableTreeNode(projectname);
-									
-									String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 and Client ='" + projectname + "'";
-									
-									ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
-									boolean emailSent = false;
-									while((rs2!=null) && (rs2.next()))
-									{
-										emailSent = rs2.getBoolean("EmailSent");
+								DefaultMutableTreeNode proj;
+								
+								DefaultMutableTreeNode projnum;
+								String commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status != 'Complete' AND Assigned ='" + g_MainMenu.CurrentUser + "' ORDER BY Client ASC";
+								ResultSet rs = c_Query.ExecuteResultSet(commandText);
+								
+								while((rs!=null) && (rs.next()))
+								{
+									String projectname = rs.getString(1);
+									proj = new DefaultMutableTreeNode(projectname);
 										
-										if(emailSent)
+										String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 AND Assigned ='" + g_MainMenu.CurrentUser + "' and Client ='" + projectname + "'";
+										
+										ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
+										boolean emailSent = false;
+										while((rs2!=null) && (rs2.next()))
 										{
-											projnum = new DefaultMutableTreeNode("<html><div style=background-color:#FF5733;>" + rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")</div></html>");
-										}
-										else
-										{
-											projnum = new DefaultMutableTreeNode(rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")");											
-										}
-																				
-										proj.add(projnum);										
-									}							
-								add(proj);
+											emailSent = rs2.getBoolean("EmailSent");
+											
+											if(emailSent)
+											{
+												projnum = new DefaultMutableTreeNode("<html><div style=background-color:#FF5733;>" + rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")</div></html>");
+											}
+											else
+											{
+												projnum = new DefaultMutableTreeNode(rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")");											
+											}
+																					
+											proj.add(projnum);										
+										}							
+									add(proj);
+								}
 							}
 						}
-					}
-				));
-		} catch (SQLException e) {
+					));
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}	
 			
-			e.printStackTrace();
-		}		
+		}
+		else
+		{
+			try {				
+				tree_active.setModel(new DefaultTreeModel(
+						new DefaultMutableTreeNode("Active Tickets") {
+							private static final long serialVersionUID = 1L;
+							{
+								DefaultMutableTreeNode proj;
+								
+								DefaultMutableTreeNode projnum;
+								String commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status != 'Complete' ORDER BY Client ASC";
+								ResultSet rs = c_Query.ExecuteResultSet(commandText);
+								
+								while((rs!=null) && (rs.next()))
+								{
+									String projectname = rs.getString(1);
+									proj = new DefaultMutableTreeNode(projectname);
+										
+										String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 and Client ='" + projectname + "'";
+										
+										ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
+										boolean emailSent = false;
+										while((rs2!=null) && (rs2.next()))
+										{
+											emailSent = rs2.getBoolean("EmailSent");
+											
+											if(emailSent)
+											{
+												projnum = new DefaultMutableTreeNode("<html><div style=background-color:#FF5733;>" + rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")</div></html>");
+											}
+											else
+											{
+												projnum = new DefaultMutableTreeNode(rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")");											
+											}
+																					
+											proj.add(projnum);										
+										}							
+									add(proj);
+								}
+							}
+						}
+					));
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}	
+		}
 	}
 	
 	
