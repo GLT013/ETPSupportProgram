@@ -24,5 +24,25 @@ public class c_EasterEggs {
 	}
 	
 	
+	public static String Greetings()
+	{
+		
+		Random rand = new Random();
+		int  n = rand.nextInt(6) + 1;
+	
+	 String[] Greetings = new String[20];
+	 Greetings[0] = "Hi";
+	 Greetings[1] = "Hello";
+	 Greetings[2] = "Howdy";
+	 Greetings[3] = "Whats New";
+	 Greetings[4] = "Whats Happenin";
+	 Greetings[5] = "G'day";
+	 Greetings[6] = "Wazzah";
+	 Greetings[7] = "Yo";
+	 
+	 return Greetings[n];
+	}
+	
+	
 
 }

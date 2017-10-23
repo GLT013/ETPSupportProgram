@@ -998,11 +998,8 @@ public class g_CurrentTickets {
 				txt_Internal.setText(rs.getString("Internal"));
 				txt_TimeSpent.setText(rs.getString("TimeSpent"));
 				lbl_UpdateDate.setText(rs.getString("UpdateDate"));
-				lblLastUpdatedByStr.setText(rs.getString("LastUpdatedBy"));
-				
-				
+				lblLastUpdatedByStr.setText(rs.getString("LastUpdatedBy"));								
 				rowID = rs.getInt("rowID");
-
 				tree_closed.clearSelection();
 			}
 		}
@@ -1071,12 +1068,12 @@ public class g_CurrentTickets {
 		String commandText = "";
 		if(!g_MainMenu.offlineMode)
 		{
-		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.rowID "
+		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		}
 		else
 		{
-			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, b.UpdateDate, b.CCNotified, b.Resolution, b.rowID "
+			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, b.UpdateDate, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
 					+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		}
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -1122,6 +1119,7 @@ public class g_CurrentTickets {
 				txt_Update.setText(rs.getString("Resolution"));
 				lbl_UpdateDate.setText(rs.getString("UpdateDate"));
 				txt_Internal.setText(rs.getString("Internal"));
+				lblLastUpdatedByStr.setText(rs.getString("LastUpdatedBy"));		
 				rowID = rs.getInt("rowID");
 				
 			}

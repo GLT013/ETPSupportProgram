@@ -125,7 +125,8 @@ public class c_SyncForOfflineMode {
 				"	[EmailSent] [bit] NULL,\r\n" + 
 				"	[UpdateDate] [text] NULL,\r\n" + 
 				"	[TimeSpent] [text] NULL,\r\n" + 
-				"	[CCNotified] [text] NULL)";
+				"	[CCNotified] [text] NULL,\r\n" +
+				"	[LastUpdatedBy] [text] NULL)";
 		
 		String Version = "CREATE TABLE IF NOT EXISTS [Version](\r\n" + 
 				"	[ID] [nchar](10) NOT NULL UNIQUE,\r\n" + 
@@ -275,19 +276,21 @@ public class c_SyncForOfflineMode {
 		c_Query.SQLiteExecuteQuery(SQLite_Delete);
 		String commandText = "SELECT * From SupportTickets WHERE Active = 1 OR (Active = 0 AND EmailSent = 0)";
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
-		String SQLite_Insert = "INSERT INTO SupportTickets(Client,Site,Category,Ticket,EnteredDate,Description,Assigned,Status,Resolution,Internal,Active,EmailSent,UpdateDate,TimeSpent,CCNotified) VALUES";
+		String SQLite_Insert = "INSERT INTO SupportTickets(Client,Site,Category,Ticket,EnteredDate,Description,Assigned,Status,Resolution,Internal,Active,EmailSent,UpdateDate,TimeSpent,CCNotified,LastUpdatedBy) VALUES";
 		String tmp = "";
 		try
 		{
 			rs.next();
 			String clean_desc = c_CleanString.Clean_String(rs.getString("Description"));
-			String clean_res = c_CleanString.Clean_String(rs.getString("Resolution"));			
-			tmp = "('" + rs.getString("Client") + "','" + rs.getString("Site") + "','" + rs.getString("Category") + "','" + rs.getString("Ticket") + "','" + rs.getTimestamp("EnteredDate") + "','" + clean_desc + "','" + rs.getString("Assigned") + "','" + rs.getString("Status") + "','" + clean_res + "','" + rs.getString("Internal") + "','" + rs.getString("Active") + "','" + rs.getString("EmailSent") + "','" + rs.getTimestamp("UpdateDate") + "','" + rs.getString("TimeSpent") + "','" + rs.getTimestamp("CCNotified") + "')";
+			String clean_res = c_CleanString.Clean_String(rs.getString("Resolution"));	
+			String clean_internal = c_CleanString.Clean_String(rs.getString("Internal"));
+			
+			tmp = "('" + rs.getString("Client") + "','" + rs.getString("Site") + "','" + rs.getString("Category") + "','" + rs.getString("Ticket") + "','" + rs.getTimestamp("EnteredDate") + "','" + clean_desc + "','" + rs.getString("Assigned") + "','" + rs.getString("Status") + "','" + clean_res + "','" + clean_internal + "','" + rs.getString("Active") + "','" + rs.getString("EmailSent") + "','" + rs.getTimestamp("UpdateDate") + "','" + rs.getString("TimeSpent") + "','" + rs.getTimestamp("CCNotified") + "','" + rs.getString("LastUpdatedBy") + "')";
 			while((rs!=null) && (rs.next()))
 			{
 				clean_desc = c_CleanString.Clean_String(rs.getString("Description"));
-				clean_res = c_CleanString.Clean_String(rs.getString("Resolution"));
-				tmp = tmp + ",('" + rs.getString("Client") + "','" + rs.getString("Site") + "','" + rs.getString("Category") + "','" + rs.getString("Ticket") + "','" + rs.getTimestamp("EnteredDate") + "','" + clean_desc + "','" + rs.getString("Assigned") + "','" + rs.getString("Status") + "','" + clean_res + "','" + rs.getString("Internal") + "','" + rs.getString("Active") + "','" + rs.getString("EmailSent") + "','" + rs.getTimestamp("UpdateDate") + "','" + rs.getString("TimeSpent") + "','" + rs.getTimestamp("CCNotified") + "')";
+				clean_res = c_CleanString.Clean_String(rs.getString("Resolution"));				
+				tmp = tmp + ",('" + rs.getString("Client") + "','" + rs.getString("Site") + "','" + rs.getString("Category") + "','" + rs.getString("Ticket") + "','" + rs.getTimestamp("EnteredDate") + "','" + clean_desc + "','" + rs.getString("Assigned") + "','" + rs.getString("Status") + "','" + clean_res + "','" + clean_internal + "','" + rs.getString("Active") + "','" + rs.getString("EmailSent") + "','" + rs.getTimestamp("UpdateDate") + "','" + rs.getString("TimeSpent") + "','" + rs.getTimestamp("CCNotified") + "','" + rs.getString("LastUpdatedBy") + "')";
 			}
 		}
 		catch(Exception e)
@@ -295,8 +298,7 @@ public class c_SyncForOfflineMode {
 			e.printStackTrace();
 		}
 		
-		SQLite_Insert = SQLite_Insert + tmp;
-		
+		SQLite_Insert = SQLite_Insert + tmp;		
 		try
 		{
 			c_Query.SQLiteExecuteQuery(SQLite_Insert);

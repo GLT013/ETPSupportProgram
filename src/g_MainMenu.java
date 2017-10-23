@@ -98,7 +98,8 @@ public class g_MainMenu {
 					g_MainMenu.frmMainMenu.setVisible(true);					
 					firstrun = false;
 					CurrentUser = c_GetComputerName.getComputerName();
-					lblHello.setText("Hello " + CurrentUser + "!");
+					String Greeting = c_EasterEggs.Greetings();
+					lblHello.setText(Greeting + " " + CurrentUser + "!");
 					
 								
 			}
