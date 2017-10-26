@@ -5,6 +5,9 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
@@ -14,9 +17,13 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Toolkit;
 
 public class g_ViewSunoco {
@@ -35,6 +42,7 @@ public class g_ViewSunoco {
 	final ArrayList <c_Employees> result = new ArrayList<c_Employees>();
 	private final JButton btnNewContact = new JButton("");
 	private final JButton btnNewButton = new JButton("Back");
+	private final JButton btnEmail = new JButton("");
 	
 
 	/**
@@ -143,7 +151,6 @@ public class g_ViewSunoco {
 			public void actionPerformed(ActionEvent arg0) {		
 				if(g_MainMenu.offlineMode)
 				{
-					//JOptionPane.showMessageDialog(null, "If you could go ahead and go online for edits, that'd be great.");
 					String err = c_EasterEggs.EasterEggs();					
 					JOptionPane.showMessageDialog(null, err);
 					return;
@@ -193,7 +200,7 @@ public class g_ViewSunoco {
 		
 		frmSunocoContacts.getContentPane().add(btnCancel);
 		
-		JLabel lblSunocoContacts = new JLabel("Sunoco Contacts");
+		JLabel lblSunocoContacts = new JLabel("ETP Contacts");
 		lblSunocoContacts.setForeground(Color.BLUE);
 		lblSunocoContacts.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblSunocoContacts.setBounds(39, 15, 187, 18);
@@ -286,7 +293,52 @@ public class g_ViewSunoco {
 		btnNewButton.setBounds(10, 360, 83, 32);
 		
 		frmSunocoContacts.getContentPane().add(btnNewButton);
+		
+		JButton btnMobile = new JButton("");
+		btnMobile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String getMobile = result.get(list.getSelectedIndex()).getMobile();				
+				String getEmployee = result.get(list.getSelectedIndex()).getName();
+				int reply = JOptionPane.showConfirmDialog(null, "Call " + getEmployee + " Mobile?" , getEmployee + " Mobile Phone #", JOptionPane.YES_NO_OPTION);
+		        if (reply == JOptionPane.YES_OPTION)
+		        {
+		        	try {
+
+						Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 1"+getMobile});
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+		        
+			}
+		});
+		btnMobile.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/telephone.png")));
+		btnMobile.setToolTipText("Mobile Phone");
+		btnMobile.setBounds(762, 215, 36, 36);
+		frmSunocoContacts.getContentPane().add(btnMobile);
+		btnEmail.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/email.png")));
+		btnEmail.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String test = result.get(list.getSelectedIndex()).getEmail();		
+				try {
+					c_Email.mailto(Arrays.asList(test)," ", " ");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnEmail.setToolTipText("Email");
+		btnEmail.setBounds(762, 156, 36, 36);
+		
+		frmSunocoContacts.getContentPane().add(btnEmail);
 	}
+	
+	
 	
 	private void CancelEdits()
 	{

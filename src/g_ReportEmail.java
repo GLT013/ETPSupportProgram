@@ -125,7 +125,7 @@ public class g_ReportEmail {
 				}
 				
 				try {
-					mailto(Arrays.asList(test),date2 + " " + am_pm + " Support Update", "");
+					c_Email.mailto(Arrays.asList(test),date2 + " " + am_pm + " Support Update", "");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -334,34 +334,8 @@ public class g_ReportEmail {
 		EmailListModel2.removeElement(tmp);
 		EmailList.setModel(EmailListModel);
 		EmailList2.setModel(EmailListModel2);		
-	}
-	
-	public static void mailto(List<String> recipients, String subject,
-	        String body) throws IOException, URISyntaxException {
-	    String uriStr = String.format("mailto:%s?subject=%s&body=%s",
-	            join(",", recipients), // use semicolon ";" for Outlook!
-	            urlEncode(subject),
-	            urlEncode(body));
-	    Desktop.getDesktop().browse(new URI(uriStr));
-	}
+	}	
 
-	private static final String urlEncode(String str) {
-	    try {
-	        return URLEncoder.encode(str, "UTF-8").replace("+", "%20");
-	    } catch (UnsupportedEncodingException e) {
-	        throw new RuntimeException(e);
-	    }
-	}
-
-	public static final String join(String sep, Iterable<?> objs) {
-	    StringBuilder sb = new StringBuilder();
-	    for(Object obj : objs) {
-	        if (sb.length() > 0) sb.append(sep);
-	        sb.append(obj);
-	    }
-	    return sb.toString();
-	}
-	
 	public static void GenerateEmailReport(List<String> TicketList )
 	{		
 		c_ConnectToDatabase.Connect();		
@@ -460,26 +434,26 @@ public class g_ReportEmail {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(ccnotified)
-			{
-			
 			SupportEmail = SupportEmail + "<u>" + client + " " + site + " " + " #" + ticketnumber + ":" + "</u> <br />" +
-									"<b>Issue: </b>" + issue + "<br />" +
-									"<b>Investigation: </b>" + investigation + "<br />" +
-									"<b>Status: </b> " + status +"<br />" +
-									"<b>Time of Completion: </b>" + TOC_Formatted + " EST.<br />" +
-									"<b>Duration: </b>" + duration + " hours. <br />" + 
-									"<b>CCNotified: </b>" + ccNotifiedTime_Formatted + " <br /><br />";
+					"<b>Issue: </b>" + issue + "<br />" +
+					"<b>Investigation: </b>" + investigation + "<br />";
+			if(status.compareTo("Complete") != 0)
+			{
+				SupportEmail = SupportEmail + "<b>Status: </b><u><span style='background-color: #FFFF00'>" + status +"</span></u><br />" +
+						"<b>Time of Investigation: </b>" + TOC_Formatted + " EST.<br />" +
+						"<b>Duration: </b>" + duration + " hours. <br />";
 			}
 			else
 			{
-				SupportEmail = SupportEmail + "<u>" + client + " " + site + " " + " #" + ticketnumber + ":" + "</u> <br />" +
-						"<b>Issue: </b>" + issue + "<br />" +
-						"<b>Investigation: </b>" + investigation + "<br />" +
-						"<b>Status: </b> " + status +"<br />" +
-						"<b>Time of Completion: </b>" + TOC_Formatted + " EST.<br />" +
-						"<b>Duration: </b>" + duration + " hours. <br /> <br />"; 		
-			}
+				SupportEmail = SupportEmail + "<b>Status: </b> " + status +"<br />" +
+				"<b>Time of Completion: </b>" + TOC_Formatted + " EST.<br />" + 
+				"<b>Duration: </b>" + duration + " hours. <br />";
+			}		
+			
+			if(ccnotified)
+			{			
+			SupportEmail = SupportEmail + "<b>CCNotified: </b>" + ccNotifiedTime_Formatted + " <br /><br />";
+			}			
 				
 		}
 		

@@ -23,7 +23,7 @@ import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 
 
-public class g_SupportArchive {	
+public class g_SupportArchive_Old {	
 	public static JFrame frmSupportArchive;
 	public static JScrollPane eq2ScrollPane;	
 	public static JList<c_Equipment> eqSiteList;
@@ -50,7 +50,7 @@ public class g_SupportArchive {
 	public static void run() {
 	
 		try {	
-			new g_SupportArchive();
+			new g_SupportArchive_Old();
 			frmSupportArchive.setVisible(true);
 			frmSupportArchive.setLocationRelativeTo(g_MainMenu.frmMainMenu);	
 		
@@ -70,7 +70,7 @@ public class g_SupportArchive {
 	/**
 	 * Create the application.
 	 */
-	public g_SupportArchive() {
+	public g_SupportArchive_Old() {
 		initialize();			
 	}
 	
@@ -488,7 +488,7 @@ public class g_SupportArchive {
 	
 	private void initialize() {
 		frmSupportArchive = new JFrame();
-		frmSupportArchive.setIconImage(Toolkit.getDefaultToolkit().getImage(g_SupportArchive.class.getResource("/icon.png")));
+		frmSupportArchive.setIconImage(Toolkit.getDefaultToolkit().getImage(g_SupportArchive_Old.class.getResource("/icon.png")));
 		frmSupportArchive.setTitle("Support Ticket Lookup");		
 		frmSupportArchive.setSize(710,789);
 		frmSupportArchive.setLocationRelativeTo(null);	
@@ -561,7 +561,7 @@ public class g_SupportArchive {
 		
 
 		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon(g_SupportArchive.class.getResource("/075837-3d-glossy-blue-orb-icon-business-magnifying-glass-ps_48.png")));
+		lblNewLabel_1.setIcon(new ImageIcon(g_SupportArchive_Old.class.getResource("/075837-3d-glossy-blue-orb-icon-business-magnifying-glass-ps_48.png")));
 		lblNewLabel_1.setToolTipText("Search");
 		lblNewLabel_1.setBounds(458, 11, 48, 48);
 		frmSupportArchive.getContentPane().add(lblNewLabel_1);

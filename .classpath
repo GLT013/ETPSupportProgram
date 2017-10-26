@@ -38,5 +38,6 @@
 	<classpathentry kind="lib" path="img_jars/icon.jar"/>
 	<classpathentry kind="lib" path="img_jars/document2.jar"/>
 	<classpathentry kind="lib" path="img_jars/telephone.jar"/>
+	<classpathentry kind="lib" path="img_jars/email.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

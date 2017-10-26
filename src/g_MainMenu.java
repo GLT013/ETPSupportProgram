@@ -32,7 +32,7 @@ import java.awt.Toolkit;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 2.02;
+	public static double version = 2.03;
 	public static boolean firstrun = true;
 	public static boolean offlineMode = false;
 	public static File SQLiteDB = new File("C:\\\\Support Program\\\\ETPSupport.db");
@@ -45,6 +45,7 @@ public class g_MainMenu {
 	public static boolean CurrentTicketsNav;
 	public static String CurrentUser = "";
 	private static JLabel lblHello;
+	private static JButton btnSupportArchive;
 
 	/**
 	 * Launch the application.
@@ -182,13 +183,13 @@ public class g_MainMenu {
 		}
 		
 		//Quick Lookup Button
-		JButton btnQuickLookup = new JButton("Support Archive");
-		btnQuickLookup.setBounds(106, 208, 187, 54);
-		frmMainMenu.getContentPane().add(btnQuickLookup);
-		btnQuickLookup.addActionListener(new ActionListener() {
+		btnSupportArchive = new JButton("Support Archive");
+		btnSupportArchive.setBounds(106, 208, 187, 54);
+		frmMainMenu.getContentPane().add(btnSupportArchive);
+		btnSupportArchive.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				g_SupportArchive.run();
+				g_ArchiveTickets.run();
 				frmMainMenu.dispose();
 								
 			}
@@ -233,7 +234,7 @@ public class g_MainMenu {
 		btnViewEmployees.setBounds(106, 283, 187, 54);
 		frmMainMenu.getContentPane().add(btnViewEmployees);
 		
-		JButton btnSunocoContacts = new JButton("Sunoco Contacts");
+		JButton btnSunocoContacts = new JButton("ETP Contacts");
 		btnSunocoContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				g_ViewSunoco.run();
@@ -327,6 +328,7 @@ public class g_MainMenu {
 	{		
 			offlineMode = true;
 			btnSyncForOffline.setEnabled(false);
+			btnSupportArchive.setEnabled(false);
 			drop_Offline.setEnabled(false);
 			drop_Online.setEnabled(true);
 			lbl_Offline.setVisible(true);
@@ -357,6 +359,7 @@ public class g_MainMenu {
 		        
 			offlineMode = false;
 			btnSyncForOffline.setEnabled(true);
+			btnSupportArchive.setEnabled(true);
 			drop_Offline.setEnabled(true);
 			drop_Online.setEnabled(false);
 			lbl_Offline.setVisible(false);

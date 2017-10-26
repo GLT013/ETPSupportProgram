@@ -5,6 +5,8 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
@@ -14,6 +16,8 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -36,6 +40,7 @@ public class g_ViewEmployees {
 	final ArrayList <c_Employees> result = new ArrayList<c_Employees>();
 	private final JButton btnNewEmployee = new JButton("");
 	private final JButton btnNewButton = new JButton("Back");
+	private final JButton button = new JButton("");
 	
 
 	/**
@@ -88,24 +93,6 @@ public class g_ViewEmployees {
 			 }
 		
 		});
-		/*
-		frame.addWindowListener(new java.awt.event.WindowAdapter() {
-		    @Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		    	int reply = JOptionPane.showConfirmDialog(null, "Upload accepted changes to SQL", "Accept Changes?", JOptionPane.YES_NO_OPTION);
-		        if (reply == JOptionPane.YES_OPTION)
-		        {
-		          	UploadChanges();
-		          	frame.dispose();
-		        }
-		        else
-		        {
-		        	frame.dispose();
-		        }
-		       
-		    }
-		});
-		*/
 		scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		scrollPane.setBounds(36, 40, 194, 241);
@@ -170,8 +157,7 @@ public class g_ViewEmployees {
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {	
 				if(g_MainMenu.offlineMode)
-				{
-					
+				{					
 					String err = c_EasterEggs.EasterEggs();					
 					JOptionPane.showMessageDialog(null, err);	
 					return;
@@ -181,8 +167,7 @@ public class g_ViewEmployees {
 					lblTitle.setEditable(true);
 					lblEmail.setEditable(true);
 					lblOffice.setEditable(true);
-					lblMobile.setEditable(true);				
-				
+					lblMobile.setEditable(true);								
 					btnEdit.setEnabled(false);
 					btnEdit.setVisible(false);
 					btnCancel.setVisible(true);
@@ -311,6 +296,74 @@ public class g_ViewEmployees {
 		btnNewButton.setBounds(10, 360, 83, 32);
 		
 		frmViewEmployees.getContentPane().add(btnNewButton);
+		
+		JButton btnMobilePhone = new JButton("");
+		btnMobilePhone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String getMobile = result.get(list.getSelectedIndex()).getMobile();				
+				String getEmployee = result.get(list.getSelectedIndex()).getName();
+				int reply = JOptionPane.showConfirmDialog(null, "Call " + getEmployee + " Mobile?" , getEmployee + " Mobile Phone #", JOptionPane.YES_NO_OPTION);
+		        if (reply == JOptionPane.YES_OPTION)
+		        {
+		        	try {
+
+						Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 1"+getMobile});
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+		        
+			}
+		});
+		btnMobilePhone.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/telephone.png")));
+		btnMobilePhone.setToolTipText("Mobile Phone");
+		btnMobilePhone.setBounds(765, 247, 36, 36);
+		frmViewEmployees.getContentPane().add(btnMobilePhone);
+		
+		JButton button_1 = new JButton("");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String getOffice = result.get(list.getSelectedIndex()).getOffice();				
+				String getEmployee = result.get(list.getSelectedIndex()).getName();
+				int reply = JOptionPane.showConfirmDialog(null, "Call " + getEmployee + " Office Phone?" , getEmployee + " Office Phone #", JOptionPane.YES_NO_OPTION);
+		        if (reply == JOptionPane.YES_OPTION)
+		        {
+		        	try {
+
+						Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 1"+getOffice});
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+		        
+			}
+			
+		});
+		button_1.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/telephone.png")));
+		button_1.setToolTipText("Office Phone");
+		button_1.setBounds(762, 196, 36, 36);
+		frmViewEmployees.getContentPane().add(button_1);
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String test = result.get(list.getSelectedIndex()).getEmail();		
+				try {
+					c_Email.mailto(Arrays.asList(test)," ", " ");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		button.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/email.png")));
+		button.setToolTipText("Email");
+		button.setBounds(762, 141, 36, 36);
+		
+		frmViewEmployees.getContentPane().add(button);
 	}
 	
 	private void CancelEdits()
@@ -352,9 +405,7 @@ public class g_ViewEmployees {
 		}
 		
 		scrollPane.setViewportView(list);
-
-		list.setModel(listModel);
-		
+		list.setModel(listModel);		
 		list.setSelectedIndex(0);
 		
 	}

@@ -193,7 +193,7 @@ public class g_CurrentTickets {
 		panel_1.add(btnSave);
 		
 		cb_Status = new JComboBox<String>();
-		cb_Status.setModel(new DefaultComboBoxModel<String>(new String[] {"Investigating", "Ongoing", "Ongoing - Need Field Support", "Complete"}));
+		cb_Status.setModel(new DefaultComboBoxModel<String>(new String[] {"Investigating", "Ongoing", "Ongoing - Need Field Support", "Ongoing - Need ETP Approval", "Complete"}));
 		cb_Status.setBounds(266, 693, 191, 28);
 		panel_1.add(cb_Status);
 		
@@ -666,7 +666,7 @@ public class g_CurrentTickets {
 		panel_2.add(button);
 		
 		JLabel lblControlCenter = new JLabel("Control Center");
-		lblControlCenter.setBounds(425, 34, 79, 14);
+		lblControlCenter.setBounds(425, 34, 98, 14);
 		panel_2.add(lblControlCenter);
 		
 		JPanel panel_3 = new JPanel();
@@ -978,9 +978,13 @@ public class g_CurrentTickets {
 				{
 					cb_Status.setSelectedIndex(2);	
 				}
+				else if (Status.compareTo("Ongoing - Need ETP Approval") == 0)
+				{
+					cb_Status.setSelectedIndex(3);	
+				}
 				else if(Status.compareTo("Complete") == 0)
 				{
-					cb_Status.setSelectedIndex(3); 	
+					cb_Status.setSelectedIndex(4); 	
 				}
 				
 				if(rs.getString("CCNotified") == null || (rs.getString("CCNotified").compareTo("null") == 0))
@@ -1120,8 +1124,7 @@ public class g_CurrentTickets {
 				lbl_UpdateDate.setText(rs.getString("UpdateDate"));
 				txt_Internal.setText(rs.getString("Internal"));
 				lblLastUpdatedByStr.setText(rs.getString("LastUpdatedBy"));		
-				rowID = rs.getInt("rowID");
-				
+				rowID = rs.getInt("rowID");				
 			}
 		}
 		catch(Exception e)
