@@ -20,13 +20,15 @@ public class c_GetComputerName {
 	    	ComputerName = "Unknown Computer";
 	    }
 	    
-	    String commandText = "SELECT Name from EN_Employees WHERE Computer = '" + ComputerName + "'";
+	    String commandText = "SELECT Name, Admin from EN_Employees WHERE Computer = '" + ComputerName + "'";
 	    ResultSet rs = c_Query.ExecuteResultSet(commandText);
 	    try{
 
 			while ((rs!=null) && (rs.next()))
 			{
-				  ComputerName = rs.getString("Name");			  
+				  ComputerName = rs.getString("Name");
+				  g_MainMenu.adminMode = rs.getBoolean("Admin");
+				  System.out.println(g_MainMenu.adminMode);
 			}
 		}
 		catch(Exception e)

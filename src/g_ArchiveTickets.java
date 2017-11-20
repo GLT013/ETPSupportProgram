@@ -29,6 +29,8 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JTextField;
+import javax.swing.JTree;
+
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,7 +60,7 @@ import javax.swing.event.ListSelectionEvent;
 public class g_ArchiveTickets {
 
 	public static JFrame frmArchiveTickets;
-	private static CheckboxTree tree_active;
+	private static JTree tree_active;
 	private JLabel lbl_ClientSite;
 	private JLabel lbl_Ticket;
 	private JLabel lbl_Assigned;
@@ -223,11 +225,11 @@ public class g_ArchiveTickets {
 			public void actionPerformed(ActionEvent arg0) {
 				if (JList_FileList.getSelectedIndex() == -1)
 				{
-					JOptionPane.showMessageDialog(null, "No file was selected.");
+					JOptionPane.showMessageDialog(frmArchiveTickets, "No file was selected.");
 				}
 				else if(JList_FileList.getSelectedIndex() > (numFiles-1))
 				{
-					JOptionPane.showMessageDialog(null, "File not found. \n Please verify file has been uploaded by hitting the update button.");
+					JOptionPane.showMessageDialog(frmArchiveTickets, "File not found. \n Please verify file has been uploaded by hitting the update button.");
 				}
 				else
 				{
@@ -238,7 +240,7 @@ public class g_ArchiveTickets {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Could not find file.");
+						JOptionPane.showMessageDialog(frmArchiveTickets, "Could not find file.");
 					}
 				}
 			}
@@ -253,7 +255,7 @@ public class g_ArchiveTickets {
 			public void actionPerformed(ActionEvent arg0) {
 				if (JList_FileList.getSelectedIndex() == -1)
 				{
-					JOptionPane.showMessageDialog(null, "No file was selected.");
+					JOptionPane.showMessageDialog(frmArchiveTickets, "No file was selected.");
 				}
 				else if(JList_FileList.getSelectedIndex() > (numFiles-1))
 				{
@@ -264,7 +266,7 @@ public class g_ArchiveTickets {
 					int index = JList_FileList.getSelectedIndex();
 					String source = fileListModel.getElementAt(index).getFile();
 					String filePath = directory + TicketNum + "_" + source;
-					int reply = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete " + source + "?" , "Delete File", JOptionPane.YES_NO_OPTION);
+					int reply = JOptionPane.showConfirmDialog(frmArchiveTickets, "Are you sure you wish to delete " + source + "?" , "Delete File", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
 			        	String commandText = "DELETE FROM Files WHERE Filename = '" + source + "'";
@@ -272,9 +274,9 @@ public class g_ArchiveTickets {
 				        fileListModel.remove(index);
 				        File file = new File(filePath);
 				        if(file.delete()){
-				        	JOptionPane.showMessageDialog(null, source + " has been deleted.");
+				        	JOptionPane.showMessageDialog(frmArchiveTickets, source + " has been deleted.");
 			    		}else{
-			    			JOptionPane.showMessageDialog(null, "Error deleting file from hard drive");
+			    			JOptionPane.showMessageDialog(frmArchiveTickets, "Error deleting file from hard drive");
 			    		}
 
 				        JList_FileList.removeAll();
@@ -284,7 +286,7 @@ public class g_ArchiveTickets {
 			        }
 			        else
 			        {
-			        	JOptionPane.showMessageDialog(null, "Whew! That was close.");
+			        	JOptionPane.showMessageDialog(frmArchiveTickets, "Whew! That was close.");
 			        }
 				}
 				
@@ -446,8 +448,8 @@ public class g_ArchiveTickets {
 					client.compareTo("Caljet") == 0 || client.compareTo("Shell") == 0 ||
 					client.compareTo("Sinclair") == 0 || client.compareTo("Cummins") == 0)
 				{
-					//JOptionPane.showMessageDialog(null, "Phone #281-637-6472");
-					int reply = JOptionPane.showConfirmDialog(null, "Phone #281-637-6472 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
+
+					int reply = JOptionPane.showConfirmDialog(frmArchiveTickets, "Phone #281-637-6472 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
 			        	try {
@@ -462,7 +464,7 @@ public class g_ArchiveTickets {
 				}
 				else
 				{
-					int reply = JOptionPane.showConfirmDialog(null, "Phone #281-637-6473 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
+					int reply = JOptionPane.showConfirmDialog(frmArchiveTickets, "Phone #281-637-6473 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
 			        	try {
@@ -520,9 +522,9 @@ public class g_ArchiveTickets {
 				scrollPane_5.setBounds(0, 0, 248, 767);
 				panel.add(scrollPane_5);
 				
-				tree_active = new CheckboxTree();
+				tree_active = new JTree();
 				scrollPane_5.setViewportView(tree_active);
-				tree_active.getCheckingModel().setCheckingMode(TreeCheckingModel.CheckingMode.PROPAGATE_PRESERVING_CHECK);
+				//tree_active.getCheckingModel().setCheckingMode(TreeCheckingModel.CheckingMode.PROPAGATE_PRESERVING_CHECK);
 				tree_active.setBackground(Color.WHITE);
 				tree_active.setBorder(UIManager.getBorder("DesktopIcon.border"));
 				
@@ -650,6 +652,29 @@ public class g_ArchiveTickets {
 								txt_TimeSpent.setText(archiveListarr.get(searchList.getSelectedIndex()).getTimeSpent());
 								lbl_UpdateDate.setText(archiveListarr.get(searchList.getSelectedIndex()).getUpdateDate());
 								lblLastUpdatedByStr.setText(archiveListarr.get(searchList.getSelectedIndex()).getLastUpdatedBy());
+																
+								fileListModel = new DefaultListModel<c_Files>();
+								String commandText = "SELECT Filename FROM Files WHERE TicketNum = '" + archiveListarr.get(searchList.getSelectedIndex()).getTicket() + "'";		
+								
+								ResultSet rs = c_Query.ExecuteResultSet(commandText);
+								
+								try
+								{
+									fileListModel.clear();
+									while((rs!=null) && (rs.next()))
+									{
+										c_Files fileName = new c_Files(rs.getString("Filename"));
+										fileListModel.addElement(fileName);
+										
+									}
+								}
+								catch(Exception e)
+								{
+									//do nothing
+								}
+								
+								numFiles = fileListModel.getSize();
+								JList_FileList.setModel(fileListModel);
 							}
 						}
 						catch(Exception e)
@@ -658,8 +683,7 @@ public class g_ArchiveTickets {
 						}
 					}
 				});
-				
-				
+							
 				listModel.removeAllElements();
 				searchList.setModel(listModel);
 				
@@ -687,7 +711,6 @@ public class g_ArchiveTickets {
 		if(rdbtnSearch.isSelected())
 		{
 			panel.setBounds(10, 133, 248, 666);
-			//scrollPane_4.setBounds(0, 0, 248, 340);
 			panel_3.setVisible(true);
 			scrollPane_5.setVisible(false);
 			searchList.setVisible(true);
@@ -758,7 +781,7 @@ public class g_ArchiveTickets {
 		
 		if(filters.compareTo("") == 0)			
 		{			
-			JOptionPane.showMessageDialog(null, "Please select a search criteria.");
+			JOptionPane.showMessageDialog(frmArchiveTickets, "Please select a search criteria.");
 		}
 		else
 		{
@@ -816,7 +839,7 @@ public class g_ArchiveTickets {
 			    {			    
 			    	System.out.println(e.toString());
 			    }			   
-				    JOptionPane.showMessageDialog(null, "Ticket #" + TicketNum + " has been reactivated.");
+				    JOptionPane.showMessageDialog(frmArchiveTickets, "Ticket #" + TicketNum + " has been reactivated.");
 				    PopulateActiveWindow();
 					PopulateActiveTickets();					
 	}
@@ -845,22 +868,26 @@ public class g_ArchiveTickets {
 					//do nothing
 				}
 			
-			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
-					+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
+		//	commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
+		//			+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		}
-		else
+		else if(rdbtnSite.isSelected())
 		{
 			try{
 				String tmp = tree_active.getSelectionPath().getLastPathComponent().toString();									
-				TicketNum = tmp;		
+				TicketNum = tmp;
 				}
 				catch (Exception e)
 				{
 					//do nothing
 				}							
-			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
-					+ "FROM Sites a, SupportTickets b WHERE Ticket = '" + TicketNum + "'";
+		//	commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
+		//			+ "FROM Sites a, SupportTickets b WHERE Ticket = '" + TicketNum + "'";
 		}
+		
+		commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
+				+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
+		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		
 		try
@@ -897,6 +924,7 @@ public class g_ArchiveTickets {
 		fileListModel = new DefaultListModel<c_Files>();
 		
 		commandText = "SELECT Filename FROM Files WHERE TicketNum = '" + TicketNum + "'";		
+		
 		rs = c_Query.ExecuteResultSet(commandText);
 		
 		try
@@ -907,6 +935,7 @@ public class g_ArchiveTickets {
 		{
 			c_Files fileName = new c_Files(rs.getString("Filename"));
 			fileListModel.addElement(fileName);
+			
 		}
 		}
 		catch(Exception e)

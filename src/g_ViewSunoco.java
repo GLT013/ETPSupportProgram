@@ -152,7 +152,7 @@ public class g_ViewSunoco {
 				if(g_MainMenu.offlineMode)
 				{
 					String err = c_EasterEggs.EasterEggs();					
-					JOptionPane.showMessageDialog(null, err);
+					JOptionPane.showMessageDialog(frmSunocoContacts, err);
 					return;
 				}
 				else
@@ -212,20 +212,20 @@ public class g_ViewSunoco {
 				if(g_MainMenu.offlineMode)
 				{
 					String err = c_EasterEggs.EasterEggs();					
-					JOptionPane.showMessageDialog(null, err);
+					JOptionPane.showMessageDialog(frmSunocoContacts, err);
 					return;
 				}
 				else
 				{
 					int index = list.getSelectedIndex();
 					String removalName = result.get(index).getName();				
-					int reply = JOptionPane.showConfirmDialog(null, "Really delete " + removalName + "?" , "Remove Contact?", JOptionPane.YES_NO_OPTION);
+					int reply = JOptionPane.showConfirmDialog(frmSunocoContacts, "Really delete " + removalName + "?" , "Remove Contact?", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
 			          String commandText = "DELETE FROM Sunoco_Contacts WHERE Name = '" + removalName + "'";
 			          c_Query.ExecuteQuery(commandText);
 			          result.remove(index);
-			          JOptionPane.showMessageDialog(null, removalName + " has been deleted. \n You monster.");
+			          JOptionPane.showMessageDialog(frmSunocoContacts, removalName + " has been deleted. \n You monster.");
 			          RefreshList();
 			        }
 			        else
@@ -245,7 +245,7 @@ public class g_ViewSunoco {
 					{
 						
 						String err = c_EasterEggs.EasterEggs();					
-						JOptionPane.showMessageDialog(null, err);
+						JOptionPane.showMessageDialog(frmSunocoContacts, err);
 						return;
 					}
 					else
@@ -299,7 +299,7 @@ public class g_ViewSunoco {
 			public void actionPerformed(ActionEvent arg0) {
 				String getMobile = result.get(list.getSelectedIndex()).getMobile();				
 				String getEmployee = result.get(list.getSelectedIndex()).getName();
-				int reply = JOptionPane.showConfirmDialog(null, "Call " + getEmployee + " Mobile?" , getEmployee + " Mobile Phone #", JOptionPane.YES_NO_OPTION);
+				int reply = JOptionPane.showConfirmDialog(frmSunocoContacts, "Call " + getEmployee + " Mobile?" , getEmployee + " Mobile Phone #", JOptionPane.YES_NO_OPTION);
 		        if (reply == JOptionPane.YES_OPTION)
 		        {
 		        	try {

@@ -321,7 +321,7 @@ public class g_NewSite {
 		
 		if (Client.compareTo("") == 0 || Site.compareTo("") == 0 || SiteID.compareTo("") == 0)
 		{
-			JOptionPane.showMessageDialog(null, "Client, Site, and SiteID are required fields.");
+			JOptionPane.showMessageDialog(frmNewSite, "Client, Site, and SiteID are required fields.");
 			return;
 		}
 		
@@ -340,7 +340,7 @@ public class g_NewSite {
 			if(rs.getInt("total") > 0)
 			{
 			//employee already exists.
-				JOptionPane.showMessageDialog(null, "Site ID " + SiteID + " already exists in the database.");
+				JOptionPane.showMessageDialog(frmNewSite, "Site ID " + SiteID + " already exists in the database.");
 				
 			}
 			else
@@ -351,7 +351,7 @@ public class g_NewSite {
 						 Dev + "','" + Generation + "','" + HMI + "','" + Address + "','" + Phone + "','" + FieldTech + "','" + FieldSupervisor + "','" + TWIC + "','" + Timezone + "')";
 			System.out.println(commandText);	
 			c_Query.UpdateResultSet(commandText);
-				JOptionPane.showMessageDialog(null, "Site " + Client + " " + Site + " was successfully added.");
+				JOptionPane.showMessageDialog(frmNewSite, "Site " + Client + " " + Site + " was successfully added.");
 				ClearFields();
 				
 				g_ViewSites.run();

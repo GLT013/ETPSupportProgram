@@ -10,6 +10,7 @@ import javax.mail.internet.MimeMessage;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -20,11 +21,16 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+import com.alee.extended.layout.ToolbarLayout;
+import com.alee.extended.statusbar.WebMemoryBar;
+import com.alee.extended.statusbar.WebStatusBar;
+import com.alee.extended.statusbar.WebStatusLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.Toolkit;
 //icons https://icons8.com/web-app/for/all/return
@@ -32,7 +38,7 @@ import java.awt.Toolkit;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 2.03;
+	public static double version = 2.032;
 	public static boolean firstrun = true;
 	public static boolean offlineMode = false;
 	public static File SQLiteDB = new File("C:\\\\Support Program\\\\ETPSupport.db");
@@ -46,18 +52,22 @@ public class g_MainMenu {
 	public static String CurrentUser = "";
 	private static JLabel lblHello;
 	private static JButton btnSupportArchive;
+	public static boolean adminMode;
+	private static JMenu mnAdmin;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
+			
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 		        if ("Nimbus".equals(info.getName())) {
 		            UIManager.setLookAndFeel(info.getClassName());
 		            break;
 		        }
 		    }
+			
 		} catch (Exception e) {
 		    // If Nimbus is not available, you can set the GUI to another look and feel.
 		}
@@ -91,7 +101,7 @@ public class g_MainMenu {
 		
 				if(!checkVersion())
 				{
-					JOptionPane.showMessageDialog(null, "There is a newer version of the program located on the I Drive!");
+					JOptionPane.showMessageDialog(frmMainMenu, "There is a newer version of the program located on the I Drive!");
 					//return;
 				}				
 					@SuppressWarnings("unused")
@@ -102,7 +112,21 @@ public class g_MainMenu {
 					String Greeting = c_EasterEggs.Greetings();
 					lblHello.setText(Greeting + " " + CurrentUser + "!");
 					
-								
+					if(adminMode)
+					{							
+						mnAdmin.setVisible(true);
+						JMenuItem mntmTicketCleanup = new JMenuItem("Ticket Cleanup");
+						mntmTicketCleanup.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent arg0) {
+								g_AutoCloseTickets.run();
+							}
+						});
+						mnAdmin.add(mntmTicketCleanup);													
+					}
+					else
+					{
+						mnAdmin.setVisible(false);
+					}													
 			}
 		});
 	}
@@ -173,6 +197,7 @@ public class g_MainMenu {
 		frmMainMenu.setLocationRelativeTo(null);
 		frmMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMainMenu.getContentPane().setLayout(null);
+		
 		if(offlineMode)
 		{
 			frmMainMenu.setTitle(TitleOffline);	
@@ -254,6 +279,8 @@ public class g_MainMenu {
 		btnSites.setBounds(106, 443, 187, 54);
 		frmMainMenu.getContentPane().add(btnSites);
 		
+		
+		
 		btnSyncForOffline = new JButton("Sync For Offline Mode");
 		btnSyncForOffline.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -290,10 +317,8 @@ public class g_MainMenu {
 		menuBar.add(mnSettings);		
 		drop_Offline = new JMenuItem("Go Offline");		
 		drop_Offline.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {				
-			
-				GoOffline();
-				
+			public void actionPerformed(ActionEvent arg0) {							
+				GoOffline();				
 			}
 		});
 		if(offlineMode)
@@ -313,14 +338,10 @@ public class g_MainMenu {
 		});
 		mnSettings.add(drop_Online);
 		mnSettings.add(drop_Offline);
-		if(offlineMode)
-		{
-			drop_Online.setEnabled(true);
-		}
-		else
-		{
-			drop_Online.setEnabled(false);
-		}
+		
+		mnAdmin = new JMenu("Admin");
+		menuBar.add(mnAdmin);
+	
 		
 	}
 	
@@ -349,25 +370,24 @@ public class g_MainMenu {
 	{
 		if(c_ConnectToDatabase.Connect() == false)
 		{
-			JOptionPane.showMessageDialog(null, "Unable to connect to online database.");
+			JOptionPane.showMessageDialog(frmMainMenu, "Unable to connect to online database.");
 			return;
 			
 		}
 		else
 		{
-			c_ConnectToDatabase.Connect();
-		        
+			c_ConnectToDatabase.Connect();		        
 			offlineMode = false;
 			btnSyncForOffline.setEnabled(true);
 			btnSupportArchive.setEnabled(true);
 			drop_Offline.setEnabled(true);
 			drop_Online.setEnabled(false);
 			lbl_Offline.setVisible(false);
-			int reply = JOptionPane.showConfirmDialog(null, "Sync Offline Changes To Online Support Database?" , "Sync Changes", JOptionPane.YES_NO_OPTION);
+			int reply = JOptionPane.showConfirmDialog(frmMainMenu, "Sync Offline Changes To Online Support Database?" , "Sync Changes", JOptionPane.YES_NO_OPTION);
 	        if (reply == JOptionPane.YES_OPTION)
 	        {
 	        	c_SyncForOnlineMode.run();
-	        	JOptionPane.showMessageDialog(null, "Offline Synchronization Completed.");	        	
+	        	JOptionPane.showMessageDialog(frmMainMenu, "Offline Synchronization Completed.");	        	
 	        }	
 		}
 	}

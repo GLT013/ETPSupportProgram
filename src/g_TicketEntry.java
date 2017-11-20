@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
+
 import javax.swing.JEditorPane;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
@@ -204,6 +205,8 @@ public class g_TicketEntry {
 		txt_Description.setLineWrap(true);
 		txt_Description.setWrapStyleWord(true);
 		datePicker.getModel().setSelected(true);
+		
+
 	}
 	
 	private void PopulateClientCB(){
@@ -330,7 +333,7 @@ public class g_TicketEntry {
 		}
 		
 		if(TicketNum.compareTo("") == 0){
-			JOptionPane.showMessageDialog(null, "Unique Ticket Number Required");
+			JOptionPane.showMessageDialog(frmTicketEntry, "Unique Ticket Number Required");
 			return;
 		}
 		String TicketCheck = "SELECT COUNT(*) as Total FROM SupportTickets WHERE Ticket = '" + TicketNum + "'";
@@ -352,11 +355,14 @@ public class g_TicketEntry {
 	        
 	        if(count > 0)
 	        {
-	        	JOptionPane.showMessageDialog(null, "Ticket Number Already Exists.");
+	        	JOptionPane.showMessageDialog(frmTicketEntry, "Ticket Number Already Exists.");
 				return;	        	
 	        }
-		
-		String commandText = "INSERT INTO SupportTickets (Client,Site,Category,Ticket,EnteredDate,Description,Assigned,Status,Resolution,Active,UpdateDate) "
+	       
+	        Description = c_CleanString.Clean_String(Description);
+	  
+
+	        String commandText = "INSERT INTO SupportTickets (Client,Site,Category,Ticket,EnteredDate,Description,Assigned,Status,Resolution,Active,UpdateDate) "
 				+ "VALUES ('" + Client + "', '" + Site + "', '" + Category + "', '" + TicketNum + "', '" + strDate + "', '" + Description + "', '" + Assigned + "', 'Investigating', '', 1, '" + strDate +"')";
 		
 		
@@ -373,6 +379,7 @@ public class g_TicketEntry {
 			g_MainMenu.run(frmTicketEntry);
 			frmTicketEntry.dispose();
 		}
+	
 	}
 	
 	

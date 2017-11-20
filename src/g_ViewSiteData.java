@@ -86,8 +86,7 @@ public class g_ViewSiteData {
 		{
 			frmSiteData.setTitle("Automated Support Program");
 		}
-		
-		
+				
 		panel.setBackground(new Color(245, 245, 245));
 		panel.setBounds(0, 0, 850, 800);
 		frmSiteData.getContentPane().add(panel);
@@ -519,7 +518,7 @@ public class g_ViewSiteData {
 					JButton btnNewButton_1 = new JButton("View");
 					btnNewButton_1.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							JOptionPane.showMessageDialog(null, injNotes);
+							JOptionPane.showMessageDialog(frmSiteData, injNotes);
 						}
 					});
 					btnNewButton_1.setBounds(302, 68+y+5, 62, 22);

@@ -452,9 +452,10 @@ public class g_ReportEmail {
 			
 			if(ccnotified)
 			{			
-			SupportEmail = SupportEmail + "<b>CCNotified: </b>" + ccNotifiedTime_Formatted + " <br /><br />";
+			SupportEmail = SupportEmail + "<b>CCNotified: </b>" + ccNotifiedTime_Formatted + " <br />";
 			}			
-				
+			
+			SupportEmail = SupportEmail + "<br />"; //add a break between tickets.
 		}
 		
 		

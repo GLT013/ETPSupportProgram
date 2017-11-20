@@ -15,6 +15,10 @@ import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+import com.inet.jortho.FileUserDictionary;
+import com.inet.jortho.SpellChecker;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -89,6 +93,7 @@ public class g_CurrentTickets {
 	private JComboBox<String> cb_Assigned;
 	private JButton btnEdit;
 	private String directory = "\\\\10.10.38.252\\C$\\SupportProgram\\Files\\";
+	private String userDictionaryPath = "\\\\10.10.38.252\\C$\\SupportProgram\\dictionary\\";
 	private int numFiles; 
 	private int viewIP;
 	private int SQLIP; 
@@ -175,25 +180,26 @@ public class g_CurrentTickets {
 		
 		btnSave = new JButton("Update");
 		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
+			public void actionPerformed(ActionEvent e) {				
 				if (cb_Status.getSelectedItem().toString().compareTo("Complete") == 0)
 				{					
 					CloseTicket();
 				}
+				else if (cb_Status.getSelectedItem().toString().compareTo("Closed by ETP") == 0)
+				{
+					ClosedByETP();
+				}
 				else
 				{
 					UpdateTicket();
-				}
-
-				
+				}				
 			}
 		});
 		btnSave.setBounds(569, 696, 89, 23);
 		panel_1.add(btnSave);
 		
 		cb_Status = new JComboBox<String>();
-		cb_Status.setModel(new DefaultComboBoxModel<String>(new String[] {"Investigating", "Ongoing", "Ongoing - Need Field Support", "Ongoing - Need ETP Approval", "Complete"}));
+		cb_Status.setModel(new DefaultComboBoxModel<String>(new String[] {"Investigating", "Ongoing", "Ongoing - Need Field Support", "Ongoing - Need ETP Approval", "Closed by ETP", "Complete"}));
 		cb_Status.setBounds(266, 693, 191, 28);
 		panel_1.add(cb_Status);
 		
@@ -242,11 +248,11 @@ public class g_CurrentTickets {
 			public void actionPerformed(ActionEvent arg0) {
 				if (JList_FileList.getSelectedIndex() == -1)
 				{
-					JOptionPane.showMessageDialog(null, "No file was selected.");
+					JOptionPane.showMessageDialog(frmCurrentTickets, "No file was selected.");
 				}
 				else if(JList_FileList.getSelectedIndex() > (numFiles-1))
 				{
-					JOptionPane.showMessageDialog(null, "File not found. \n Please verify file has been uploaded by hitting the update button.");
+					JOptionPane.showMessageDialog(frmCurrentTickets, "File not found. \n Please verify file has been uploaded by hitting the update button.");
 				}
 				else
 				{
@@ -257,7 +263,7 @@ public class g_CurrentTickets {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						JOptionPane.showMessageDialog(null, "Could not find file.");
+						JOptionPane.showMessageDialog(frmCurrentTickets, "Could not find file.");
 					}
 				}
 			}
@@ -271,7 +277,7 @@ public class g_CurrentTickets {
 			public void actionPerformed(ActionEvent arg0) {
 				if (JList_FileList.getSelectedIndex() == -1)
 				{
-					JOptionPane.showMessageDialog(null, "No file was selected.");
+					JOptionPane.showMessageDialog(frmCurrentTickets, "No file was selected.");
 				}
 				else if(JList_FileList.getSelectedIndex() > (numFiles-1))
 				{
@@ -282,7 +288,7 @@ public class g_CurrentTickets {
 					int index = JList_FileList.getSelectedIndex();
 					String source = fileListModel.getElementAt(index).getFile();
 					String filePath = directory + TicketNum + "_" + source;
-					int reply = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete " + source + "?" , "Delete File", JOptionPane.YES_NO_OPTION);
+					int reply = JOptionPane.showConfirmDialog(frmCurrentTickets, "Are you sure you wish to delete " + source + "?" , "Delete File", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
 			        	String commandText = "DELETE FROM Files WHERE Filename = '" + source + "'";
@@ -290,9 +296,9 @@ public class g_CurrentTickets {
 				        fileListModel.remove(index);
 				        File file = new File(filePath);
 				        if(file.delete()){
-				        	JOptionPane.showMessageDialog(null, source + " has been deleted.");
+				        	JOptionPane.showMessageDialog(frmCurrentTickets, source + " has been deleted.");
 			    		}else{
-			    			JOptionPane.showMessageDialog(null, "Error deleting file from hard drive");
+			    			JOptionPane.showMessageDialog(frmCurrentTickets, "Error deleting file from hard drive");
 			    		}
 
 				        JList_FileList.removeAll();
@@ -302,7 +308,7 @@ public class g_CurrentTickets {
 			        }
 			        else
 			        {
-			        	JOptionPane.showMessageDialog(null, "Whew! That was close.");
+			        	JOptionPane.showMessageDialog(frmCurrentTickets, "Whew! That was close.");
 			        }
 				}
 				
@@ -406,11 +412,10 @@ public class g_CurrentTickets {
 		panel_Update.add(lblhours);
 		
 		JButton btn_SiteData = new JButton("Site Data");
-		btn_SiteData.setEnabled(false);
 		btn_SiteData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//ViewSiteData();
-				g_ViewSiteData.run(siteID);
+				//ViewSiteData2();
+				g_ViewSiteData2.run(siteID);
 			}
 		});
 		btn_SiteData.setBounds(10, 43, 105, 23);
@@ -571,8 +576,7 @@ public class g_CurrentTickets {
 				try {					
 					Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress);
 				} catch (IOException e2) {
-					// TODO Auto-generated catch block
-					System.out.println(e2.toString());
+				
 				}
 			
 			}
@@ -587,7 +591,7 @@ public class g_CurrentTickets {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String ip = "10.219." + siteID + "." + hostIP; 
-				JOptionPane.showMessageDialog(null, "VSphere Host IP: \n " + ip);
+				JOptionPane.showMessageDialog(frmCurrentTickets, "VSphere Host IP: \n " + ip);
 			}
 		});
 		icon_host.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/host.png")));
@@ -628,7 +632,7 @@ public class g_CurrentTickets {
 					client.compareTo("Sinclair") == 0 || client.compareTo("Cummins") == 0)
 				{
 					//JOptionPane.showMessageDialog(null, "Phone #281-637-6472");
-					int reply = JOptionPane.showConfirmDialog(null, "Phone #281-637-6472 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
+					int reply = JOptionPane.showConfirmDialog(frmCurrentTickets, "Phone #281-637-6472 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
 			        	try {
@@ -643,7 +647,7 @@ public class g_CurrentTickets {
 				}
 				else
 				{
-					int reply = JOptionPane.showConfirmDialog(null, "Phone #281-637-6473 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
+					int reply = JOptionPane.showConfirmDialog(frmCurrentTickets, "Phone #281-637-6473 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
 			        	try {
@@ -654,10 +658,7 @@ public class g_CurrentTickets {
 							e.printStackTrace();
 						}
 			        }
-				}
-				
-				
-				
+				}												
 			}
 		});
 		button.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/telephone.png")));
@@ -773,10 +774,16 @@ public class g_CurrentTickets {
 				rdbtnMyTickets.setBackground(Color.WHITE);
 				rdbtnMyTickets.setBounds(125, 3, 96, 15);
 				panel_4.add(rdbtnMyTickets);
-				
-				
-				
-				
+								
+				if(!g_MainMenu.offlineMode)
+				{
+					SpellChecker.setUserDictionaryProvider(new FileUserDictionary(userDictionaryPath));
+					SpellChecker.registerDictionaries(getClass().getResource(userDictionaryPath), "en");
+					SpellChecker.getOptions().setIgnoreAllCapsWords(true);
+					SpellChecker.getOptions().setIgnoreCapitalization(true);
+			        SpellChecker.register( txt_Internal);		        
+			        SpellChecker.register( txt_Update);
+				}
 		tree_active.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				PopulateActiveWindow();
@@ -829,7 +836,7 @@ public class g_CurrentTickets {
 	        		        
 	        if(count <= 0)
 	        {
-	        	JOptionPane.showMessageDialog(null, "Ticket Number Not Found.");
+	        	JOptionPane.showMessageDialog(frmCurrentTickets, "Ticket Number Not Found.");
 				return;	        	
 	        }
 	        else
@@ -846,24 +853,20 @@ public class g_CurrentTickets {
 			    }
 			    if(success)
 			    {
-				    JOptionPane.showMessageDialog(null, "Ticket #" + TicketNum + " has been reactivated.");
+				    JOptionPane.showMessageDialog(frmCurrentTickets, "Ticket #" + TicketNum + " has been reactivated.");
 				    PopulateActiveWindow();
 					PopulateActiveTickets();
 					PopulateRecentTickets();
 			    }
 			    else
 			    {
-			    	JOptionPane.showMessageDialog(null, "There was an error reactivating ticket..");
+			    	JOptionPane.showMessageDialog(frmCurrentTickets, "There was an error reactivating ticket..");
 			    }
 	        }
 	    }
 	    
 	}
 	
-	private void ShowMyTickets()
-	{
-		
-	}
 	
 	private void GetCheckboxes()
 	{
@@ -982,9 +985,13 @@ public class g_CurrentTickets {
 				{
 					cb_Status.setSelectedIndex(3);	
 				}
+				else if (Status.compareTo("Closed by ETP") == 0)
+				{
+					cb_Status.setSelectedIndex(4);	
+				}
 				else if(Status.compareTo("Complete") == 0)
 				{
-					cb_Status.setSelectedIndex(4); 	
+					cb_Status.setSelectedIndex(5); 	
 				}
 				
 				if(rs.getString("CCNotified") == null || (rs.getString("CCNotified").compareTo("null") == 0))
@@ -1106,7 +1113,7 @@ public class g_CurrentTickets {
 				lbl_Assigned.setText(rs.getString("Assigned"));
 				if(rs.getString("Status").compareTo("Complete") == 0)
 				{
-					cb_Status.setSelectedIndex(3); 	
+					cb_Status.setSelectedIndex(5); 	
 				}
 				if(rs.getString("CCNotified") == null)
 				{
@@ -1171,7 +1178,7 @@ public class g_CurrentTickets {
 								DefaultMutableTreeNode proj;
 								
 								DefaultMutableTreeNode projnum;
-								String commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status != 'Complete' AND Assigned ='" + g_MainMenu.CurrentUser + "' ORDER BY Client ASC";
+								String commandText = "SELECT DISTINCT Client from SupportTickets WHERE (Status != 'Complete' AND Status != 'Closed By ETP') AND Assigned ='" + g_MainMenu.CurrentUser + "' ORDER BY Client ASC";
 								ResultSet rs = c_Query.ExecuteResultSet(commandText);
 								
 								while((rs!=null) && (rs.next()))
@@ -1219,7 +1226,7 @@ public class g_CurrentTickets {
 								DefaultMutableTreeNode proj;
 								
 								DefaultMutableTreeNode projnum;
-								String commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status != 'Complete' ORDER BY Client ASC";
+								String commandText = "SELECT DISTINCT Client from SupportTickets WHERE (Status != 'Complete' AND Status != 'Closed By ETP') ORDER BY Client ASC";
 								ResultSet rs = c_Query.ExecuteResultSet(commandText);
 								
 								while((rs!=null) && (rs.next()))
@@ -1269,16 +1276,7 @@ public class g_CurrentTickets {
 							DefaultMutableTreeNode proj;
 							DefaultMutableTreeNode projnum;
 							String commandText = "";
-							/* Commented out as it didnt make sense to query the last day if an email was never sent.
-							if(!g_MainMenu.offlineMode)
-							{
-								//commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and UpdateDate >= DATEADD(day,-1,GETDATE()) and EmailSent = 'False' ORDER BY Client ASC";
-								commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and EmailSent = 'False' ORDER BY Client ASC";
-							}
-							else
-							{
-								commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and EmailSent = 0 ORDER BY Client ASC";
-							}*/
+
 							commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' and EmailSent = 0 ORDER BY Client ASC";
 							ResultSet rs = c_Query.ExecuteResultSet(commandText);
 							
@@ -1286,18 +1284,7 @@ public class g_CurrentTickets {
 							{
 								String projectname = rs.getString(1);
 								proj = new DefaultMutableTreeNode(projectname);	
-									String commandText2 = "";
-									/*
-									if(!g_MainMenu.offlineMode)
-									{
-										commandText2 = "SELECT Site, Ticket from SupportTickets WHERE Status = 'Complete' and UpdateDate >= DATEADD(day,-1,GETDATE()) and EmailSent = 'False' and Client ='" + projectname + "'"; ;
-									}
-									else
-									{
-										commandText2 = "SELECT Site, Ticket from SupportTickets WHERE Status = 'Complete' and EmailSent = 0 and Client ='" + projectname + "'"; ;
-									}
-									*/
-									
+									String commandText2 = "";									
 									commandText2 = "SELECT Site, Ticket from SupportTickets WHERE Status = 'Complete' and EmailSent = 0 and Client ='" + projectname + "'"; ;
 									ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
 									
@@ -1325,6 +1312,14 @@ public class g_CurrentTickets {
 		 fileListModel.addElement(addFile);
 	 }
 	 
+	 public void ClosedByETP()
+	 {
+		 String commandText = "UPDATE SupportTickets SET Active = 0, Status = 'Closed By ETP' WHERE rowID = " + rowID;
+		 c_Query.UpdateResultSet(commandText);
+		 PopulateActiveWindow();
+		 PopulateActiveTickets();
+	 }
+	 
 	 
 	 public void CloseTicket()
 	 {		 
@@ -1340,9 +1335,7 @@ public class g_CurrentTickets {
 			 Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
 			 testDate = dateFormat.format(currentTimestamp);	
 		 }
-		 	
-		// Date date = new Date();
-		 //String testDate = dateFormat.format(date);		 
+		 			 
 		 String resolution = txt_Update.getText();
 		 resolution = c_CleanString.Clean_String(resolution);
 		 String commandText = "";

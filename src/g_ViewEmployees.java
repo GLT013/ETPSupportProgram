@@ -159,7 +159,7 @@ public class g_ViewEmployees {
 				if(g_MainMenu.offlineMode)
 				{					
 					String err = c_EasterEggs.EasterEggs();					
-					JOptionPane.showMessageDialog(null, err);	
+					JOptionPane.showMessageDialog(frmViewEmployees, err);	
 					return;
 				}
 				{
@@ -217,19 +217,19 @@ public class g_ViewEmployees {
 				if(g_MainMenu.offlineMode)
 				{
 					String err = c_EasterEggs.EasterEggs();					
-					JOptionPane.showMessageDialog(null, err);					
+					JOptionPane.showMessageDialog(frmViewEmployees, err);					
 					return;
 				}
 				{
 					int index = list.getSelectedIndex();
 					String removalName = result.get(index).getName();				
-					int reply = JOptionPane.showConfirmDialog(null, "Really delete " + removalName + "?" , "Remove Employee", JOptionPane.YES_NO_OPTION);
+					int reply = JOptionPane.showConfirmDialog(frmViewEmployees, "Really delete " + removalName + "?" , "Remove Employee", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
 			          String commandText = "DELETE FROM EN_Employees WHERE Name = '" + removalName + "'";
 			          c_Query.ExecuteQuery(commandText);
 			          result.remove(index);
-			          JOptionPane.showMessageDialog(null, removalName + " has been deleted. \n You monster.");
+			          JOptionPane.showMessageDialog(frmViewEmployees, removalName + " has been deleted. \n You monster.");
 			          RefreshList();
 			        }
 			        else
@@ -248,7 +248,7 @@ public class g_ViewEmployees {
 				if(g_MainMenu.offlineMode)
 				{
 					String err = c_EasterEggs.EasterEggs();					
-					JOptionPane.showMessageDialog(null, err);
+					JOptionPane.showMessageDialog(frmViewEmployees, err);
 					
 					return;
 				}
@@ -302,7 +302,7 @@ public class g_ViewEmployees {
 			public void actionPerformed(ActionEvent arg0) {
 				String getMobile = result.get(list.getSelectedIndex()).getMobile();				
 				String getEmployee = result.get(list.getSelectedIndex()).getName();
-				int reply = JOptionPane.showConfirmDialog(null, "Call " + getEmployee + " Mobile?" , getEmployee + " Mobile Phone #", JOptionPane.YES_NO_OPTION);
+				int reply = JOptionPane.showConfirmDialog(frmViewEmployees, "Call " + getEmployee + " Mobile?" , getEmployee + " Mobile Phone #", JOptionPane.YES_NO_OPTION);
 		        if (reply == JOptionPane.YES_OPTION)
 		        {
 		        	try {
@@ -326,7 +326,7 @@ public class g_ViewEmployees {
 			public void actionPerformed(ActionEvent arg0) {
 				String getOffice = result.get(list.getSelectedIndex()).getOffice();				
 				String getEmployee = result.get(list.getSelectedIndex()).getName();
-				int reply = JOptionPane.showConfirmDialog(null, "Call " + getEmployee + " Office Phone?" , getEmployee + " Office Phone #", JOptionPane.YES_NO_OPTION);
+				int reply = JOptionPane.showConfirmDialog(frmViewEmployees, "Call " + getEmployee + " Office Phone?" , getEmployee + " Office Phone #", JOptionPane.YES_NO_OPTION);
 		        if (reply == JOptionPane.YES_OPTION)
 		        {
 		        	try {

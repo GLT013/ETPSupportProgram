@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry including="*" kind="src" path="src">
+	<classpathentry excluding="dictionary/|dictionary/" including="*" kind="src" path="src">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="EquipmentPurchases/src"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="src/dictionary"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="References/mysql-connector-java-5.1.22-bin.jar"/>
 	<classpathentry kind="lib" path="References/sqltool.jar"/>
@@ -39,5 +40,10 @@
 	<classpathentry kind="lib" path="img_jars/document2.jar"/>
 	<classpathentry kind="lib" path="img_jars/telephone.jar"/>
 	<classpathentry kind="lib" path="img_jars/email.jar"/>
+	<classpathentry kind="lib" path="References/weblaf-1.29.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tjohnston/Downloads/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tjohnston/Downloads/JOrtho_1.0/jortho.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tjohnston/Downloads/JOrtho_1.0/src/com"/>
+	<classpathentry kind="lib" path="C:/Users/tjohnston/Downloads/dictionary_en_2013_03"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

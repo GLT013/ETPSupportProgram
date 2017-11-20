@@ -134,7 +134,7 @@ public class g_NewSunocoContact {
 		
 		if (name.compareTo("") == 0 || company.compareTo("") == 0 || email.compareTo("") == 0)
 		{
-			JOptionPane.showMessageDialog(null, "Name, Company, and Email are required fields.");
+			JOptionPane.showMessageDialog(frmNewSunocoContact, "Name, Company, and Email are required fields.");
 			return;
 		}
 		
@@ -153,7 +153,7 @@ public class g_NewSunocoContact {
 			if(rs.getInt("total") > 0)
 			{
 			//employee already exists.
-				JOptionPane.showMessageDialog(null, "Contact " + name + " already exists in the database.");
+				JOptionPane.showMessageDialog(frmNewSunocoContact, "Contact " + name + " already exists in the database.");
 				
 			}
 			else
@@ -162,7 +162,7 @@ public class g_NewSunocoContact {
 			commandText = "INSERT INTO Sunoco_Contacts(Name,Company,Email,Mobile_Phone) "
 						+ "VALUES ( '" + name + "','" + company + "','" + email + "','" + mobile + "')";
 				c_Query.UpdateResultSet(commandText);
-				JOptionPane.showMessageDialog(null, "Contact " + name + " was successfully added.");
+				JOptionPane.showMessageDialog(frmNewSunocoContact, "Contact " + name + " was successfully added.");
 				ClearFields();
 				
 				g_ViewSunoco.run();

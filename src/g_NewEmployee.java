@@ -151,7 +151,7 @@ public class g_NewEmployee {
 		
 		if (name.compareTo("") == 0 || title.compareTo("") == 0 || email.compareTo("") == 0)
 		{
-			JOptionPane.showMessageDialog(null, "Name, Title, and Email are required fields.");
+			JOptionPane.showMessageDialog(frmNewEmployee, "Name, Title, and Email are required fields.");
 			return;
 		}
 		
@@ -170,7 +170,7 @@ public class g_NewEmployee {
 			if(rs.getInt("total") > 0)
 			{
 			//employee already exists.
-				JOptionPane.showMessageDialog(null, "Employee " + name + " already exists in the database.");
+				JOptionPane.showMessageDialog(frmNewEmployee, "Employee " + name + " already exists in the database.");
 				
 			}
 			else
@@ -179,7 +179,7 @@ public class g_NewEmployee {
 			commandText = "INSERT INTO EN_Employees(Name,Title,Email,Office_Phone, Mobile_Phone, Active) "
 						+ "VALUES ( '" + name + "','" + title + "','" + email + "','" + phone + "','" + mobile + "', 'True')";
 				c_Query.UpdateResultSet(commandText);
-				JOptionPane.showMessageDialog(null, "Employee " + name + " was successfully added.");
+				JOptionPane.showMessageDialog(frmNewEmployee, "Employee " + name + " was successfully added.");
 				ClearFields();
 				
 				g_ViewEmployees.run();
