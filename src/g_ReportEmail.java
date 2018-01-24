@@ -367,6 +367,11 @@ public class g_ReportEmail {
 					client = rs.getString("client");
 					site = rs.getString("site");
 					ticketnumber = rs.getString("ticket");
+					if(ticketnumber.charAt(0) == '3')
+					{
+						ticketnumber = "?-?????";
+					}
+					
 					issue = rs.getString("Description");
 					investigation = rs.getString("Resolution");
 					status = rs.getString("Status");

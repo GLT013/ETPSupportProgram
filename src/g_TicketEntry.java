@@ -31,7 +31,12 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextArea;
-import java.awt.Toolkit; 
+import java.awt.Toolkit;
+import javax.swing.JCheckBox;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent; 
 
 public class g_TicketEntry {
 
@@ -44,6 +49,7 @@ public class g_TicketEntry {
 	private JComboBox<String> cb_Assign;
 	private JDatePanelImpl datePanel; 
 	private JDatePickerImpl datePicker;
+	private static JCheckBox chkbx_NoTicketNum;
 
 			public static void run() {			
 				try {	
@@ -69,7 +75,7 @@ public class g_TicketEntry {
 	private void initialize() {
 		frmTicketEntry = new JFrame();
 		frmTicketEntry.setIconImage(Toolkit.getDefaultToolkit().getImage(g_TicketEntry.class.getResource("/icon.png")));
-		frmTicketEntry.setBounds(100, 100, 726, 562);
+		frmTicketEntry.setBounds(100, 100, 767, 562);
 		frmTicketEntry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTicketEntry.getContentPane().setLayout(null);
 		if(g_MainMenu.offlineMode)
@@ -204,6 +210,23 @@ public class g_TicketEntry {
 		txt_Description.setFont(new Font("Plantagenet Cherokee", Font.PLAIN, 16));
 		txt_Description.setLineWrap(true);
 		txt_Description.setWrapStyleWord(true);
+		
+		chkbx_NoTicketNum = new JCheckBox("No Ticket \r\n#");		
+		chkbx_NoTicketNum.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(chkbx_NoTicketNum.isSelected())
+				{
+					txt_TicketNum.setEnabled(false);					
+				}
+				else
+				{
+					txt_TicketNum.setEnabled(true);
+				}
+			}
+		});
+	
+		chkbx_NoTicketNum.setBounds(663, 42, 97, 23);
+		frmTicketEntry.getContentPane().add(chkbx_NoTicketNum);
 		datePicker.getModel().setSelected(true);
 		
 
@@ -275,11 +298,7 @@ public class g_TicketEntry {
 		String Client = cb_Client.getSelectedItem().toString();
 		String Site = cb_Site.getSelectedItem().toString();
 		String Category = cb_Category.getSelectedItem().toString();
-		
-		
-		
 
-		
 		int testMonth = datePicker.getModel().getMonth();
 		testMonth++;
 		int testDay = datePicker.getModel().getDay();			
@@ -287,8 +306,20 @@ public class g_TicketEntry {
 		
 
 		String strDate = testYear + "-" + testMonth + "-" + testDay + " " + LocalTime.now().toString();
-		String TicketNum = txt_TicketNum.getText();
+		String TicketNum = "";
+		if(chkbx_NoTicketNum.isSelected())
+		{
+			TicketNum = NoTicketNumber();			
+		}
+		else
+		{
+			TicketNum = txt_TicketNum.getText();	
+		}
 		
+		 if(Character.isLetter(TicketNum.charAt(0)))
+		 {
+			 TicketNum = TicketNum.substring(1);
+		 }
 		/*
 			if (Character.isDigit(TicketNum.charAt(0)))
 			{
@@ -380,6 +411,32 @@ public class g_TicketEntry {
 			frmTicketEntry.dispose();
 		}
 	
+	}
+	
+	private String NoTicketNumber()
+	{
+		String ticketNumber = "";
+		String commandText = "SELECT COUNT(*) as Total FROM SupportTickets WHERE Ticket LIKE '%3-%'";
+		ResultSet rs = c_Query.ExecuteResultSet(commandText);
+		int count = 0;
+        try {
+			while((rs!=null) && (rs.next()))
+			{					
+				count = rs.getInt("Total");				
+			}
+		} catch (SQLException e) {
+		}
+        try {
+			rs.close();
+		} catch (SQLException e) {
+		
+		}
+        
+        count++; //increment the number
+       
+        ticketNumber = "3-" + ticketNumber.format("%04d", count);
+        
+		return ticketNumber;
 	}
 	
 	

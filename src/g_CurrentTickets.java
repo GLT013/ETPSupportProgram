@@ -412,6 +412,7 @@ public class g_CurrentTickets {
 		panel_Update.add(lblhours);
 		
 		JButton btn_SiteData = new JButton("Site Data");
+		btn_SiteData.setEnabled(false);
 		btn_SiteData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//ViewSiteData2();
