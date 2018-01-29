@@ -38,14 +38,10 @@ import java.awt.Toolkit;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 2.05;
+	public static double version = 3.0;
 	public static boolean firstrun = true;
 	public static boolean offlineMode = false;
 	public static File SQLiteDB = new File("C:\\\\Support Program\\\\ETPSupport.db");
-	private static JButton btnSyncForOffline;
-	private static JMenuItem drop_Offline;
-	private static JMenuItem drop_Online;
-	private static JLabel lbl_Offline;
 	public static String TitleOnline = "Automated Support Program v" + version + "";
 	public static String TitleOffline = "Automated Support Program v" + version + " - OFFLINE";
 	public static boolean CurrentTicketsNav;
@@ -192,7 +188,7 @@ public class g_MainMenu {
 		frmMainMenu = new JFrame();
 		frmMainMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(g_MainMenu.class.getResource("/icon.png")));
 		frmMainMenu.setTitle("Main Menu");
-		frmMainMenu.setBounds(0,0,410, 642);
+		frmMainMenu.setBounds(0,0,410, 599);
 		frmMainMenu.setResizable(false);
 		frmMainMenu.setLocationRelativeTo(null);
 		frmMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -225,7 +221,7 @@ public class g_MainMenu {
 		JLabel lblV = new JLabel("");
 		lblV.setText("v " + version);
 		lblV.setHorizontalAlignment(SwingConstants.CENTER);
-		lblV.setBounds(340, 572, 54, 14);
+		lblV.setBounds(340, 527, 54, 14);
 		frmMainMenu.getContentPane().add(lblV);
 		
 		JButton btnCurrentTickets = new JButton("Current Tickets");
@@ -279,116 +275,21 @@ public class g_MainMenu {
 		btnSites.setBounds(106, 443, 187, 54);
 		frmMainMenu.getContentPane().add(btnSites);
 		
-		
-		
-		btnSyncForOffline = new JButton("Sync For Offline Mode");
-		btnSyncForOffline.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				c_SyncForOfflineMode.run();
-				GoOffline();
-			}
-		});
-		btnSyncForOffline.setBounds(106, 532, 187, 54);
-		frmMainMenu.getContentPane().add(btnSyncForOffline);
-		
-		lbl_Offline = new JLabel("Offline!");
-		lbl_Offline.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lbl_Offline.setForeground(Color.RED);
-		lbl_Offline.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_Offline.setBounds(10, 572, 54, 14);
-		lbl_Offline.setVisible(false);
-		frmMainMenu.getContentPane().add(lbl_Offline);
-		
 		lblHello = new JLabel("Hello Travis Johnston!");
 		lblHello.setHorizontalAlignment(SwingConstants.CENTER);
 		lblHello.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblHello.setBounds(10, 11, 384, 25);
 		frmMainMenu.getContentPane().add(lblHello);
-		if(offlineMode)
-		{
-			btnSyncForOffline.setEnabled(false);
-			lbl_Offline.setVisible(true);
-		}
+	
 		
 		//Menubar for Main Menu
 		JMenuBar menuBar = new JMenuBar();
-		frmMainMenu.setJMenuBar(menuBar);		
-		JMenu mnSettings = new JMenu("Settings");
-		menuBar.add(mnSettings);		
-		drop_Offline = new JMenuItem("Go Offline");		
-		drop_Offline.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {							
-				GoOffline();				
-			}
-		});
-		if(offlineMode)
-		{
-			drop_Offline.setEnabled(false);
-		}
-		else
-		{
-			drop_Offline.setEnabled(true);
-		}
+		frmMainMenu.setJMenuBar(menuBar);
 		
-		drop_Online = new JMenuItem("Go Online");
-		drop_Online.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				GoOnline();
-			}
-		});
-		mnSettings.add(drop_Online);
-		mnSettings.add(drop_Offline);
 		
 		mnAdmin = new JMenu("Admin");
 		menuBar.add(mnAdmin);
 	
 		
-	}
-	
-	private void GoOffline()
-	{		
-			offlineMode = true;
-			btnSyncForOffline.setEnabled(false);
-			btnSupportArchive.setEnabled(false);
-			drop_Offline.setEnabled(false);
-			drop_Online.setEnabled(true);
-			lbl_Offline.setVisible(true);
-			if(SQLiteDB.exists())
-        	{
-        		c_ConnectToDatabase.ConnectSQLite();
-        	}
-        	else
-        	{
-        		c_SyncForOfflineMode.CreateDatabase();
-        		c_ConnectToDatabase.ConnectSQLite();
-        		c_SyncForOfflineMode.CreateTables();
-        	}
-			
-	}
-	
-	private void GoOnline()
-	{
-		if(c_ConnectToDatabase.Connect() == false)
-		{
-			JOptionPane.showMessageDialog(frmMainMenu, "Unable to connect to online database.");
-			return;
-			
-		}
-		else
-		{
-			c_ConnectToDatabase.Connect();		        
-			offlineMode = false;
-			btnSyncForOffline.setEnabled(true);
-			btnSupportArchive.setEnabled(true);
-			drop_Offline.setEnabled(true);
-			drop_Online.setEnabled(false);
-			lbl_Offline.setVisible(false);
-			int reply = JOptionPane.showConfirmDialog(frmMainMenu, "Sync Offline Changes To Online Support Database?" , "Sync Changes", JOptionPane.YES_NO_OPTION);
-	        if (reply == JOptionPane.YES_OPTION)
-	        {
-	        	c_SyncForOnlineMode.run();
-	        	JOptionPane.showMessageDialog(frmMainMenu, "Offline Synchronization Completed.");	        	
-	        }	
-		}
 	}
 }

@@ -14,10 +14,10 @@ public class c_ConnectToDatabase {
 	 try
      {
          Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-         String connectionUrl = "jdbc:sqlserver://10.10.38.252;" +
+         String connectionUrl = "jdbc:sqlserver://enesupport.database.windows.net;" +
                                  "database=Support;" +
-                                 "user=sa;" +
-                                 "password=Mce!2195";
+                                 "user=travis;" +
+                                 "password=Butane#Ops";
          con = DriverManager.getConnection(connectionUrl);
          return true;
      }
