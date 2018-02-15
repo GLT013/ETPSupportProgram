@@ -50,15 +50,9 @@ public class g_NewSunocoContact {
 		frmNewSunocoContact.setIconImage(Toolkit.getDefaultToolkit().getImage(g_NewSunocoContact.class.getResource("/icon.png")));
 		frmNewSunocoContact.setBounds(100, 100, 626, 421);
 		frmNewSunocoContact.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmNewSunocoContact.getContentPane().setLayout(null);
-		if(g_MainMenu.offlineMode)
-		{
-			frmNewSunocoContact.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmNewSunocoContact.setTitle("Automated Support Program");
-		}
+		frmNewSunocoContact.getContentPane().setLayout(null);		
+		frmNewSunocoContact.setTitle("Automated Support Program");
+		
 		
 		JLabel lblAddNewSunocoContact = new JLabel("Add New Contact");
 		lblAddNewSunocoContact.setBounds(228, 11, 189, 19);

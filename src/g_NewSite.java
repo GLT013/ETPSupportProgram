@@ -68,14 +68,8 @@ public class g_NewSite {
 		frmNewSite.setBounds(100, 100, 679, 661);
 		frmNewSite.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNewSite.getContentPane().setLayout(null);
-		if(g_MainMenu.offlineMode)
-		{
-			frmNewSite.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmNewSite.setTitle("Automated Support Program");
-		}
+		frmNewSite.setTitle("Automated Support Program");
+		
 		
 		JLabel lblAddNewEmployee = new JLabel("Add New Site");
 		lblAddNewEmployee.setHorizontalAlignment(SwingConstants.CENTER);

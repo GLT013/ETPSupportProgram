@@ -1,20 +1,10 @@
-import it.cnr.imaa.essi.lablib.gui.checkboxtree.CheckboxTree;
-import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -25,35 +15,23 @@ import java.awt.Color;
 import javax.swing.JFileChooser;
 import java.awt.Font;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
 import javax.swing.ListSelectionModel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.JTabbedPane;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
-import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 /* http://stackoverflow.com/questions/16157529/how-do-i-pass-objects-between-classes */
@@ -76,27 +54,19 @@ public class g_ArchiveTickets {
 	public static JList<c_Files> JList_FileList;
 	public static DefaultListModel<c_Files> fileListModel;
 	public static DefaultListModel<c_Files> ExistingfileListModel;
-	private List<String> ViewSiteData = new ArrayList<String>();
 	private JPanel panel_Update;
 	private JScrollPane scrollPane;
 	private JPanel panel_Internal;
 	private JLabel lblInternalUpdate;
 	private JButton btn_External;
 	private JButton btn_Internal;
-	private int rowID;
 	private String TicketNum;
 	public String siteID;
 	private String directory = "\\\\10.10.38.252\\C$\\SupportProgram\\Files\\";
 	private int numFiles; 
-	private int viewIP;
-	private int SQLIP; 
-	private int DevIP; 
-	private int iDracIP;
-	private int hostIP; 
 	private String client;
 	private String site;
 	private int siteid;
-	private boolean highperformance;	
 	private static JRadioButton rdbtnCategory;
 	private static JRadioButton rdbtnSite;
 	private static JLabel lblLastUpdatedByStr;
@@ -111,6 +81,8 @@ public class g_ArchiveTickets {
 	private static JCheckBox chckbxResolution;	
 	private static JList<String> searchList = new JList<String>();
 	private static JScrollPane scrollPane_4;
+	private static JLabel txtEnteredDate;
+	private static JLabel txtStatus;
 	
 	
 
@@ -118,9 +90,10 @@ public class g_ArchiveTickets {
 
 	public static void run() {				
 		try {
+			@SuppressWarnings("unused")
 			g_ArchiveTickets window = new g_ArchiveTickets();
-			window.frmArchiveTickets.setVisible(true);
-			window.frmArchiveTickets.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+			g_ArchiveTickets.frmArchiveTickets.setVisible(true);
+			g_ArchiveTickets.frmArchiveTickets.setLocationRelativeTo( g_MainMenu.frmMainMenu );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -143,15 +116,7 @@ public class g_ArchiveTickets {
 	private void initialize() {
 		frmArchiveTickets = new JFrame();
 		frmArchiveTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ArchiveTickets.class.getResource("/icon.png")));
-		
-		if(g_MainMenu.offlineMode)
-		{
-			frmArchiveTickets.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmArchiveTickets.setTitle("Automated Support Program");
-		}
+		frmArchiveTickets.setTitle("Automated Support Program");
 		frmArchiveTickets.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frmArchiveTickets.setBounds(100, 100, 964, 895);
 		frmArchiveTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -389,6 +354,16 @@ public class g_ArchiveTickets {
 		lblhours.setBounds(40, 283, 58, 20);
 		panel_Update.add(lblhours);
 		
+		JLabel lblEnteredDate = new JLabel("Entered Date:");
+		lblEnteredDate.setBounds(215, 259, 114, 20);
+		panel_Update.add(lblEnteredDate);
+		lblEnteredDate.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		
+		txtEnteredDate = new JLabel("");
+		txtEnteredDate.setBounds(215, 284, 185, 20);
+		panel_Update.add(txtEnteredDate);
+		txtEnteredDate.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		
 		JButton btn_SiteData = new JButton("Site Data");
 		btn_SiteData.setEnabled(false);
 		btn_SiteData.addActionListener(new ActionListener() {
@@ -484,12 +459,17 @@ public class g_ArchiveTickets {
 		JLabel lblControlCenter = new JLabel("Control Center");
 		lblControlCenter.setBounds(560, 758, 98, 14);
 		panel_1.add(lblControlCenter);
-		lblOffline.setVisible(false);
-		if(g_MainMenu.offlineMode)
-		{
-			lblOffline.setVisible(true);
-		}
 		
+		lblTicketStatus = new JLabel("Ticket Status:");
+		lblTicketStatus.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lblTicketStatus.setBounds(248, 717, 114, 20);
+		panel_1.add(lblTicketStatus);
+		
+		txtStatus = new JLabel("");
+		txtStatus.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		txtStatus.setBounds(248, 739, 178, 20);
+		panel_1.add(txtStatus);
+		lblOffline.setVisible(false);				
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -652,6 +632,8 @@ public class g_ArchiveTickets {
 								txt_TimeSpent.setText(archiveListarr.get(searchList.getSelectedIndex()).getTimeSpent());
 								lbl_UpdateDate.setText(archiveListarr.get(searchList.getSelectedIndex()).getUpdateDate());
 								lblLastUpdatedByStr.setText(archiveListarr.get(searchList.getSelectedIndex()).getLastUpdatedBy());
+								txtEnteredDate.setText(archiveListarr.get(searchList.getSelectedIndex()).getEnteredDate());
+								txtStatus.setText(archiveListarr.get(searchList.getSelectedIndex()).getStatus());
 																
 								fileListModel = new DefaultListModel<c_Files>();
 								String commandText = "SELECT Filename FROM Files WHERE TicketNum = '" + archiveListarr.get(searchList.getSelectedIndex()).getTicket() + "'";		
@@ -705,7 +687,7 @@ public class g_ArchiveTickets {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton rdbtnSearch;
 	private JTextField txtSearch;
-	
+	private JLabel lblTicketStatus;
 	private void AdjustWindowSize()
 	{
 		if(rdbtnSearch.isSelected())
@@ -785,8 +767,8 @@ public class g_ArchiveTickets {
 		}
 		else
 		{
-			String commandText = "SELECT Client, Site, Category, Ticket, EnteredDate, Description, Assigned, Status, Resolution, Internal, Active, EmailSent, CONVERT(varchar(17), UpdateDate, 113) as UpdateDate,TimeSpent,CCNotified,LastUpdatedBy "
-					+ "FROM SupportTickets WHERE" + filters + " ORDER BY Client, Site";
+			String commandText = "SELECT Client, Site, Category, Ticket, CONVERT(varchar(17), EnteredDate, 113) as EnteredDate, Description, Assigned, Status, Resolution, Internal, Active, EmailSent, CONVERT(varchar(17), UpdateDate, 113) as UpdateDate,TimeSpent,CCNotified,LastUpdatedBy "
+					+ "FROM SupportTickets WHERE" + filters + " ORDER BY Client asc, Site asc, EnteredDate desc";
 			
 			ResultSet rs = c_Query.ExecuteResultSet(commandText);
 			try {
@@ -866,10 +848,7 @@ public class g_ArchiveTickets {
 				catch (Exception e)
 				{
 					//do nothing
-				}
-			
-		//	commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
-		//			+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
+				}			
 		}
 		else if(rdbtnSite.isSelected())
 		{
@@ -881,11 +860,10 @@ public class g_ArchiveTickets {
 				{
 					//do nothing
 				}							
-		//	commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
-		//			+ "FROM Sites a, SupportTickets b WHERE Ticket = '" + TicketNum + "'";
+
 		}
 		
-		commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
+		commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Status, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.EnteredDate, 113) as EnteredDate, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
 				+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -899,12 +877,12 @@ public class g_ArchiveTickets {
 				siteid = rs.getInt("SiteID");
 				lbl_ClientSite.setText(client + " " + site + " (" + siteid + ")");
 				siteID = rs.getString("SiteID");
-				viewIP = rs.getInt("ViewIP");
-				SQLIP = rs.getInt("SQLIP");
-				DevIP = rs.getInt("DevIP");
-				iDracIP = rs.getInt("iDracIP");
-				hostIP = rs.getInt("HostIP");
-				highperformance = rs.getBoolean("HighPerformance");				
+				rs.getInt("ViewIP");
+				rs.getInt("SQLIP");
+				rs.getInt("DevIP");
+				rs.getInt("iDracIP");
+				rs.getInt("HostIP");
+				rs.getBoolean("HighPerformance");				
 				lbl_Ticket.setText("(#" + rs.getString("Ticket") + ")");
 				lbl_Assigned.setText(rs.getString("Assigned"));				
 				txt_Issue.setText(rs.getString("Description"));
@@ -912,8 +890,11 @@ public class g_ArchiveTickets {
 				txt_Internal.setText(rs.getString("Internal"));
 				txt_TimeSpent.setText(rs.getString("TimeSpent"));
 				lbl_UpdateDate.setText(rs.getString("UpdateDate"));
-				lblLastUpdatedByStr.setText(rs.getString("LastUpdatedBy"));								
-				rowID = rs.getInt("rowID");
+				lblLastUpdatedByStr.setText(rs.getString("LastUpdatedBy"));		
+				txtEnteredDate.setText(rs.getString("EnteredDate"));
+				txtStatus.setText(rs.getString("Status"));
+				
+				rs.getInt("rowID");
 				
 			}
 		}
@@ -975,7 +956,7 @@ public class g_ArchiveTickets {
 										node_client = new DefaultMutableTreeNode(tmpSite);
 										node_category.add(node_client);
 																				
-										String commandText2 = "SELECT Ticket from SupportTickets WHERE Active = 0 and Site ='" + tmpSite + "' and Client = '" + tmpClient + "' ORDER BY Site asc";										
+										String commandText2 = "SELECT Ticket from SupportTickets WHERE Active = 0 and Site ='" + tmpSite + "' and Client = '" + tmpClient + "' ORDER BY Site asc, Ticket";										
 										ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);										
 										while((rs2!=null) && (rs2.next()))
 										{											
@@ -985,9 +966,7 @@ public class g_ArchiveTickets {
 									add(node_category);
 										
 									}
-									
-										
-										
+
 								}
 							}
 						}
@@ -1022,10 +1001,8 @@ public class g_ArchiveTickets {
 									{									
 										String tmpclient = rs3.getString("Client");
 										node_client = new DefaultMutableTreeNode(tmpclient);
-										node_category.add(node_client);
-										//node_category.add(new DefaultMutableTreeNode(tmpclient));
-																				
-										String commandText2 = "SELECT Site, Ticket  from SupportTickets WHERE Active = 0 and Category ='" + category + "' and Client = '" + tmpclient + "' ORDER BY Site asc";										
+										node_category.add(node_client);																				
+										String commandText2 = "SELECT Site, Ticket  from SupportTickets WHERE Active = 0 and Category ='" + category + "' and Client = '" + tmpclient + "' ORDER BY Site asc, Ticket asc";										
 										ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);										
 										while((rs2!=null) && (rs2.next()))
 										{											
@@ -1049,8 +1026,6 @@ public class g_ArchiveTickets {
 		}
 	}
 	
-	
-
 	 private void AddFilesToList(String filename, File source)
 	 {		 
 		 c_Files addFile = new c_Files(filename,source);

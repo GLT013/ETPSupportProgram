@@ -15,15 +15,11 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-
 import javax.swing.JTextField;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
-
-import javax.swing.JEditorPane;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.util.Properties;
@@ -32,11 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextArea;
 import java.awt.Toolkit;
-import javax.swing.JCheckBox;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent; 
+import javax.swing.JCheckBox; 
 
 public class g_TicketEntry {
 
@@ -54,9 +46,10 @@ public class g_TicketEntry {
 			public static void run() {			
 				try {	
 					new g_TicketEntry();
+					@SuppressWarnings("unused")
 					g_TicketEntry window = new g_TicketEntry();
-					window.frmTicketEntry.setVisible(true);
-					window.frmTicketEntry.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					g_TicketEntry.frmTicketEntry.setVisible(true);
+					g_TicketEntry.frmTicketEntry.setLocationRelativeTo( g_MainMenu.frmMainMenu );
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -77,15 +70,9 @@ public class g_TicketEntry {
 		frmTicketEntry.setIconImage(Toolkit.getDefaultToolkit().getImage(g_TicketEntry.class.getResource("/icon.png")));
 		frmTicketEntry.setBounds(100, 100, 767, 562);
 		frmTicketEntry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmTicketEntry.getContentPane().setLayout(null);
-		if(g_MainMenu.offlineMode)
-		{
-			frmTicketEntry.setTitle(g_MainMenu.TitleOffline);	
-		}
-		else
-		{
-			frmTicketEntry.setTitle(g_MainMenu.TitleOnline);
-		}
+		frmTicketEntry.getContentPane().setLayout(null);		
+		frmTicketEntry.setTitle(g_MainMenu.TitleOnline);
+		
 		
 		cb_Site.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -141,9 +128,9 @@ public class g_TicketEntry {
 		cb_Site.setEnabled(false);
 		cb_Category.setEnabled(false);
 		
-		JLabel lblWorkTicket = new JLabel("Ticket #");
+		JLabel lblWorkTicket = new JLabel("Notification #");
 		lblWorkTicket.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		lblWorkTicket.setBounds(551, 11, 78, 20);
+		lblWorkTicket.setBounds(522, 11, 135, 20);
 		frmTicketEntry.getContentPane().add(lblWorkTicket);
 		
 		txt_TicketNum = new JTextField();
@@ -320,17 +307,7 @@ public class g_TicketEntry {
 		 {
 			 TicketNum = TicketNum.substring(1);
 		 }
-		/*
-			if (Character.isDigit(TicketNum.charAt(0)))
-			{
-				if(TicketNum.charAt(1) == '-')				
-				{
-					//String tmp = search.replaceAll("([^\0])[0-9]{4,6}([^\0])", "");
-					String tmp2 = TicketNum.replace("-", "");
-					TicketNum = TicketNum.charAt(0) + "000000" + tmp2.replaceFirst("\\d","");
-
-				}
-		*/
+		
 		String Description = txt_Description.getText();	
 		String Assigned = cb_Assign.getSelectedItem().toString();
 		
@@ -434,7 +411,7 @@ public class g_TicketEntry {
         
         count++; //increment the number
        
-        ticketNumber = "3-" + ticketNumber.format("%04d", count);
+        ticketNumber = "3-" + String.format("%04d", count);
         
 		return ticketNumber;
 	}

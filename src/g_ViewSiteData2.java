@@ -73,16 +73,8 @@ public class g_ViewSiteData2 {
 	 */
 	private void initialize() {
 		frmArchiveTickets = new JFrame();
-		frmArchiveTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSiteData2.class.getResource("/icon.png")));
-		
-		if(g_MainMenu.offlineMode)
-		{
-			frmArchiveTickets.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmArchiveTickets.setTitle("Automated Support Program");
-		}
+		frmArchiveTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSiteData2.class.getResource("/icon.png")));						
+		frmArchiveTickets.setTitle("Automated Support Program");		
 		frmArchiveTickets.setBounds(100, 100, 801, 601);
 		frmArchiveTickets.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmArchiveTickets.getContentPane().setLayout(null);

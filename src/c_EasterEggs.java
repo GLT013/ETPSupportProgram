@@ -1,7 +1,5 @@
 import java.util.Random;
 
-import javax.swing.JOptionPane;
-
 public class c_EasterEggs {
 	
 	public static String EasterEggs()

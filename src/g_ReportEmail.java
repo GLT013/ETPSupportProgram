@@ -1,13 +1,9 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
@@ -19,15 +15,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import javax.swing.border.EtchedBorder;
-
-import net.sourceforge.jtds.jdbc.DateTime;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -50,9 +40,10 @@ public class g_ReportEmail {
 	
 			public static void run() {
 				try {
+					@SuppressWarnings("unused")
 					g_ReportEmail window = new g_ReportEmail();
-					window.frmReportEmail.setVisible(true);
-					window.frmReportEmail.setLocationRelativeTo( g_CurrentTickets.frmCurrentTickets );
+					g_ReportEmail.frmReportEmail.setVisible(true);
+					g_ReportEmail.frmReportEmail.setLocationRelativeTo( g_CurrentTickets.frmCurrentTickets );
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -77,16 +68,8 @@ public class g_ReportEmail {
 		frmReportEmail.setBounds(100, 100, 800, 906);
 		frmReportEmail.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmReportEmail.getContentPane().setLayout(null);
-		if(g_MainMenu.offlineMode)
-		{
-			frmReportEmail.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmReportEmail.setTitle("Automated Support Program");
-		}
-		
-		
+		frmReportEmail.setTitle("Automated Support Program");
+						
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 38, 764, 469);
 		frmReportEmail.getContentPane().add(scrollPane);
@@ -144,7 +127,7 @@ public class g_ReportEmail {
 		scrollPane_1.setBounds(10, 569, 194, 241);
 		frmReportEmail.getContentPane().add(scrollPane_1);
 		
-		final JList list = new JList();
+		final JList<?> list = new JList<Object>();
 		scrollPane_1.setViewportView(list);
 		
 		JButton btnNewButton = new JButton(">>");
@@ -336,6 +319,7 @@ public class g_ReportEmail {
 		EmailList2.setModel(EmailListModel2);		
 	}	
 
+	@SuppressWarnings("deprecation")
 	public static void GenerateEmailReport(List<String> TicketList )
 	{		
 		c_ConnectToDatabase.Connect();		
@@ -348,7 +332,6 @@ public class g_ReportEmail {
 		Timestamp TOC = null; //time of completion
 		String duration = "";
 		String TOC_Formatted = "";
-		Date TOC_Date = null;
 		SupportEmail = "<html>";
 		
 		for(int i = 0; i < TicketList.size(); i++)
@@ -375,59 +358,18 @@ public class g_ReportEmail {
 					issue = rs.getString("Description");
 					investigation = rs.getString("Resolution");
 					status = rs.getString("Status");
-
-					if(!g_MainMenu.offlineMode)
-					{
-						TOC = rs.getTimestamp("UpdateDate");
-						TOC.setHours(TOC.getHours()+1); //Update to Eastern Time Zone.
-						TOC_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(TOC);
-					}
-					else
-					{
-						TOC_Formatted = rs.getString("UpdateDate");
-						
-						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //First put string into date format						
-						Date date = null;
-						try {
-							date = formatter.parse(TOC_Formatted);							
-						} catch (ParseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();							
-						}						
-						Calendar cal = Calendar.getInstance();
-						cal.setTime(date);							
-						cal.add(Calendar.HOUR_OF_DAY, 1); //Update to Eastern Time Zone		
-						SimpleDateFormat tmpFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm"); //Used to convert date format to email format.
-						TOC_Formatted = tmpFormat.format(cal.getTime());//Format to appropriate date format.												
-					}
+			
+					TOC = rs.getTimestamp("UpdateDate");
+					TOC.setHours(TOC.getHours()+1); //Update to Eastern Time Zone.
+					TOC_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(TOC);
+					
 					
 					duration = rs.getString("TimeSpent");	
 					if((rs.getString("CCNotified") != null) && (rs.getString("CCNotified").compareTo("null") != 0))
-					{
-						if(!g_MainMenu.offlineMode)
-						{
+					{						
 							ccNotifiedTime = rs.getTimestamp("CCNotified");							
 							ccNotifiedTime.setHours(ccNotifiedTime.getHours()+1); //Update to Eastern Time Zone.
-							ccNotifiedTime_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(ccNotifiedTime) + " EST.";
-						}
-						else
-						{
-							ccNotifiedTime_Formatted = rs.getString("CCNotified");							
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //First put string into date format						
-							Date date = null;
-							try {
-								date = formatter.parse(ccNotifiedTime_Formatted);							
-							} catch (ParseException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();							
-							}						
-							Calendar cal = Calendar.getInstance();
-							cal.setTime(date);							
-							cal.add(Calendar.HOUR_OF_DAY, 1); //Update to Eastern Time Zone		
-							SimpleDateFormat tmpFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm"); //Used to convert date format to email format.
-							ccNotifiedTime_Formatted = tmpFormat.format(cal.getTime()) + " EST.";//Format to appropriate date format.													
-						}
-						
+							ccNotifiedTime_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(ccNotifiedTime) + " EST.";												
 					}
 					else
 					{

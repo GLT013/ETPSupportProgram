@@ -494,14 +494,9 @@ public class g_SupportArchive_Old {
 		frmSupportArchive.setLocationRelativeTo(null);	
 		frmSupportArchive.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSupportArchive.getContentPane().setLayout(null);
-		if(g_MainMenu.offlineMode)
-		{
-			frmSupportArchive.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmSupportArchive.setTitle("Automated Support Program");
-		}
+
+		frmSupportArchive.setTitle("Automated Support Program");
+		
 		
 		
 		txtSearch = new JTextField();

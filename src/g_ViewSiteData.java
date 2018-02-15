@@ -77,15 +77,9 @@ public class g_ViewSiteData {
 		frmSiteData.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSiteData.class.getResource("/icon.png")));
 		frmSiteData.setBounds(100, 100, 869, 867);
 		frmSiteData.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frmSiteData.getContentPane().setLayout(null);
-		if(g_MainMenu.offlineMode)
-		{
-			frmSiteData.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmSiteData.setTitle("Automated Support Program");
-		}
+		frmSiteData.getContentPane().setLayout(null);		
+		frmSiteData.setTitle("Automated Support Program");
+		
 				
 		panel.setBackground(new Color(245, 245, 245));
 		panel.setBounds(0, 0, 850, 800);

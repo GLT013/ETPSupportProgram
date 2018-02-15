@@ -6,8 +6,6 @@ import java.awt.Font;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
@@ -18,12 +16,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Toolkit;
 
 public class g_ViewSunoco {
@@ -51,9 +47,10 @@ public class g_ViewSunoco {
 	
 			public static void run() {
 				try {
+					@SuppressWarnings("unused")
 					g_ViewSunoco window = new g_ViewSunoco();
-					window.frmSunocoContacts.setVisible(true);
-					window.frmSunocoContacts.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					g_ViewSunoco.frmSunocoContacts.setVisible(true);
+					g_ViewSunoco.frmSunocoContacts.setLocationRelativeTo( g_MainMenu.frmMainMenu );
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -76,15 +73,9 @@ public class g_ViewSunoco {
 		frmSunocoContacts.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSunoco.class.getResource("/icon.png")));
 		frmSunocoContacts.setBounds(100, 100, 909, 441);
 		frmSunocoContacts.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frmSunocoContacts.getContentPane().setLayout(null);
-		if(g_MainMenu.offlineMode)
-		{
-			frmSunocoContacts.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmSunocoContacts.setTitle("Automated Support Program");
-		}
+		frmSunocoContacts.getContentPane().setLayout(null);		
+		frmSunocoContacts.setTitle("Automated Support Program");
+		
 		
 		frmSunocoContacts.addWindowListener(new java.awt.event.WindowAdapter() {
 			 @Override
@@ -149,14 +140,7 @@ public class g_ViewSunoco {
 		
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {		
-				if(g_MainMenu.offlineMode)
-				{
-					String err = c_EasterEggs.EasterEggs();					
-					JOptionPane.showMessageDialog(frmSunocoContacts, err);
-					return;
-				}
-				else
-				{
+				
 					lblName.setEditable(true);
 					lblCompany.setEditable(true);
 					lblEmail.setEditable(true);				
@@ -169,7 +153,7 @@ public class g_ViewSunoco {
 					btnAccept.setVisible(true);
 					btnAccept.setEnabled(true);
 				}
-			}
+			
 		});   
 		
 		btnEdit.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/edit.png")));
@@ -209,14 +193,7 @@ public class g_ViewSunoco {
 		JButton btnRemoveContact = new JButton("");
 		btnRemoveContact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(g_MainMenu.offlineMode)
-				{
-					String err = c_EasterEggs.EasterEggs();					
-					JOptionPane.showMessageDialog(frmSunocoContacts, err);
-					return;
-				}
-				else
-				{
+				
 					int index = list.getSelectedIndex();
 					String removalName = result.get(index).getName();				
 					int reply = JOptionPane.showConfirmDialog(frmSunocoContacts, "Really delete " + removalName + "?" , "Remove Contact?", JOptionPane.YES_NO_OPTION);
@@ -232,7 +209,7 @@ public class g_ViewSunoco {
 			        {
 			        	//do nothing.
 			        }
-				}
+				
 			}
 		});
 		btnRemoveContact.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/Minus-48.png")));
@@ -241,19 +218,11 @@ public class g_ViewSunoco {
 		frmSunocoContacts.getContentPane().add(btnRemoveContact);		
 			btnNewContact.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(g_MainMenu.offlineMode)
-					{
-						
-						String err = c_EasterEggs.EasterEggs();					
-						JOptionPane.showMessageDialog(frmSunocoContacts, err);
-						return;
-					}
-					else
-					{
+					
 					g_NewSunocoContact.run();
 					frmSunocoContacts.dispose();
 					}
-				}
+				
 			});
 		
 		btnNewContact.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/Plus-48.png")));

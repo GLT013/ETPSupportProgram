@@ -55,15 +55,9 @@ public class g_NewEmployee {
 		frmNewEmployee.setIconImage(Toolkit.getDefaultToolkit().getImage(g_NewEmployee.class.getResource("/icon.png")));
 		frmNewEmployee.setBounds(100, 100, 626, 475);
 		frmNewEmployee.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmNewEmployee.getContentPane().setLayout(null);
-		if(g_MainMenu.offlineMode)
-		{
-			frmNewEmployee.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmNewEmployee.setTitle("Automated Support Program");
-		}
+		frmNewEmployee.getContentPane().setLayout(null);		
+		frmNewEmployee.setTitle("Automated Support Program");
+		
 		
 		JLabel lblAddNewEmployee = new JLabel("Add New Employee");
 		lblAddNewEmployee.setBounds(214, 11, 189, 19);

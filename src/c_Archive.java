@@ -78,39 +78,7 @@ public class c_Archive {
 		lastupdatedby = _lastupdatedby;
 	}
 	
-	/*
-	public c_Archive(String proj)
-	{
-		project = proj;		
 		
-	}
-	
-	public c_Archive(String proj, String partnum)
-	{
-		project = proj;
-		part_number = partnum;		
-		
-	}
-*/	
-	/*
-@Override
-public String toString(){
-		
-		if(this.getproject() != null)
-		{
-		String fullproject = new String(this.getproject());
-		return fullproject;
-		}
-		
-		else 
-		{
-			return this.getproject();
-		}
-		
-		
-	}
-*/	
-	
 	
 	
 }

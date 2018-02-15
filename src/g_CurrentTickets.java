@@ -2,11 +2,9 @@ import it.cnr.imaa.essi.lablib.gui.checkboxtree.CheckboxTree;
 import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
@@ -15,10 +13,8 @@ import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-
 import com.inet.jortho.FileUserDictionary;
 import com.inet.jortho.SpellChecker;
-
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -51,11 +47,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
 import javax.swing.border.EtchedBorder;
-import javax.swing.border.MatteBorder;
-import javax.swing.JTabbedPane;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
-import javax.swing.border.BevelBorder;
 /* http://stackoverflow.com/questions/16157529/how-do-i-pass-objects-between-classes */
 public class g_CurrentTickets {
 
@@ -92,8 +85,8 @@ public class g_CurrentTickets {
 	public String siteID;
 	private JComboBox<String> cb_Assigned;
 	private JButton btnEdit;
-	private String directory = "\\\\10.10.38.252\\C$\\SupportProgram\\Files\\";
-	private String userDictionaryPath = "\\\\10.10.38.252\\C$\\SupportProgram\\dictionary\\";
+	private String directory = "\\\\supportsql\\C$\\SupportProgram\\Files\\";
+	private String userDictionaryPath = "\\\\supportsql\\C$\\SupportProgram\\dictionary\\";
 	private int numFiles; 
 	private int viewIP;
 	private int SQLIP; 
@@ -105,7 +98,6 @@ public class g_CurrentTickets {
 	private int siteid;
 	private boolean highperformance;
 	private static JCheckBox chckbxCcNotified;
-	private static String CCNotified;
 	private static boolean CCNotifiedState = false;
 	private static JRadioButton rdbtnAllTickets;
 	private static JRadioButton rdbtnMyTickets;
@@ -117,9 +109,10 @@ public class g_CurrentTickets {
 
 	public static void run() {				
 		try {
+			@SuppressWarnings("unused")
 			g_CurrentTickets window = new g_CurrentTickets();
-			window.frmCurrentTickets.setVisible(true);
-			window.frmCurrentTickets.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+			g_CurrentTickets.frmCurrentTickets.setVisible(true);
+			g_CurrentTickets.frmCurrentTickets.setLocationRelativeTo( g_MainMenu.frmMainMenu );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -141,16 +134,8 @@ public class g_CurrentTickets {
 	 */
 	private void initialize() {
 		frmCurrentTickets = new JFrame();
-		frmCurrentTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_CurrentTickets.class.getResource("/icon.png")));
-		
-		if(g_MainMenu.offlineMode)
-		{
-			frmCurrentTickets.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmCurrentTickets.setTitle("Automated Support Program");
-		}
+		frmCurrentTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_CurrentTickets.class.getResource("/icon.png")));				
+		frmCurrentTickets.setTitle("Automated Support Program");		
 		frmCurrentTickets.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frmCurrentTickets.setBounds(100, 100, 964, 895);
 		frmCurrentTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -390,7 +375,6 @@ public class g_CurrentTickets {
 		
 		txt_Update = new JTextArea();
 		scrollPane.setViewportView(txt_Update);
-		//txt_Update.setAutoscrolls(false);
 		txt_Update.setLineWrap(true);
 		txt_Update.setWrapStyleWord(true);
 		
@@ -456,19 +440,7 @@ public class g_CurrentTickets {
 		chckbxCcNotified = new JCheckBox("CC Notified");
 		chckbxCcNotified.setBounds(466, 696, 97, 23);
 		panel_1.add(chckbxCcNotified);
-		
-		JLabel lblOffline = new JLabel("Offline!");
-		lblOffline.setForeground(Color.RED);
-		lblOffline.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		lblOffline.setBounds(294, 11, 97, 20);
-		panel_1.add(lblOffline);
-		lblOffline.setVisible(false);
-		if(g_MainMenu.offlineMode)
-		{
-			lblOffline.setVisible(true);
-		}
-			
-		
+						
 		panel_2 = new JPanel();
 		panel_2.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panel_2.setBounds(265, 747, 668, 54);
@@ -632,7 +604,6 @@ public class g_CurrentTickets {
 					client.compareTo("Caljet") == 0 || client.compareTo("Shell") == 0 ||
 					client.compareTo("Sinclair") == 0 || client.compareTo("Cummins") == 0)
 				{
-					//JOptionPane.showMessageDialog(null, "Phone #281-637-6472");
 					int reply = JOptionPane.showConfirmDialog(frmCurrentTickets, "Phone #281-637-6472 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
@@ -774,17 +745,14 @@ public class g_CurrentTickets {
 				buttonGroup.add(rdbtnMyTickets);
 				rdbtnMyTickets.setBackground(Color.WHITE);
 				rdbtnMyTickets.setBounds(125, 3, 96, 15);
-				panel_4.add(rdbtnMyTickets);
-								
-				if(!g_MainMenu.offlineMode)
-				{
-					SpellChecker.setUserDictionaryProvider(new FileUserDictionary(userDictionaryPath));
-					SpellChecker.registerDictionaries(getClass().getResource(userDictionaryPath), "en");
-					SpellChecker.getOptions().setIgnoreAllCapsWords(true);
-					SpellChecker.getOptions().setIgnoreCapitalization(true);
-			        SpellChecker.register( txt_Internal);		        
-			        SpellChecker.register( txt_Update);
-				}
+				panel_4.add(rdbtnMyTickets);												
+				SpellChecker.setUserDictionaryProvider(new FileUserDictionary(userDictionaryPath));
+				SpellChecker.registerDictionaries(getClass().getResource(userDictionaryPath), "en");
+				SpellChecker.getOptions().setIgnoreAllCapsWords(true);
+				SpellChecker.getOptions().setIgnoreCapitalization(true);
+			    SpellChecker.register( txt_Internal);		        
+			    SpellChecker.register( txt_Update);
+				
 		tree_active.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				PopulateActiveWindow();
@@ -937,16 +905,10 @@ public class g_CurrentTickets {
 		
 		String commandText = "";
 		
-		if(!g_MainMenu.offlineMode)
-		{
+		
 		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
-		}
-		else
-		{
-			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, b.UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
-					+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
-		}
+		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		
 		try
@@ -1078,16 +1040,10 @@ public class g_CurrentTickets {
 			//do nothing
 		}
 		String commandText = "";
-		if(!g_MainMenu.offlineMode)
-		{
+		
 		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
-		}
-		else
-		{
-			commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, b.UpdateDate, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
-					+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
-		}
+		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		
 		try
@@ -1187,7 +1143,7 @@ public class g_CurrentTickets {
 									String projectname = rs.getString(1);
 									proj = new DefaultMutableTreeNode(projectname);
 										
-										String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 AND Assigned ='" + g_MainMenu.CurrentUser + "' and Client ='" + projectname + "'";
+										String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 AND Assigned ='" + g_MainMenu.CurrentUser + "' and Client ='" + projectname + "' ORDER BY Site ASC";
 										
 										ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
 										boolean emailSent = false;
@@ -1235,7 +1191,7 @@ public class g_CurrentTickets {
 									String projectname = rs.getString(1);
 									proj = new DefaultMutableTreeNode(projectname);
 										
-										String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 and Client ='" + projectname + "'";
+										String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 and Client ='" + projectname + "' ORDER BY Site ASC";
 										
 										ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
 										boolean emailSent = false;
@@ -1326,16 +1282,10 @@ public class g_CurrentTickets {
 	 {		 
 		 DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm");
 		 String testDate = "";
-		 if(!g_MainMenu.offlineMode)
-		 {			 
+		 		 
 			 Date date = new Date();
 			 testDate = dateFormat.format(date);	
-		 }
-		 else
-		 {						
-			 Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-			 testDate = dateFormat.format(currentTimestamp);	
-		 }
+		
 		 			 
 		 String resolution = txt_Update.getText();
 		 resolution = c_CleanString.Clean_String(resolution);
@@ -1423,16 +1373,10 @@ public class g_CurrentTickets {
 		 
 		 String testDate = "";
 		 DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm");
-		 if(!g_MainMenu.offlineMode)
-		 {			 
+		 		 
 			 Date date = new Date();
 			 testDate = dateFormat.format(date);	
-		 }
-		 else
-		 {						
-			 Timestamp currentTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-			 testDate = dateFormat.format(currentTimestamp);	
-		 }
+		
 		 	 
 		 String commandText = "";
 		 String resolution = txt_Update.getText();
@@ -1512,7 +1456,6 @@ public class g_CurrentTickets {
 			}
 
 			PopulateActiveWindow();
-			//PopulateActiveTickets(); //Added to refresh window after update has been made. Will clear email sent flag.
 			tree_active.getExpandsSelectedPaths();
 			tree_active.setSelectionPath(tpath);
 			tree_active.scrollPathToVisible(tpath);

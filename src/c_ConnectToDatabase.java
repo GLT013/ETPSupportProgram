@@ -1,6 +1,5 @@
 import java.sql.DriverManager;
 import java.sql.Statement;
-import org.sqlite.SQLiteDataSource;
 
 
 public class c_ConnectToDatabase {
@@ -29,16 +28,6 @@ public class c_ConnectToDatabase {
 	}
 	
 	
-	public static boolean ConnectSQLite(){		 
-	    try {
-	      Class.forName("org.sqlite.JDBC");
-	      con_sqlite = DriverManager.getConnection("jdbc:sqlite:C:\\\\Support Program\\\\ETPSupport.db");
-	    } catch ( Exception e ) {
-	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-	      return false;
-	    }
-	    
-	    return true;
-	}
+
 
 }

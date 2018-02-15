@@ -65,9 +65,10 @@ public class g_ViewSites {
 	
 			public static void run() {
 				try {
+					@SuppressWarnings("unused")
 					g_ViewSites window = new g_ViewSites();
-					window.frmButaneSites.setVisible(true);
-					window.frmButaneSites.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					g_ViewSites.frmButaneSites.setVisible(true);
+					g_ViewSites.frmButaneSites.setLocationRelativeTo( g_MainMenu.frmMainMenu );
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -90,15 +91,9 @@ public class g_ViewSites {
 		frmButaneSites.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSites.class.getResource("/icon.png")));
 		frmButaneSites.setBounds(100, 100, 909, 730);
 		frmButaneSites.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frmButaneSites.getContentPane().setLayout(null);
-		if(g_MainMenu.offlineMode)
-		{
-			frmButaneSites.setTitle("Automated Support Program - OFFLINE");	
-		}
-		else
-		{
-			frmButaneSites.setTitle("Automated Support Program");
-		}
+		frmButaneSites.getContentPane().setLayout(null);		
+		frmButaneSites.setTitle("Automated Support Program");
+		
 		
 		frmButaneSites.addWindowListener(new java.awt.event.WindowAdapter() {
 			 @Override

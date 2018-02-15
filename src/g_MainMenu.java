@@ -1,36 +1,18 @@
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Properties;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import com.alee.extended.layout.ToolbarLayout;
-import com.alee.extended.statusbar.WebMemoryBar;
-import com.alee.extended.statusbar.WebStatusBar;
-import com.alee.extended.statusbar.WebStatusLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import java.awt.Color;
-import java.awt.Container;
 import java.awt.Font;
 import java.awt.Toolkit;
 //icons https://icons8.com/web-app/for/all/return
@@ -38,12 +20,9 @@ import java.awt.Toolkit;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 3.0;
+	public static double version = 3.1;
 	public static boolean firstrun = true;
-	public static boolean offlineMode = false;
-	public static File SQLiteDB = new File("C:\\\\Support Program\\\\ETPSupport.db");
-	public static String TitleOnline = "Automated Support Program v" + version + "";
-	public static String TitleOffline = "Automated Support Program v" + version + " - OFFLINE";
+	public static String TitleOnline = "Automated Support Program v" + version + "";	
 	public static boolean CurrentTicketsNav;
 	public static String CurrentUser = "";
 	private static JLabel lblHello;
@@ -73,28 +52,10 @@ public class g_MainMenu {
 			{
 				if(c_ConnectToDatabase.Connect() == false)
 				{
-					int reply = JOptionPane.showConfirmDialog(null, "Cannot connect to database. \n Continue in Offline Mode?" , "Offline Mode", JOptionPane.YES_NO_OPTION);
-			        if (reply == JOptionPane.YES_OPTION)
-			        {
-			        	offlineMode = true;
-			        	if(SQLiteDB.exists())
-			        	{
-			        		c_ConnectToDatabase.ConnectSQLite();
-			        	}
-			        	else
-			        	{
-			        		c_SyncForOfflineMode.CreateDatabase();
-			        		c_ConnectToDatabase.ConnectSQLite();
-			        		c_SyncForOfflineMode.CreateTables();
-			        	}
-			        }
-			        else
-			        {
+					JOptionPane.showMessageDialog(frmMainMenu, "Cannot connect to database. Please verify internet connection and try again.");					
 			        	return;
-			        }
-				}
-				
-		
+			    }
+								
 				if(!checkVersion())
 				{
 					JOptionPane.showMessageDialog(frmMainMenu, "There is a newer version of the program located on the I Drive!");
@@ -132,8 +93,7 @@ public class g_MainMenu {
 	
 	public static boolean checkVersion()
 	{
-		if(!offlineMode)
-		{
+		
 			String _version = "SELECT Version from Version";
 			ResultSet rs = c_Query.ExecuteResultSet(_version);
 			
@@ -154,11 +114,7 @@ public class g_MainMenu {
 				e.printStackTrace();
 			}		
 			return true;	
-		}
-		else
-		{
-			return true;
-		}
+		
 	}
 	
 	public static void run(JFrame frame) {
@@ -193,15 +149,8 @@ public class g_MainMenu {
 		frmMainMenu.setLocationRelativeTo(null);
 		frmMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMainMenu.getContentPane().setLayout(null);
+		frmMainMenu.setTitle(TitleOnline);
 		
-		if(offlineMode)
-		{
-			frmMainMenu.setTitle(TitleOffline);	
-		}
-		else
-		{
-			frmMainMenu.setTitle(TitleOnline);
-		}
 		
 		//Quick Lookup Button
 		btnSupportArchive = new JButton("Support Archive");
