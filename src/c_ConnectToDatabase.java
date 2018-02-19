@@ -18,6 +18,7 @@ public class c_ConnectToDatabase {
                                  "user=travis;" +
                                  "password=Butane#Ops";
          con = DriverManager.getConnection(connectionUrl);
+         
          return true;
      }
      catch(Exception e)

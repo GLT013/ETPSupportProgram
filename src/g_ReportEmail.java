@@ -361,7 +361,7 @@ public class g_ReportEmail {
 			
 					TOC = rs.getTimestamp("UpdateDate");
 					TOC.setHours(TOC.getHours()+1); //Update to Eastern Time Zone.
-					TOC_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(TOC);
+					TOC_Formatted = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(TOC);
 					
 					
 					duration = rs.getString("TimeSpent");	
@@ -369,7 +369,7 @@ public class g_ReportEmail {
 					{						
 							ccNotifiedTime = rs.getTimestamp("CCNotified");							
 							ccNotifiedTime.setHours(ccNotifiedTime.getHours()+1); //Update to Eastern Time Zone.
-							ccNotifiedTime_Formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm").format(ccNotifiedTime) + " EST.";												
+							ccNotifiedTime_Formatted = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(ccNotifiedTime) + " EST.";												
 					}
 					else
 					{

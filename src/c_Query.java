@@ -9,11 +9,26 @@ public static java.sql.Connection connection;
 public static Statement statement;
 public static java.sql.Connection con_sqlite;
 public static Statement stmt_sqlite;
-
-			
+		
 	public static ResultSet ExecuteResultSet(String query)
 	{
-		//if statement to determine if offline mode???
+		try {
+			if(!c_ConnectToDatabase.con.isValid(0))
+			{
+				try
+				{
+					c_ConnectToDatabase.Connect();
+				}
+				catch(Exception e)
+				{
+					System.out.println(e.toString());
+				}
+				
+			}
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 			
 			ResultSet rs = null;	
 			connection = c_ConnectToDatabase.con;
@@ -42,12 +57,30 @@ public static Statement stmt_sqlite;
 				g_MainMenu.run(null);
 				
 			}		
+			
 			return rs;
 	}
 		
 		
 		public static void ExecuteQuery(String query)
-		{			
+		{		
+			try {
+				if(!c_ConnectToDatabase.con.isValid(0))
+				{
+					try
+					{
+						c_ConnectToDatabase.Connect();
+					}
+					catch(Exception e)
+					{
+						System.out.println(e.toString());
+					}
+					
+				}
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			connection = c_ConnectToDatabase.con;
 			statement = c_ConnectToDatabase.stmt;
 			
@@ -59,10 +92,29 @@ public static Statement stmt_sqlite;
 			
 				e.printStackTrace();
 			}
+			
+			
 		}
 
 		public static void UpdateResultSet(String query)
 		{			
+			try {
+				if(!c_ConnectToDatabase.con.isValid(0))
+				{
+					try
+					{
+						c_ConnectToDatabase.Connect();
+					}
+					catch(Exception e)
+					{
+						System.out.println(e.toString());
+					}
+					
+				}
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 				connection = c_ConnectToDatabase.con;
 				statement = c_ConnectToDatabase.stmt;
 				try{
@@ -72,15 +124,35 @@ public static Statement stmt_sqlite;
 				}catch (SQLException e) {
 					e.printStackTrace();
 				}
+				
+				
 		}
 	
 		
 		public static ResultSet SQLiteExecuteResultSet(String query)
 		{
+			try {
+				if(!c_ConnectToDatabase.con.isValid(0))
+				{
+					try
+					{
+						c_ConnectToDatabase.Connect();
+					}
+					catch(Exception e)
+					{
+						System.out.println(e.toString());
+					}
+					
+				}
+			} catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 				ResultSet rs = null;	
 				connection = c_ConnectToDatabase.con_sqlite;
 				statement = c_ConnectToDatabase.stmt_sqlite;
-				//java.sql.Connection con = null;					
+				//java.sql.Connection con = null;			
+				
 				try{
 					
 					statement = connection.createStatement(); 
@@ -103,37 +175,22 @@ public static Statement stmt_sqlite;
 					g_MainMenu.run(null);
 					
 				}		
+				
+				
 				return rs;						
-			}
+			}	
 		
-		
-		public static void SQLiteExecuteQuery(String query){
-			connection = c_ConnectToDatabase.con_sqlite;
-			statement = c_ConnectToDatabase.stmt_sqlite;
-			
+		public static void CloseConnection()
+		{
 			try {
-				statement = (Statement) ((java.sql.Connection) connection).createStatement();	
-				statement.executeUpdate(query);
-				
+				c_ConnectToDatabase.con_sqlite.close();
+				c_ConnectToDatabase.stmt_sqlite.close();
 			} catch (SQLException e) {
-			
+				// TODO Auto-generated catch block
 				e.printStackTrace();
+				System.out.println(e.toString());
 			}
 			
-		
 		}
-
-		public static void SQLiteUpdateResultSet(String query){
-			
-			connection = c_ConnectToDatabase.con_sqlite;
-			statement = c_ConnectToDatabase.stmt_sqlite;
-			try{
-				statement = (Statement) ((java.sql.Connection) connection).createStatement();
-				statement.executeUpdate(query);			
-				
-			}catch (SQLException e) {
-				e.printStackTrace();
-			}
-
-	}
+	
 }

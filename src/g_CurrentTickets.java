@@ -109,6 +109,7 @@ public class g_CurrentTickets {
 
 	public static void run() {				
 		try {
+			c_ConnectToDatabase.Connect();
 			@SuppressWarnings("unused")
 			g_CurrentTickets window = new g_CurrentTickets();
 			g_CurrentTickets.frmCurrentTickets.setVisible(true);
@@ -1374,10 +1375,8 @@ public class g_CurrentTickets {
 		 String testDate = "";
 		 DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm");
 		 		 
-			 Date date = new Date();
-			 testDate = dateFormat.format(date);	
-		
-		 	 
+		 Date date = new Date();
+		 testDate = dateFormat.format(date);	
 		 String commandText = "";
 		 String resolution = txt_Update.getText();
 		 resolution = c_CleanString.Clean_String(resolution);

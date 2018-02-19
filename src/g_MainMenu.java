@@ -20,7 +20,7 @@ import java.awt.Toolkit;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 3.1;
+	public static double version = 3.3;
 	public static boolean firstrun = true;
 	public static String TitleOnline = "Automated Support Program v" + version + "";	
 	public static boolean CurrentTicketsNav;
