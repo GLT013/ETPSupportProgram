@@ -5,17 +5,12 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import java.awt.Font;
-import javax.swing.JButton;
 import javax.swing.DefaultListModel;
-import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
-import javax.swing.JTable;
-import java.awt.Color;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
@@ -23,6 +18,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+
 /* http://stackoverflow.com/questions/16157529/how-do-i-pass-objects-between-classes */
 public class g_ViewSiteData2 {
 
@@ -33,7 +30,7 @@ public class g_ViewSiteData2 {
 	private int rowID;
 	private String TicketNum;
 	public String siteID;
-	private String directory = "\\\\10.10.38.252\\C$\\SupportProgram\\Files\\";
+	private String directory = "\\\\supportsql\\C$\\SupportProgram\\Files\\";
 	private int numFiles; 
 	private int viewIP;
 	private int SQLIP; 
@@ -910,6 +907,8 @@ public class g_ViewSiteData2 {
 		lblTerminalOffice.setBounds(89, 128, 152, 14);
 		panel_7.add(lblTerminalOffice);
 		
-	}		
+	
+	}
 }
+
 

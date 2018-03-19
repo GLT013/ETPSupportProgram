@@ -420,16 +420,16 @@ public class g_ArchiveTickets {
 			public void actionPerformed(ActionEvent arg0) {				
 				if (client.compareTo("Kinder Morgan") == 0 || client.compareTo("Phillips 66") == 0 ||
 					client.compareTo("Motiva") == 0 || client.compareTo("Chevron") == 0 ||
-					client.compareTo("Caljet") == 0 || client.compareTo("Shell") == 0 ||
+					client.compareTo("Shell") == 0 ||
 					client.compareTo("Sinclair") == 0 || client.compareTo("Cummins") == 0)
 				{
 
-					int reply = JOptionPane.showConfirmDialog(frmArchiveTickets, "Phone #281-637-6472 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
+					int reply = JOptionPane.showConfirmDialog(frmArchiveTickets, "Phone #713-989-4409 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
 			        	try {
 
-							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 12816376472"});
+							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894409"});
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -439,12 +439,12 @@ public class g_ArchiveTickets {
 				}
 				else
 				{
-					int reply = JOptionPane.showConfirmDialog(frmArchiveTickets, "Phone #281-637-6473 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
+					int reply = JOptionPane.showConfirmDialog(frmArchiveTickets, "Phone #713-989-4408 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
 			        	try {
 
-							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 12816376473"});
+							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894408"});
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

@@ -21,6 +21,7 @@ public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
 	public static double version = 3.3;
+	public static int ticketMax = 20;
 	public static boolean firstrun = true;
 	public static String TitleOnline = "Automated Support Program v" + version + "";	
 	public static boolean CurrentTicketsNav;
@@ -58,8 +59,8 @@ public class g_MainMenu {
 								
 				if(!checkVersion())
 				{
-					JOptionPane.showMessageDialog(frmMainMenu, "There is a newer version of the program located on the I Drive!");
-					//return;
+					JOptionPane.showMessageDialog(frmMainMenu, "Support Program Update Required!");
+					return;
 				}				
 					@SuppressWarnings("unused")
 					g_MainMenu window = new g_MainMenu();
@@ -68,6 +69,15 @@ public class g_MainMenu {
 					CurrentUser = c_GetComputerName.getComputerName();
 					String Greeting = c_EasterEggs.Greetings();
 					lblHello.setText(Greeting + " " + CurrentUser + "!");
+					
+					JButton btnNewButton = new JButton("New button");
+					btnNewButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							g_SiteChanges.run();
+						}
+					});
+					btnNewButton.setBounds(10, 518, 89, 23);
+					frmMainMenu.getContentPane().add(btnNewButton);
 					
 					if(adminMode)
 					{							
@@ -94,14 +104,20 @@ public class g_MainMenu {
 	public static boolean checkVersion()
 	{
 		
-			String _version = "SELECT Version from Version";
+			String _version = "SELECT Version, MaxOpenTickets from Version";
 			ResultSet rs = c_Query.ExecuteResultSet(_version);
 			
 			try {
 				rs.next();
+				ticketMax = rs.getInt("MaxOpenTickets");
 				double _dbVersion = rs.getDouble("Version");			
 				if(_dbVersion == version)
 				{
+					return true;
+				}
+				else if ((_dbVersion - version)*10 <= 1)
+				{
+					JOptionPane.showMessageDialog(frmMainMenu, "There is a newer version of the program located on the I Drive!");
 					return true;
 				}
 				else
@@ -186,9 +202,16 @@ public class g_MainMenu {
 		JButton btnNewTicket = new JButton("New Ticket");
 		btnNewTicket.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CurrentTicketsNav = false;
-				g_TicketEntry.run();
-				frmMainMenu.dispose();
+				if(c_CheckOpenTickets.CheckTickets())
+				{
+					CurrentTicketsNav = false;
+					g_TicketEntry.run();
+					frmMainMenu.dispose();
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(frmMainMenu, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
+				}
 			}
 		});
 		btnNewTicket.setBounds(106, 47, 187, 54);
