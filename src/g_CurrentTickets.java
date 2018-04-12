@@ -18,6 +18,9 @@ import com.inet.jortho.SpellChecker;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -101,10 +104,7 @@ public class g_CurrentTickets {
 	private static boolean CCNotifiedState = false;
 	private static JRadioButton rdbtnAllTickets;
 	private static JRadioButton rdbtnMyTickets;
-	private static JLabel lblLastUpdatedByStr;
-	
-	
-
+	private static JLabel lblLastUpdatedByStr;	
 	
 
 	public static void run() {				
@@ -136,9 +136,9 @@ public class g_CurrentTickets {
 	private void initialize() {
 		frmCurrentTickets = new JFrame();
 		frmCurrentTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_CurrentTickets.class.getResource("/icon.png")));				
-		frmCurrentTickets.setTitle("Automated Support Program");		
+		frmCurrentTickets.setTitle("Automated Support Program v." + g_MainMenu.version);	
 		frmCurrentTickets.getContentPane().setBackground(Color.LIGHT_GRAY);
-		frmCurrentTickets.setBounds(100, 100, 964, 895);
+		frmCurrentTickets.setBounds(100, 100, 964, 917);
 		frmCurrentTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmCurrentTickets.getContentPane().setLayout(null);
 	
@@ -693,7 +693,7 @@ public class g_CurrentTickets {
 			public void actionPerformed(ActionEvent arg0) {
 				if(c_CheckOpenTickets.CheckTickets())
 				{
-					g_MainMenu.CurrentTicketsNav = true;
+					
 					g_TicketEntry.run();
 					frmCurrentTickets.dispose();
 				}
@@ -765,6 +765,96 @@ public class g_CurrentTickets {
 				PopulateActiveWindow();
 			}
 		});
+		
+				//Menubar
+				JMenuBar menuBar = new JMenuBar();
+				frmCurrentTickets.setJMenuBar(menuBar);
+				
+				
+						
+				JMenu mnSupport = new JMenu("Support");
+				menuBar.add(mnSupport);
+				
+				JMenuItem mntmNewTicket = new JMenuItem("New Ticket");
+				mntmNewTicket.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						g_MainMenu.checkVersion();
+						if(c_CheckOpenTickets.CheckTickets())
+						{							
+							g_TicketEntry.run();
+							frmCurrentTickets.dispose();
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(frmCurrentTickets, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
+						}
+						
+					}
+				});
+				mnSupport.add(mntmNewTicket);
+				
+				JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
+				mntmCurrentTickets.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						g_CurrentTickets.run();
+						frmCurrentTickets.dispose();
+					}
+				});
+				mnSupport.add(mntmCurrentTickets);
+				
+				JMenuItem mntmArchive = new JMenuItem("Archive");
+				mntmArchive.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						g_ArchiveTickets.run();
+						frmCurrentTickets.dispose();
+					}
+				});
+				mnSupport.add(mntmArchive);
+				
+				JMenu mnSites = new JMenu("Sites");
+				menuBar.add(mnSites);
+				
+				JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
+				mntmButaneSites.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						g_ViewSites.run();
+						frmCurrentTickets.dispose();
+					}
+				});
+				mnSites.add(mntmButaneSites);
+				
+				JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
+				mntmSiteChanges.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						g_SiteChanges.run();
+						frmCurrentTickets.dispose();
+					}
+				});
+				mnSites.add(mntmSiteChanges);
+				
+				JMenu mnContacts = new JMenu("Contacts");
+				menuBar.add(mnContacts);
+				
+				JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
+				mntmENEmployees.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						g_ViewEmployees.run();
+						frmCurrentTickets.dispose();
+					}
+				});
+				mnContacts.add(mntmENEmployees);
+				
+				JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
+				mntmEtpContacts.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						g_ViewSunoco.run();
+						frmCurrentTickets.dispose();
+					}
+				});
+				mnContacts.add(mntmEtpContacts);
+			
+				
+		
 	}
 	
 	int tmp2[];

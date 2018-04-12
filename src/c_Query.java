@@ -45,14 +45,7 @@ public static Statement stmt_sqlite;
 			}catch (SQLException e) {
 				e.printStackTrace();
 				String tmp = e.toString();			
-				JOptionPane.showMessageDialog(null, "Could not execute query or no data was found \n " + "Error Message: " + tmp,"Query error",JOptionPane.ERROR_MESSAGE);
-				try{
-					g_SupportArchive_Old.frmSupportArchive.dispose();
-				}
-				catch (Exception e1)
-				{
-					
-				}
+				JOptionPane.showMessageDialog(null, "Could not execute query or no data was found \n " + "Error Message: " + tmp,"Query error",JOptionPane.ERROR_MESSAGE);				
 				
 				g_MainMenu.run(null);
 				
@@ -164,13 +157,7 @@ public static Statement stmt_sqlite;
 					e.printStackTrace();
 					String tmp = e.toString();			
 					JOptionPane.showMessageDialog(null, "Could not execute query or no data was found \n " + "Error Message: " + tmp,"Query error",JOptionPane.ERROR_MESSAGE);
-					try{
-						g_SupportArchive_Old.frmSupportArchive.dispose();
-					}
-					catch (Exception e1)
-					{
-						
-					}
+					
 					
 					g_MainMenu.run(null);
 					

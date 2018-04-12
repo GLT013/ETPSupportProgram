@@ -12,6 +12,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,11 +71,12 @@ public class g_TicketEntry {
 	 */
 	private void initialize() {
 		frmTicketEntry = new JFrame();
+		frmTicketEntry.setResizable(false);
 		frmTicketEntry.setIconImage(Toolkit.getDefaultToolkit().getImage(g_TicketEntry.class.getResource("/icon.png")));
-		frmTicketEntry.setBounds(100, 100, 767, 562);
+		frmTicketEntry.setBounds(100, 100, 767, 576);
 		frmTicketEntry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTicketEntry.getContentPane().setLayout(null);		
-		frmTicketEntry.setTitle(g_MainMenu.TitleOnline);
+		frmTicketEntry.setTitle("Automated Support Program v." + g_MainMenu.version);
 		
 		
 		cb_Site.addItemListener(new ItemListener() {
@@ -90,7 +95,7 @@ public class g_TicketEntry {
 				//PopulateSubCategory(cb_Category.getSelectedItem().toString());
 			}
 		});
-		cb_Category.setModel(new DefaultComboBoxModel<String>(new String[] {"", "Injection", "PGM", "Reporting", "Safety", "Sampling", "Supply", "System", "Other"}));
+		cb_Category.setModel(new DefaultComboBoxModel<String>(new String[] {"", "Injection", "HMI", "PGM", "Reporting", "Safety", "Sampling", "Supply", "System", "Other"}));
 		frmTicketEntry.getContentPane().add(cb_Category);
 		
 		JButton btnSubmit = new JButton("Enter Ticket");
@@ -216,6 +221,93 @@ public class g_TicketEntry {
 		frmTicketEntry.getContentPane().add(chkbx_NoTicketNum);
 		datePicker.getModel().setSelected(true);
 		
+
+		//Menubar
+		JMenuBar menuBar = new JMenuBar();
+		frmTicketEntry.setJMenuBar(menuBar);
+		
+		
+				
+		JMenu mnSupport = new JMenu("Support");
+		menuBar.add(mnSupport);
+		
+		JMenuItem mntmNewTicket = new JMenuItem("New Ticket");
+		mntmNewTicket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_MainMenu.checkVersion();
+				if(c_CheckOpenTickets.CheckTickets())
+				{							
+					g_TicketEntry.run();
+					frmTicketEntry.dispose();
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(frmTicketEntry, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
+				}
+				
+			}
+		});
+		mnSupport.add(mntmNewTicket);
+		
+		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
+		mntmCurrentTickets.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_CurrentTickets.run();
+				frmTicketEntry.dispose();
+			}
+		});
+		mnSupport.add(mntmCurrentTickets);
+		
+		JMenuItem mntmArchive = new JMenuItem("Archive");
+		mntmArchive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ArchiveTickets.run();
+				frmTicketEntry.dispose();
+			}
+		});
+		mnSupport.add(mntmArchive);
+		
+		JMenu mnSites = new JMenu("Sites");
+		menuBar.add(mnSites);
+		
+		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
+		mntmButaneSites.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewSites.run();
+				frmTicketEntry.dispose();
+			}
+		});
+		mnSites.add(mntmButaneSites);
+		
+		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
+		mntmSiteChanges.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_SiteChanges.run();
+				frmTicketEntry.dispose();
+			}
+		});
+		mnSites.add(mntmSiteChanges);
+		
+		JMenu mnContacts = new JMenu("Contacts");
+		menuBar.add(mnContacts);
+		
+		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
+		mntmENEmployees.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewEmployees.run();
+				frmTicketEntry.dispose();
+			}
+		});
+		mnContacts.add(mntmENEmployees);
+		
+		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
+		mntmEtpContacts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewSunoco.run();
+				frmTicketEntry.dispose();
+			}
+		});
+		mnContacts.add(mntmEtpContacts);
 
 	}
 	

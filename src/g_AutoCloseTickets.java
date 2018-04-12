@@ -48,6 +48,7 @@ public class g_AutoCloseTickets {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 384, 576);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setTitle("Automated Support Program v." + g_MainMenu.version);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));

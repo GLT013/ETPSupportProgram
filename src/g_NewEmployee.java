@@ -3,6 +3,9 @@ import java.awt.HeadlessException;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
@@ -52,11 +55,12 @@ public class g_NewEmployee {
 	 */
 	private void initialize() {
 		frmNewEmployee = new JFrame();
+		frmNewEmployee.setResizable(false);
 		frmNewEmployee.setIconImage(Toolkit.getDefaultToolkit().getImage(g_NewEmployee.class.getResource("/icon.png")));
-		frmNewEmployee.setBounds(100, 100, 626, 475);
+		frmNewEmployee.setBounds(100, 100, 626, 507);
 		frmNewEmployee.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNewEmployee.getContentPane().setLayout(null);		
-		frmNewEmployee.setTitle("Automated Support Program");
+		frmNewEmployee.setTitle("Automated Support Program v." + g_MainMenu.version);
 		
 		
 		JLabel lblAddNewEmployee = new JLabel("Add New Employee");
@@ -133,6 +137,93 @@ public class g_NewEmployee {
 		});
 		btnBack.setBounds(10, 403, 89, 23);
 		frmNewEmployee.getContentPane().add(btnBack);
+		
+		//Menubar
+		JMenuBar menuBar = new JMenuBar();
+		frmNewEmployee.setJMenuBar(menuBar);
+		
+		
+				
+		JMenu mnSupport = new JMenu("Support");
+		menuBar.add(mnSupport);
+		
+		JMenuItem mntmNewTicket = new JMenuItem("New Ticket");
+		mntmNewTicket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_MainMenu.checkVersion();
+				if(c_CheckOpenTickets.CheckTickets())
+				{							
+					g_TicketEntry.run();
+					frmNewEmployee.dispose();
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(frmNewEmployee, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
+				}
+				
+			}
+		});
+		mnSupport.add(mntmNewTicket);
+		
+		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
+		mntmCurrentTickets.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_CurrentTickets.run();
+				frmNewEmployee.dispose();
+			}
+		});
+		mnSupport.add(mntmCurrentTickets);
+		
+		JMenuItem mntmArchive = new JMenuItem("Archive");
+		mntmArchive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ArchiveTickets.run();
+				frmNewEmployee.dispose();
+			}
+		});
+		mnSupport.add(mntmArchive);
+		
+		JMenu mnSites = new JMenu("Sites");
+		menuBar.add(mnSites);
+		
+		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
+		mntmButaneSites.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewSites.run();
+				frmNewEmployee.dispose();
+			}
+		});
+		mnSites.add(mntmButaneSites);
+		
+		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
+		mntmSiteChanges.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_SiteChanges.run();
+				frmNewEmployee.dispose();
+			}
+		});
+		mnSites.add(mntmSiteChanges);
+		
+		JMenu mnContacts = new JMenu("Contacts");
+		menuBar.add(mnContacts);
+		
+		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
+		mntmENEmployees.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewEmployees.run();
+				frmNewEmployee.dispose();
+			}
+		});
+		mnContacts.add(mntmENEmployees);
+		
+		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
+		mntmEtpContacts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewSunoco.run();
+				frmNewEmployee.dispose();
+			}
+		});
+		mnContacts.add(mntmEtpContacts);
 	}
 	
 	public void InsertEmployee(){

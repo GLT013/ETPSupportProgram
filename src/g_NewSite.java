@@ -2,6 +2,9 @@ import javax.swing.JFrame;
 import java.awt.HeadlessException;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -35,6 +38,7 @@ public class g_NewSite {
 	private JCheckBox txtTwic;
 	private JTextField txtState;
 	private JTextField txtTimezone;
+	private JCheckBox chk_HighPerformance;
 
 	/**
 	 * Launch the application.
@@ -64,11 +68,12 @@ public class g_NewSite {
 	 */
 	private void initialize() {
 		frmNewSite = new JFrame();
+		frmNewSite.setResizable(false);
 		frmNewSite.setIconImage(Toolkit.getDefaultToolkit().getImage(g_NewSite.class.getResource("/icon.png")));
-		frmNewSite.setBounds(100, 100, 679, 661);
+		frmNewSite.setBounds(100, 100, 679, 681);
 		frmNewSite.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNewSite.getContentPane().setLayout(null);
-		frmNewSite.setTitle("Automated Support Program");
+		frmNewSite.setTitle("Automated Support Program v." + g_MainMenu.version);
 		
 		
 		JLabel lblAddNewEmployee = new JLabel("Add New Site");
@@ -284,6 +289,107 @@ public class g_NewSite {
 		txtTimezone.setColumns(10);
 		txtTimezone.setBounds(600, 398, 40, 35);
 		frmNewSite.getContentPane().add(txtTimezone);
+		
+		JLabel lblHighPerformance = new JLabel("High \r");
+		lblHighPerformance.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
+		lblHighPerformance.setBounds(502, 487, 94, 19);
+		frmNewSite.getContentPane().add(lblHighPerformance);
+		
+		chk_HighPerformance = new JCheckBox("\r\n");
+		chk_HighPerformance.setBounds(602, 487, 38, 23);
+		frmNewSite.getContentPane().add(chk_HighPerformance);
+		
+		JLabel lblPerformance = new JLabel("Performance");
+		lblPerformance.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
+		lblPerformance.setBounds(502, 500, 94, 19);
+		frmNewSite.getContentPane().add(lblPerformance);
+		
+		//Menubar
+		JMenuBar menuBar = new JMenuBar();
+		frmNewSite.setJMenuBar(menuBar);
+		
+		
+				
+		JMenu mnSupport = new JMenu("Support");
+		menuBar.add(mnSupport);
+		
+		JMenuItem mntmNewTicket = new JMenuItem("New Ticket");
+		mntmNewTicket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_MainMenu.checkVersion();
+				if(c_CheckOpenTickets.CheckTickets())
+				{							
+					g_TicketEntry.run();
+					frmNewSite.dispose();
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(frmNewSite, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
+				}
+				
+			}
+		});
+		mnSupport.add(mntmNewTicket);
+		
+		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
+		mntmCurrentTickets.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_CurrentTickets.run();
+				frmNewSite.dispose();
+			}
+		});
+		mnSupport.add(mntmCurrentTickets);
+		
+		JMenuItem mntmArchive = new JMenuItem("Archive");
+		mntmArchive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ArchiveTickets.run();
+				frmNewSite.dispose();
+			}
+		});
+		mnSupport.add(mntmArchive);
+		
+		JMenu mnSites = new JMenu("Sites");
+		menuBar.add(mnSites);
+		
+		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
+		mntmButaneSites.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewSites.run();
+				frmNewSite.dispose();
+			}
+		});
+		mnSites.add(mntmButaneSites);
+		
+		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
+		mntmSiteChanges.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_SiteChanges.run();
+				frmNewSite.dispose();
+			}
+		});
+		mnSites.add(mntmSiteChanges);
+		
+		JMenu mnContacts = new JMenu("Contacts");
+		menuBar.add(mnContacts);
+		
+		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
+		mntmENEmployees.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewEmployees.run();
+				frmNewSite.dispose();
+			}
+		});
+		mnContacts.add(mntmENEmployees);
+		
+		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
+		mntmEtpContacts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewSunoco.run();
+				frmNewSite.dispose();
+			}
+		});
+		mnContacts.add(mntmEtpContacts);
 	}
 	
 	public void InsertSite(){
@@ -306,10 +412,15 @@ public class g_NewSite {
 		String FieldTech = txtFieldTech.getText();
 		String FieldSupervisor = txtFieldSupervisor.getText();
 		String Timezone = txtTimezone.getText();
+		boolean HP = false;
 		boolean TWIC = false;
 		if(txtTwic.isSelected())
 		{
 			TWIC = true;
+		}
+		if(chk_HighPerformance.isSelected())
+		{
+			HP = true;
 		}
 		
 		
@@ -340,9 +451,9 @@ public class g_NewSite {
 			else
 			{
 			
-			commandText = "INSERT INTO Sites(Client,Site,State,SiteID,ClientAbbrv,SiteAbbrv,iDracIP,HostIP,ViewIP,SQLIP,DevIP,Generation,HMI,Address,Phone,Field_Tech,Field_Supervisor,Twic,Timezone) "
+			commandText = "INSERT INTO Sites(Client,Site,State,SiteID,ClientAbbrv,SiteAbbrv,iDracIP,HostIP,ViewIP,SQLIP,DevIP,Generation,HMI,Address,Phone,Field_Tech,Field_Supervisor,Twic,Timezone,HighPerformance) "
 						+ "VALUES ( '" + Client + "','" + Site + "','" + State + "','" + SiteID + "','" + ClientAbbrv + "','" + SiteAbbrv + "','" + iDrac + "','" + Host + "','" + View + "','" + SQL + "','" + 
-						 Dev + "','" + Generation + "','" + HMI + "','" + Address + "','" + Phone + "','" + FieldTech + "','" + FieldSupervisor + "','" + TWIC + "','" + Timezone + "')";
+						 Dev + "','" + Generation + "','" + HMI + "','" + Address + "','" + Phone + "','" + FieldTech + "','" + FieldSupervisor + "','" + TWIC + "','" + Timezone + "','" + HP + "')";
 			System.out.println(commandText);	
 			c_Query.UpdateResultSet(commandText);
 				JOptionPane.showMessageDialog(frmNewSite, "Site " + Client + " " + Site + " was successfully added.");

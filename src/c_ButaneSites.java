@@ -66,6 +66,10 @@ public class c_ButaneSites {
 	public void setTimezone(String timezone){ this.timezone = timezone;}
 	public void setHighPerformance(boolean highperformance){ this.highperformance = highperformance;}
 	
+	@Override
+	public String toString(){
+		return this.client + " " + this.site + " (" + this.siteid + ")";
+}
 	
 	public String getName()
 	{

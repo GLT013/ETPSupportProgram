@@ -2,6 +2,9 @@ import javax.swing.JFrame;
 import java.awt.HeadlessException;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -47,11 +50,12 @@ public class g_NewSunocoContact {
 	 */
 	private void initialize() {
 		frmNewSunocoContact = new JFrame();
+		frmNewSunocoContact.setResizable(false);
 		frmNewSunocoContact.setIconImage(Toolkit.getDefaultToolkit().getImage(g_NewSunocoContact.class.getResource("/icon.png")));
-		frmNewSunocoContact.setBounds(100, 100, 626, 421);
+		frmNewSunocoContact.setBounds(100, 100, 626, 447);
 		frmNewSunocoContact.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNewSunocoContact.getContentPane().setLayout(null);		
-		frmNewSunocoContact.setTitle("Automated Support Program");
+		frmNewSunocoContact.setTitle("Automated Support Program v." + g_MainMenu.version);
 		
 		
 		JLabel lblAddNewSunocoContact = new JLabel("Add New Contact");
@@ -117,6 +121,93 @@ public class g_NewSunocoContact {
 		});
 		btnBack.setBounds(10, 355, 89, 23);
 		frmNewSunocoContact.getContentPane().add(btnBack);
+		
+		//Menubar
+		JMenuBar menuBar = new JMenuBar();
+		frmNewSunocoContact.setJMenuBar(menuBar);
+		
+		
+				
+		JMenu mnSupport = new JMenu("Support");
+		menuBar.add(mnSupport);
+		
+		JMenuItem mntmNewTicket = new JMenuItem("New Ticket");
+		mntmNewTicket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_MainMenu.checkVersion();
+				if(c_CheckOpenTickets.CheckTickets())
+				{							
+					g_TicketEntry.run();
+					frmNewSunocoContact.dispose();
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(frmNewSunocoContact, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
+				}
+				
+			}
+		});
+		mnSupport.add(mntmNewTicket);
+		
+		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
+		mntmCurrentTickets.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_CurrentTickets.run();
+				frmNewSunocoContact.dispose();
+			}
+		});
+		mnSupport.add(mntmCurrentTickets);
+		
+		JMenuItem mntmArchive = new JMenuItem("Archive");
+		mntmArchive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ArchiveTickets.run();
+				frmNewSunocoContact.dispose();
+			}
+		});
+		mnSupport.add(mntmArchive);
+		
+		JMenu mnSites = new JMenu("Sites");
+		menuBar.add(mnSites);
+		
+		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
+		mntmButaneSites.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewSites.run();
+				frmNewSunocoContact.dispose();
+			}
+		});
+		mnSites.add(mntmButaneSites);
+		
+		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
+		mntmSiteChanges.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_SiteChanges.run();
+				frmNewSunocoContact.dispose();
+			}
+		});
+		mnSites.add(mntmSiteChanges);
+		
+		JMenu mnContacts = new JMenu("Contacts");
+		menuBar.add(mnContacts);
+		
+		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
+		mntmENEmployees.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewEmployees.run();
+				frmNewSunocoContact.dispose();
+			}
+		});
+		mnContacts.add(mntmENEmployees);
+		
+		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
+		mntmEtpContacts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewSunoco.run();
+				frmNewSunocoContact.dispose();
+			}
+		});
+		mnContacts.add(mntmEtpContacts);
 	}
 	
 	public void InsertEmployee(){

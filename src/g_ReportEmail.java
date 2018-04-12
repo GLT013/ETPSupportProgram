@@ -68,7 +68,7 @@ public class g_ReportEmail {
 		frmReportEmail.setBounds(100, 100, 800, 906);
 		frmReportEmail.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmReportEmail.getContentPane().setLayout(null);
-		frmReportEmail.setTitle("Automated Support Program");
+		frmReportEmail.setTitle("Automated Support Program v." + g_MainMenu.version);
 						
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 38, 764, 469);
@@ -237,7 +237,7 @@ public class g_ReportEmail {
 		       name.compareTo("James Waymire") == 0 ||   name.compareTo("Joe Klems") == 0 ||
 		       name.compareTo("Chris Sheedy") == 0 || name.compareTo("Sean McCausland") == 0 ||
 		       name.compareTo("James McClintock") == 0 || name.compareTo("James Banks") == 0 ||
-		       name.compareTo("Elizabeth Parzanese") == 0)
+		       name.compareTo("Elizabeth Parzanese") == 0 || name.compareTo("Keegan Lowry") == 0)
 		    {
 		    	addRecipients(i);
 		    	i--;
@@ -254,7 +254,7 @@ public class g_ReportEmail {
 			name = EmailList.getModel().getElementAt(i).getName().toString();
 		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
 		       name.compareTo("Joe Klems") == 0 ||  name.compareTo("Chris Sheedy") == 0 || 
-		       name.compareTo("James McClintock") == 0)
+		       name.compareTo("James McClintock") == 0 || name.compareTo("Keegan Lowry") == 0)
 		    {
 		    	addRecipients(i);
 		    	i--;

@@ -1,6 +1,11 @@
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -88,11 +93,12 @@ public class g_ViewSites {
 	 */
 	private void initialize() {
 		frmButaneSites = new JFrame();
+		frmButaneSites.setResizable(false);
 		frmButaneSites.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSites.class.getResource("/icon.png")));
-		frmButaneSites.setBounds(100, 100, 909, 730);
+		frmButaneSites.setBounds(100, 100, 909, 772);
 		frmButaneSites.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frmButaneSites.getContentPane().setLayout(null);		
-		frmButaneSites.setTitle("Automated Support Program");
+		frmButaneSites.setTitle("Automated Support Program v." + g_MainMenu.version);
 		
 		
 		frmButaneSites.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -607,6 +613,94 @@ public class g_ViewSites {
 		chk_Twic = new JCheckBox("");
 		chk_Twic.setBounds(479, 56, 36, 23);
 		panel_3.add(chk_Twic);
+		
+		
+		//Menubar
+		JMenuBar menuBar = new JMenuBar();
+		frmButaneSites.setJMenuBar(menuBar);
+		
+		
+				
+		JMenu mnSupport = new JMenu("Support");
+		menuBar.add(mnSupport);
+		
+		JMenuItem mntmNewTicket = new JMenuItem("New Ticket");
+		mntmNewTicket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_MainMenu.checkVersion();
+				if(c_CheckOpenTickets.CheckTickets())
+				{							
+					g_TicketEntry.run();
+					frmButaneSites.dispose();
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(frmButaneSites, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
+				}
+				
+			}
+		});
+		mnSupport.add(mntmNewTicket);
+		
+		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
+		mntmCurrentTickets.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_CurrentTickets.run();
+				frmButaneSites.dispose();
+			}
+		});
+		mnSupport.add(mntmCurrentTickets);
+		
+		JMenuItem mntmArchive = new JMenuItem("Archive");
+		mntmArchive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ArchiveTickets.run();
+				frmButaneSites.dispose();
+			}
+		});
+		mnSupport.add(mntmArchive);
+		
+		JMenu mnSites = new JMenu("Sites");
+		menuBar.add(mnSites);
+		
+		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
+		mntmButaneSites.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewSites.run();
+				frmButaneSites.dispose();
+			}
+		});
+		mnSites.add(mntmButaneSites);
+		
+		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
+		mntmSiteChanges.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_SiteChanges.run();
+				frmButaneSites.dispose();
+			}
+		});
+		mnSites.add(mntmSiteChanges);
+		
+		JMenu mnContacts = new JMenu("Contacts");
+		menuBar.add(mnContacts);
+		
+		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
+		mntmENEmployees.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewEmployees.run();
+				frmButaneSites.dispose();
+			}
+		});
+		mnContacts.add(mntmENEmployees);
+		
+		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
+		mntmEtpContacts.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_ViewSunoco.run();
+				frmButaneSites.dispose();
+			}
+		});
+		mnContacts.add(mntmEtpContacts);
 	}
 	
 	private void CancelEdits()

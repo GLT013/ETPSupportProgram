@@ -74,11 +74,12 @@ public class g_ViewSiteData {
 	 */
 	private void initialize() {
 		frmSiteData = new JFrame();
+		frmSiteData.setResizable(false);
 		frmSiteData.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSiteData.class.getResource("/icon.png")));
 		frmSiteData.setBounds(100, 100, 869, 867);
 		frmSiteData.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frmSiteData.getContentPane().setLayout(null);		
-		frmSiteData.setTitle("Automated Support Program");
+		frmSiteData.getContentPane().setLayout(null);			
+		frmSiteData.setTitle("Automated Support Program v." + g_MainMenu.version);
 		
 				
 		panel.setBackground(new Color(245, 245, 245));
@@ -331,6 +332,8 @@ public class g_ViewSiteData {
 		 JLabel label2 = new JLabel("Server Information");
 		    panel.add(label2);
 		   
+		    
+		    
 	}
 	
 	

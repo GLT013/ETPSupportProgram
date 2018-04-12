@@ -106,7 +106,8 @@ public class g_ArchiveTickets {
 	 */
 	public g_ArchiveTickets() {
 		initialize();		
-		PopulateActiveTickets();
+		//PopulateActiveTickets();
+		AdjustWindowSize();
 		
 	}
 
@@ -115,12 +116,13 @@ public class g_ArchiveTickets {
 	 */
 	private void initialize() {
 		frmArchiveTickets = new JFrame();
-		frmArchiveTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ArchiveTickets.class.getResource("/icon.png")));
-		frmArchiveTickets.setTitle("Automated Support Program");
+		frmArchiveTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ArchiveTickets.class.getResource("/icon.png")));		
+		frmArchiveTickets.setTitle("Automated Support Program v." + g_MainMenu.version);
 		frmArchiveTickets.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frmArchiveTickets.setBounds(100, 100, 964, 895);
 		frmArchiveTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmArchiveTickets.getContentPane().setLayout(null);
+		
 	
 
 		JPanel panel_1 = new JPanel();
@@ -530,7 +532,6 @@ public class g_ArchiveTickets {
 						PopulateActiveTickets();
 					}
 				});
-				rdbtnCategory.setSelected(true);
 				buttonGroup.add(rdbtnCategory);
 				rdbtnCategory.setBackground(Color.WHITE);
 				rdbtnCategory.setBounds(17, 2, 71, 18);
@@ -550,11 +551,10 @@ public class g_ArchiveTickets {
 				
 				
 				rdbtnSearch = new JRadioButton("Search");
+				rdbtnSearch.setSelected(true);
 				rdbtnSearch.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						AdjustWindowSize();
-						
-						
+						AdjustWindowSize();											
 					}
 				});
 				rdbtnSearch.setBackground(Color.WHITE);
