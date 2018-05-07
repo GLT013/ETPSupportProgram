@@ -22,6 +22,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Toolkit;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class g_ReportEmail {
 
@@ -65,7 +67,7 @@ public class g_ReportEmail {
 	private void initialize() {
 		frmReportEmail = new JFrame();
 		frmReportEmail.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ReportEmail.class.getResource("/icon.png")));
-		frmReportEmail.setBounds(100, 100, 800, 906);
+		frmReportEmail.setBounds(100, 100, 800, 900);
 		frmReportEmail.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmReportEmail.getContentPane().setLayout(null);
 		frmReportEmail.setTitle("Automated Support Program v." + g_MainMenu.version);
@@ -80,7 +82,8 @@ public class g_ReportEmail {
 		editorPane.setContentType("text/html");
 		editorPane.setText(SupportEmail);
 		
-		JButton btnCopyToClipboard = new JButton("Generate Draft Email");
+		JButton btnCopyToClipboard = new JButton("Generate Email");
+		btnCopyToClipboard.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnCopyToClipboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -119,7 +122,7 @@ public class g_ReportEmail {
 
 			}
 		});
-		btnCopyToClipboard.setBounds(577, 767, 155, 43);
+		btnCopyToClipboard.setBounds(651, 831, 117, 29);
 		frmReportEmail.getContentPane().add(btnCopyToClipboard);
 		
 		scrollPane_1 = new JScrollPane();
@@ -159,14 +162,15 @@ public class g_ReportEmail {
 		button.setBounds(214, 708, 89, 23);
 		frmReportEmail.getContentPane().add(button);
 		
-		JButton btnSelectAll = new JButton("Copy to Clipboard");
+		JButton btnSelectAll = new JButton("Copy");
+		btnSelectAll.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnSelectAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				editorPane.selectAll();
 				editorPane.copy();
 			}
 		});
-		btnSelectAll.setBounds(577, 533, 155, 43);
+		btnSelectAll.setBounds(524, 831, 117, 29);
 		frmReportEmail.getContentPane().add(btnSelectAll);
 		
 		JLabel lblNewLabel = new JLabel("Email Preview");
@@ -194,23 +198,79 @@ public class g_ReportEmail {
 		btnBack.setBounds(10, 834, 89, 23);
 		frmReportEmail.getContentPane().add(btnBack);
 		
+		JPanel panel = new JPanel();
+		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel.setBounds(544, 587, 193, 54);
+		frmReportEmail.getContentPane().add(panel);
+		panel.setLayout(null);
+		
 		JButton btnDayShift = new JButton("Day Shift");
-		btnDayShift.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				PopulateDayShiftEmails();
-			}
-		});
-		btnDayShift.setBounds(325, 823, 89, 23);
-		frmReportEmail.getContentPane().add(btnDayShift);
+		btnDayShift.setBounds(10, 22, 77, 23);
+		panel.add(btnDayShift);
 		
 		JButton btnOffHours = new JButton("Off Hours");
+		btnOffHours.setBounds(97, 22, 86, 23);
+		panel.add(btnOffHours);
+		
+		JLabel lblBlendSeason = new JLabel("Blend Season");
+		lblBlendSeason.setBounds(0, 0, 193, 14);
+		panel.add(lblBlendSeason);
+		lblBlendSeason.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBlendSeason.setFont(new Font("Tahoma", Font.BOLD, 13));
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setLayout(null);
+		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_1.setBounds(544, 663, 193, 94);
+		frmReportEmail.getContentPane().add(panel_1);
+		
+		JButton button_1 = new JButton("Day Shift");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				PopulateSummerDayEmails();
+			}
+		});
+		button_1.setBounds(10, 22, 77, 23);
+		panel_1.add(button_1);
+		
+		JButton btnFieldResourcesNeeded = new JButton("Field Resources Needed");
+		btnFieldResourcesNeeded.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PopulateSummerFieldResources();
+			}
+		});
+		btnFieldResourcesNeeded.setBounds(10, 60, 173, 23);
+		panel_1.add(btnFieldResourcesNeeded);
+		
+		JLabel lblSummer = new JLabel("Summer");
+		lblSummer.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSummer.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblSummer.setBounds(0, 0, 193, 14);
+		panel_1.add(lblSummer);
+		
+		JButton btnOffHours_1 = new JButton("Off Hours");
+		btnOffHours_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				PopulateSummerOffHourEmails();
+			}
+		});
+		btnOffHours_1.setBounds(96, 22, 87, 23);
+		panel_1.add(btnOffHours_1);
+		
+		JLabel lblEmailDistributions = new JLabel("Email Distribution Lists");
+		lblEmailDistributions.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblEmailDistributions.setBounds(544, 529, 173, 29);
+		frmReportEmail.getContentPane().add(lblEmailDistributions);
 		btnOffHours.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PopulateOffHourEmails();
 			}
 		});
-		btnOffHours.setBounds(430, 823, 89, 23);
-		frmReportEmail.getContentPane().add(btnOffHours);
+		btnDayShift.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				PopulateDayShiftEmails();
+			}
+		});
 	}
 	
 	private void PopulateDefaultEmails()
@@ -244,6 +304,60 @@ public class g_ReportEmail {
 		    }
 		}
 	}
+	
+	private void PopulateSummerOffHourEmails()
+	{
+		String name = "";
+		for(int i=0; i < EmailList.getModel().getSize(); i++)
+		{
+			name = EmailList.getModel().getElementAt(i).getName().toString();
+		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
+		       name.compareTo("Joe Klems") == 0 ||     name.compareTo("Chris Sheedy") == 0 || 
+		       name.compareTo("Jim Robbins") == 0 ||   name.compareTo("James McClintock") == 0 || 
+		       name.compareTo("Keegan Lowry") == 0)
+		    {
+		    	addRecipients(i);
+		    	i--;
+		    }
+		}
+	}
+	
+	private void PopulateSummerDayEmails()
+	{
+		String name = "";
+		for(int i=0; i < EmailList.getModel().getSize(); i++)
+		{
+			name = EmailList.getModel().getElementAt(i).getName().toString();
+		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
+		       name.compareTo("Joe Klems") == 0 	|| name.compareTo("James McClintock") == 0 || 
+		       name.compareTo("Jim Robbins") == 0   ||   name.compareTo("Keegan Lowry") == 0 ||
+		       name.compareTo("Chris Sheedy") == 0)
+		    {
+		    	addRecipients(i);
+		    	i--;
+		    }
+		}
+	}
+	
+	
+	private void PopulateSummerFieldResources()
+	{
+		String name = "";
+		for(int i=0; i < EmailList.getModel().getSize(); i++)
+		{
+			name = EmailList.getModel().getElementAt(i).getName().toString();
+		    if(name.compareTo("Bill Tirri") == 0	||   name.compareTo("Bob Crowley") == 0 || 
+		       name.compareTo("Joe Klems") == 0 	||   name.compareTo("James McClintock") == 0 ||
+		       name.compareTo("Jim Robbins") == 0)
+		      
+		    {
+		    	addRecipients(i);
+		    	i--;
+		    }
+		}
+	}
+	
+	
 	
 	
 	private void PopulateDayShiftEmails()

@@ -24,7 +24,7 @@ import javax.swing.border.EtchedBorder;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 3.4;
+	public static double version = 3.5;
 	public static int ticketMax;
 	public static boolean firstrun = true;
 	public static String TitleOnline = "Automated Support Program v" + version + "";	
