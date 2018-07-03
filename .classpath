@@ -29,7 +29,7 @@
 	<classpathentry kind="lib" path="C:/Users/tjohnston/Downloads/JOrtho_1.0/src/com"/>
 	<classpathentry kind="lib" path="C:/Users/tjohnston/Downloads/dictionary_en_2013_03"/>
 	<classpathentry kind="lib" path="References/sqljdbc4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/tjohnston/Downloads/java-swing-calendar-master/java-swing-calendar-master/JavaCalendarDemo/libs/JavaCalendar.jar"/>
 	<classpathentry kind="lib" path="References/jgoodies-forms-1.8.0.jar"/>
+	<classpathentry kind="lib" path="References/support.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

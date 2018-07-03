@@ -25,6 +25,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 
 public class g_ViewEmployees {
 
@@ -44,7 +46,7 @@ public class g_ViewEmployees {
 	private final JButton btnNewEmployee = new JButton("");
 	private final JButton btnNewButton = new JButton("Back");
 	private final JButton button = new JButton("");
-	
+	private static String server = "https://pool2013.ene.enengineering.com/cscp/#MainFrameViewModel%3DResponseGroup%2CResponseGroup%3DQueue";
 
 	/**
 	 * Launch the application.
@@ -105,22 +107,22 @@ public class g_ViewEmployees {
 		
 		JLabel lblTitle2 = new JLabel("Title:");
 		lblTitle2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblTitle2.setBounds(309, 99, 113, 14);
+		lblTitle2.setBounds(309, 104, 113, 14);
 		frmViewEmployees.getContentPane().add(lblTitle2);
 		
 		JLabel lblEmail2 = new JLabel("Email:");
 		lblEmail2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblEmail2.setBounds(309, 143, 113, 14);
+		lblEmail2.setBounds(309, 148, 113, 14);
 		frmViewEmployees.getContentPane().add(lblEmail2);
 		
 		JLabel lblOfficePhone2 = new JLabel("Office Phone:");
 		lblOfficePhone2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblOfficePhone2.setBounds(309, 199, 113, 14);
+		lblOfficePhone2.setBounds(309, 204, 113, 14);
 		frmViewEmployees.getContentPane().add(lblOfficePhone2);
 		
 		JLabel lblMobilePhone2 = new JLabel("Mobile Phone:");
 		lblMobilePhone2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblMobilePhone2.setBounds(309, 251, 113, 14);
+		lblMobilePhone2.setBounds(309, 256, 113, 14);
 		frmViewEmployees.getContentPane().add(lblMobilePhone2);
 		lblTitle.setEditable(false);
 		
@@ -345,6 +347,53 @@ public class g_ViewEmployees {
 		button.setBounds(762, 141, 36, 36);
 		
 		frmViewEmployees.getContentPane().add(button);
+		
+		JButton button_2 = new JButton("");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					//Runtime.getRuntime().exec("iexplore.exe "+ipAddress);
+					Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + server);
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					System.out.println(e2.toString());
+				}
+			}
+		});
+		button_2.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/support.png")));
+		button_2.setToolTipText("Skype Business Server");
+		button_2.setBounds(828, 348, 41, 40);
+		frmViewEmployees.getContentPane().add(button_2);
+		
+		JButton button_3 = new JButton("");
+		button_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				String sip_address = "sip:1" + result.get(list.getSelectedIndex()).getMobile() + "@enengineering.com";				
+				sip_address = sip_address.replace("-", "");
+				StringSelection selection = new StringSelection(sip_address);
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				clipboard.setContents(selection, selection);
+				//JOptionPane.showMessageDialog(frmViewEmployees, sip_address + " copied to clipboard.");
+				
+				try {
+					//Runtime.getRuntime().exec("iexplore.exe "+ipAddress);
+					Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + server);
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					System.out.println(e2.toString());
+				}
+				
+			}
+		});
+		button_3.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/copy.png")));
+		button_3.setToolTipText("Copy to clipboard.");
+		button_3.setBounds(828, 245, 36, 36);
+		frmViewEmployees.getContentPane().add(button_3);
+		
+		JLabel lblSkypeBusinessServer = new JLabel("Skype Business Server:");
+		lblSkypeBusinessServer.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblSkypeBusinessServer.setBounds(626, 355, 182, 26);
+		frmViewEmployees.getContentPane().add(lblSkypeBusinessServer);
 		
 		//Menubar
 		JMenuBar menuBar = new JMenuBar();

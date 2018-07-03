@@ -65,6 +65,7 @@ public class g_CurrentTickets {
 	private JComboBox<String> cb_Status;
 	private JLabel lbl_Problem;
 	private JLabel lbl_Update;
+	private JLabel lbl_TicketEntered;
 	JTextArea txt_Issue;
 	JTextArea txt_Update;
 	private JTextArea txt_Internal;
@@ -759,6 +760,16 @@ public class g_CurrentTickets {
 				SpellChecker.getOptions().setIgnoreCapitalization(true);
 			    SpellChecker.register( txt_Internal);		        
 			    SpellChecker.register( txt_Update);
+			    
+			    JLabel lblTicketEntered = new JLabel("Ticket Entered:");
+			    lblTicketEntered.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			    lblTicketEntered.setBounds(242, 259, 164, 20);
+			    panel_Update.add(lblTicketEntered);
+			    
+			    lbl_TicketEntered = new JLabel("Date");
+			    lbl_TicketEntered.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+			    lbl_TicketEntered.setBounds(242, 288, 164, 20);
+			    panel_Update.add(lbl_TicketEntered);
 				
 		tree_active.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
@@ -1003,7 +1014,7 @@ public class g_CurrentTickets {
 		String commandText = "";
 		
 		
-		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
+		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.EnteredDate, 113) as EnteredDate, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -1022,6 +1033,7 @@ public class g_CurrentTickets {
 				DevIP = rs.getInt("DevIP");
 				iDracIP = rs.getInt("iDracIP");
 				hostIP = rs.getInt("HostIP");
+				lbl_TicketEntered.setText(rs.getString("EnteredDate"));
 				highperformance = rs.getBoolean("HighPerformance");
 				
 				lbl_Ticket.setText("(#" + rs.getString("Ticket") + ")");

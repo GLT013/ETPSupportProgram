@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JFrame;
@@ -95,15 +96,35 @@ public class g_ReportEmail {
 				String date2 = dateFormat.format(date);				
 				@SuppressWarnings("deprecation")
 				int hour = date.getHours();
-						String am_pm = "";
-				if(hour < 12)
+				String am_pm = "";
+				if(hour >= 0 && hour < 7)
+				{
+					am_pm = "Overnight";
+					
+					Calendar cal = Calendar.getInstance();				       
+			        //subtract one day from current date
+			        cal.add(Calendar.DAY_OF_MONTH, -1);
+			        date = cal.getTime();
+			        date2 = dateFormat.format(date);		
+					
+				}
+				else if(hour >= 7 && hour < 10)
 				{
 					am_pm = "Morning";
 				}
-				else
+				else if (hour >=10 && hour < 14)
+				{
+					am_pm = "Noon";
+				}
+				else if (hour >= 14 && hour < 17)
 				{
 					am_pm = "Afternoon";
 				}
+				else if (hour >= 17 && hour < 24)
+				{
+					am_pm = "Evening";
+				}
+				
 				String test = EmailList2.getModel().getElementAt(0).getEmail();
 				for(int i=1; i < EmailList2.getModel().getSize(); i++){
 				     test =  test + ";" + EmailList2.getModel().getElementAt(i).getEmail();  

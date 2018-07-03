@@ -8,9 +8,14 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JLabel;
@@ -29,13 +34,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
+import javax.swing.JTree;
 
 public class g_ViewSites {
 
 	public static JFrame frmButaneSites;
 	private static JList<String> list = new JList<String>();
+	private static JTree tree_sites;
 	private static DefaultListModel<String> listModel = new DefaultListModel<String>();
-	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_Listbox;
 	JTextField txtSite = new JTextField("");
 	JTextField txtSiteID = new JTextField("");
 	JTextField txtAddress = new JTextField("");
@@ -86,6 +93,7 @@ public class g_ViewSites {
 	public g_ViewSites() {
 		initialize();
 		PopulateSites();
+		//PopulateSitesTree();
 	}
 
 	/**
@@ -97,7 +105,6 @@ public class g_ViewSites {
 		frmButaneSites.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSites.class.getResource("/icon.png")));
 		frmButaneSites.setBounds(100, 100, 909, 772);
 		frmButaneSites.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frmButaneSites.getContentPane().setLayout(null);		
 		frmButaneSites.setTitle("Automated Support Program v." + g_MainMenu.version);
 		
 		
@@ -110,11 +117,13 @@ public class g_ViewSites {
 			 }
 		
 		});
+		frmButaneSites.getContentPane().setLayout(null);
 
-		scrollPane = new JScrollPane();
-		scrollPane.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		scrollPane.setBounds(36, 47, 263, 589);
-		frmButaneSites.getContentPane().add(scrollPane);
+		scrollPane_Listbox = new JScrollPane();
+		scrollPane_Listbox.setBounds(36, 47, 263, 589);
+		scrollPane_Listbox.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		frmButaneSites.getContentPane().add(scrollPane_Listbox);
+		btnEdit.setBounds(828, 11, 32, 32);
 		btnEdit.setToolTipText("Edit");
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				
@@ -147,10 +156,84 @@ public class g_ViewSites {
 				btnAccept.setEnabled(true);
 			}
 		});     
-		btnEdit.setIcon(new ImageIcon(g_ViewSites.class.getResource("/edit.png")));
-		btnEdit.setBounds(828, 11, 32, 32);
 		
+		JScrollPane scrollPane_Tree = new JScrollPane();
+		scrollPane_Tree.setEnabled(false);
+		scrollPane_Tree.setBounds(36, 47, 263, 568);
+		frmButaneSites.getContentPane().add(scrollPane_Tree);
+		
+		tree_sites = new JTree();
+		tree_sites.setBorder(UIManager.getBorder("DesktopIcon.border"));
+		tree_sites.setBackground(Color.WHITE);
+		scrollPane_Tree.setViewportView(tree_sites);
+		btnEdit.setIcon(new ImageIcon(g_ViewSites.class.getResource("/edit.png")));
+		
+		/*
+		tree_sites.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent e) {
+				System.out.println("TEsting");
+				try{
+					
+						//CancelEdits();
+						//Object tmp = tree_sites.getLastSelectedPathComponent();			
+						DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode)tree_sites.getLastSelectedPathComponent();
+						if(currentNode != null){         
+					        Object nodeInfo = currentNode.getUserObject();
+						 c_ButaneSites test = (c_ButaneSites) nodeInfo;						
+						txtClient.setText(test.getAddress());
+						System.out.println("WTFFFFFFF" + test.getAddress());
+						}
+						//txtClient.setText(result.get(tree_sites.getSelectionPath().getLastPathComponent().toString().getSelectedIndex()).getClient());
+						/*
+						txtSite.setText(result.get(list.getSelectedIndex()).getSite());
+						txtSiteID.setText(String.valueOf(result.get(list.getSelectedIndex()).getSiteID()));
+						txtState.setText(result.get(list.getSelectedIndex()).getState());
+						txtClientAbbrv.setText(result.get(list.getSelectedIndex()).getClientAbbrv());
+						txtSiteAbbrv.setText(result.get(list.getSelectedIndex()).getSiteAbbrv());
+						txtiDrac.setText(String.valueOf(result.get(list.getSelectedIndex()).getiDrac()));
+						txtHost.setText(String.valueOf(result.get(list.getSelectedIndex()).getHost()));
+						txtView.setText(String.valueOf(result.get(list.getSelectedIndex()).getView()));
+						txtSQL.setText(String.valueOf(result.get(list.getSelectedIndex()).getSQL()));
+						txtDev.setText(String.valueOf(result.get(list.getSelectedIndex()).getDev()));
+						txtGeneration.setText(String.valueOf(result.get(list.getSelectedIndex()).getGeneration()));
+						txtHMI.setText(result.get(list.getSelectedIndex()).getHMI());
+						txtAddress.setText(result.get(list.getSelectedIndex()).getAddress());
+						txtPhone.setText(result.get(list.getSelectedIndex()).getPhone());
+						txtFieldTech.setText(result.get(list.getSelectedIndex()).getFieldTech());
+						txtFieldSupervisor.setText(result.get(list.getSelectedIndex()).getFieldSupervisor());
+						txtTimezone.setText(result.get(list.getSelectedIndex()).getTimezone());
+						
+						if(result.get(list.getSelectedIndex()).getTwic())
+						{
+							chk_Twic.setSelected(true);
+						}
+						else
+						{
+							chk_Twic.setSelected(false);
+						}
+						
+						if(result.get(list.getSelectedIndex()).getHighPerformance())
+						{
+							chk_HighPerformance.setSelected(true);
+						}
+						else
+						{
+							chk_HighPerformance.setSelected(false);
+						}
+						
+					}
+				
+				
+				catch(Exception e1)
+				{
+					System.out.println(e1.toString());
+				}
+			}
+
+		});
+	*/	
 		frmButaneSites.getContentPane().add(btnEdit);
+		btnAccept.setBounds(786, 11, 34, 34);
 		btnAccept.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				AcceptEdits();
@@ -160,9 +243,9 @@ public class g_ViewSites {
 		btnAccept.setEnabled(false);
 		btnAccept.setVisible(false);
 		btnAccept.setIcon(new ImageIcon(g_ViewSites.class.getResource("/ok-icon.png")));
-		btnAccept.setBounds(786, 11, 34, 34);
 		
 		frmButaneSites.getContentPane().add(btnAccept);
+		btnCancel.setBounds(828, 11, 32, 32);
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				CancelEdits();
@@ -171,16 +254,16 @@ public class g_ViewSites {
 		btnCancel.setToolTipText("Cancel Edits");
 		btnCancel.setEnabled(false);
 		btnCancel.setIcon(new ImageIcon(g_ViewSites.class.getResource("/Actions-window-close-icon.png")));
-		btnCancel.setBounds(828, 11, 32, 32);
 		
 		frmButaneSites.getContentPane().add(btnCancel);
 		
 		JLabel lblSites = new JLabel("Butane Sites");
+		lblSites.setBounds(36, 18, 260, 18);
 		lblSites.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSites.setForeground(Color.RED);
 		lblSites.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblSites.setBounds(36, 18, 260, 18);
 		frmButaneSites.getContentPane().add(lblSites);
+		btnAddSite.setBounds(267, 638, 32, 32);
 		btnAddSite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				g_NewSite.run();				
@@ -189,7 +272,6 @@ public class g_ViewSites {
 		});
 		btnAddSite.setIcon(new ImageIcon(g_ViewSites.class.getResource("/Plus-48.png")));
 		btnAddSite.setToolTipText("New Site");
-		btnAddSite.setBounds(267, 638, 32, 32);
 		
 		frmButaneSites.getContentPane().add(btnAddSite);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -248,19 +330,19 @@ public class g_ViewSites {
 		
 		listModel.removeAllElements();
 		list.setModel(listModel);
+		btnNewButton.setBounds(10, 660, 83, 32);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				g_MainMenu.run(frmButaneSites);
 				frmButaneSites.dispose();
 			}
 		});
-		btnNewButton.setBounds(10, 660, 83, 32);
 		
 		frmButaneSites.getContentPane().add(btnNewButton);
 		
 		JPanel panel = new JPanel();
-		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel.setBounds(643, 47, 240, 161);
+		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frmButaneSites.getContentPane().add(panel);
 		panel.setLayout(null);
 		
@@ -407,8 +489,8 @@ public class g_ViewSites {
 		lblDev.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_1.setBounds(323, 47, 310, 161);
+		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frmButaneSites.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -476,8 +558,8 @@ public class g_ViewSites {
 		lblSiteAbbrv.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_2.setBounds(323, 235, 560, 278);
+		panel_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frmButaneSites.getContentPane().add(panel_2);
 		panel_2.setLayout(null);
 		txtAddress.setBounds(113, 32, 310, 30);
@@ -547,8 +629,8 @@ public class g_ViewSites {
 		panel_2.add(txtState);
 		
 		JPanel panel_3 = new JPanel();
-		panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_3.setBounds(323, 515, 560, 121);
+		panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frmButaneSites.getContentPane().add(panel_3);
 		panel_3.setLayout(null);
 		
@@ -732,6 +814,81 @@ public class g_ViewSites {
 		btnAccept.setVisible(false);
 	}
 	
+	/*
+	private void PopulateSitesTree()
+	{
+		try {				
+			tree_sites.setModel(new DefaultTreeModel(
+					new DefaultMutableTreeNode("Sites") {
+						private static final long serialVersionUID = 1L;
+						{
+							DefaultMutableTreeNode node_category;
+							DefaultMutableTreeNode node_client;
+							DefaultMutableTreeNode node_ticket;
+							
+							String commandText = "SELECT DISTINCT Client from SupportTickets ORDER BY Client ASC";
+							ResultSet rs = c_Query.ExecuteResultSet(commandText);
+							
+							while((rs!=null) && (rs.next()))
+							{									
+								String tmpClient = rs.getString("Client");
+								node_category = new DefaultMutableTreeNode(tmpClient);
+								String commandText3 = "SELECT DISTINCT Site from SupportTickets WHERE Client = '" + tmpClient +"'";
+								ResultSet rs3 = c_Query.ExecuteResultSet(commandText3);
+								while((rs3!=null) && (rs3.next()))
+								{									
+									String tmpSite = rs3.getString("Site");
+									 
+									
+																			
+									//String commandText2 = "SELECT Ticket from SupportTickets WHERE Active = 0 and Site ='" + tmpSite + "' and Client = '" + tmpClient + "' ORDER BY Site asc, Ticket";
+									 String commandText2 = "SELECT [Client],[Site],[State],[SiteID],[ClientAbbrv],[SiteAbbrv],[iDracIP],[HostIP],[ViewIP],[SQLIP],[DevIP],[Generation],[HMI],[Address],[Phone],[Field_Tech],[Field_Supervisor],[Twic],[Timezone],[HighPerformance] FROM Sites WHERE client = '" + tmpClient + "' and site = '" + tmpSite +"' ORDER BY Client asc, Site asc";										
+									ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);										
+									while((rs2!=null) && (rs2.next()))
+									{											
+											//node_ticket = new DefaultMutableTreeNode(rs2.getString("Ticket"));																
+											//node_client.add(node_ticket);		
+										c_ButaneSites sites = new c_ButaneSites();
+										 sites.setClient(rs2.getString(1));
+										  sites.setSite(rs2.getString(2));
+										  sites.setState(rs2.getString(3));
+										  sites.setSiteID(rs2.getInt(4));
+										  sites.setClientAbbrv(rs2.getString(5));
+										  sites.setSiteAbbrv(rs2.getString(6));
+										  sites.setiDrac(rs2.getInt(7));
+										  sites.setHost(rs2.getInt(8));
+										  sites.setView(rs2.getInt(9));
+										  sites.setSQL(rs2.getInt(10));
+										  sites.setDev(rs2.getInt(11));
+										  sites.setGeneration(rs2.getFloat(12));
+										  sites.setHMI(rs2.getString(13));
+										  sites.setAddress(rs2.getString(14));
+										  sites.setPhone(rs2.getString(15));
+										  sites.setFieldTech(rs2.getString(16));
+										  sites.setFieldSupervisor(rs2.getString(17));
+										  sites.setTwic(rs2.getBoolean(18));
+										  sites.setTimezone(rs2.getString(19));
+										  sites.setHighPerformance(rs2.getBoolean(20));	
+										node_client = new DefaultMutableTreeNode(sites);
+										node_category.add(node_client);
+									}
+											
+									
+									
+								add(node_category);
+									
+								}
+
+							}
+						}
+					}
+				));
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}	
+	}
+	*/
 	private void PopulateSites()
 	{	
 		
@@ -771,7 +928,7 @@ public class g_ViewSites {
 			System.out.println("ERROR " + e.toString());
 		}
 		
-		scrollPane.setViewportView(list);
+		scrollPane_Listbox.setViewportView(list);
 
 		list.setModel(listModel);
 		
@@ -786,6 +943,7 @@ public class g_ViewSites {
 		listModel.removeAllElements();
 		list.setModel(listModel);
 		PopulateSites();
+		//PopulateSitesTree();
 		list.setSelectedIndex(index);
 	}
 	

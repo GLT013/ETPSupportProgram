@@ -68,7 +68,8 @@ public class c_ButaneSites {
 	
 	@Override
 	public String toString(){
-		return this.client + " " + this.site + " (" + this.siteid + ")";
+		//return this.client + " " + this.site + " (" + this.siteid + ")";
+		return this.site + " (" + this.siteid + ")";
 }
 	
 	public String getName()
