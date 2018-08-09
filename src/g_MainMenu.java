@@ -24,7 +24,7 @@ import javax.swing.border.EtchedBorder;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 3.6;
+	public static double version = 3.7;
 	public static int ticketMax;
 	public static boolean firstrun = true;
 	public static String TitleOnline = "Automated Support Program v" + version + "";	
@@ -225,12 +225,13 @@ public class g_MainMenu {
 			try {
 				rs.next();
 				ticketMax = rs.getInt("MaxOpenTickets");
-				double _dbVersion = rs.getDouble("Version");			
+				double _dbVersion = rs.getDouble("Version");	
+				double abs = Math.abs(version - _dbVersion);				
 				if(_dbVersion == version)
 				{
 					return true;
 				}
-				else if ((_dbVersion - version)*10 <= 1)
+				else if ((abs) < .2)
 				{
 					JOptionPane.showMessageDialog(frmMainMenu, "There is a newer version of the program located on the I Drive!");
 					return true;
