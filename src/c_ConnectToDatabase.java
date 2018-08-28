@@ -16,7 +16,7 @@ public class c_ConnectToDatabase {
          String connectionUrl = "jdbc:sqlserver://enesupport.database.windows.net;" +
                                  "database=Support;" +
                                  "user=travis;" +
-                                 "password=Butane#Ops";
+                                 "password=Butane#Ops1";
          con = DriverManager.getConnection(connectionUrl);
          
          return true;

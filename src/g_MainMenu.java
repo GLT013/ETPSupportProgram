@@ -24,13 +24,15 @@ import javax.swing.border.EtchedBorder;
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 3.7;
+	public static double version = 3.8;
 	public static int ticketMax;
 	public static boolean firstrun = true;
-	public static String TitleOnline = "Automated Support Program v" + version + "";	
+	public static String TitleOnline = "EN Automation Support Program v" + version + "";	
 	public static boolean CurrentTicketsNav;
 	public static String CurrentUser = "";
+	public static String CurrentUserTitle = "";
 	private static JLabel lblHello;
+	private static JLabel lbl_Title;
 	private static JButton btnSupportArchive;
 	public static boolean adminMode;
 	private static JMenu mnAdmin;
@@ -60,6 +62,34 @@ public class g_MainMenu {
 					JOptionPane.showMessageDialog(frmMainMenu, "Cannot connect to database. Please verify internet connection and try again.");					
 			        	return;
 			    }
+				
+				if(!c_GetMacAddress.getMacAddress())
+				{
+					JOptionPane.showMessageDialog(frmMainMenu, " It is I, Arthur, son of Uther Pendragon, \n from the castle of Camelot. \n King of the Britons, defeater of the Saxons, \n Sovereign of all England!", "Halt! Who goes there?",							
+					        JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmMainMenu, "I am, and this is my trusty servant Patsy. \n We have ridden the length and breadth of the land in search of knights \n who will join me in my court at Camelot. \n I must speak with your lord and master.", "Pull the other one!",							
+					        JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmMainMenu, "Yes!", "What? Ridden on a horse?",							
+					        JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmMainMenu, "What?!", "You're using coconuts!",							
+					        JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmMainMenu, "So? We have ridden since the snows of winter covered this land, \n through the kingdom of Mercia, through...", " You've got two empty halves of coconut and you're bangin' 'em together.",							
+					        JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmMainMenu, "We found them.", "Where'd you get the coconuts?",							
+					        JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmMainMenu, "What do you mean?", "Found them? The coconuts tropical!",							
+					        JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmMainMenu, "The swallow may fly south with the sun or the house martin \n or the plover may seek warmer climes in winter, \n yet these are not strangers to our land?", "Well, this is a temperate zone.",							
+					        JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmMainMenu, "Not at all. They could be carried.", "Are you suggesting that coconuts migrate? ",							
+					        JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmMainMenu, "It could grip it by the husk!", "What? A swallow carrying a coconut?",							
+					        JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmMainMenu, "It's a simple question of weight ratios! A five ounce bird could not carry a one pound coconut. \n \n Well, it doesn't matter. Will you go and tell your master that Arthur \n from the Court of Camelot is here?", "It's not a question of where he grips it! ",							
+					        JOptionPane.ERROR_MESSAGE);
+					return;
+					
+				}
 								
 				if(!checkVersion())
 				{
@@ -69,14 +99,16 @@ public class g_MainMenu {
 					@SuppressWarnings("unused")
 					g_MainMenu window = new g_MainMenu();
 					g_MainMenu.frmMainMenu.setVisible(true);					
-					firstrun = false;
-					CurrentUser = c_GetComputerName.getComputerName();
-					String Greeting = c_EasterEggs.Greetings();
-					lblHello.setText(Greeting + " " + CurrentUser + "!");
+					firstrun = false;			
+					//String Greeting = c_EasterEggs.Greetings();
+					//lblHello.setText(Greeting + " " + CurrentUser + "!");
+					lblHello.setText(CurrentUser);
+					lbl_Title.setText("" + CurrentUserTitle + "");
+					
 					
 					JPanel panel = new JPanel();
 					panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-					panel.setBounds(152, 47, 215, 295);
+					panel.setBounds(152, 65, 215, 295);
 					frmMainMenu.getContentPane().add(panel);
 					panel.setLayout(null);
 					
@@ -275,8 +307,8 @@ public class g_MainMenu {
 		//Main Frame
 		frmMainMenu = new JFrame();
 		frmMainMenu.setIconImage(Toolkit.getDefaultToolkit().getImage(g_MainMenu.class.getResource("/icon.png")));
-		frmMainMenu.setTitle("Automated Support Program v." + g_MainMenu.version);
-		frmMainMenu.setBounds(0,0,524, 647);
+		frmMainMenu.setTitle("EN Automation Support Program v." + g_MainMenu.version);
+		frmMainMenu.setBounds(0,0,524, 665);
 		frmMainMenu.setResizable(false);
 		frmMainMenu.setLocationRelativeTo(null);
 		frmMainMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -288,7 +320,7 @@ public class g_MainMenu {
 		JLabel lblV = new JLabel("");
 		lblV.setText("v " + version);
 		lblV.setHorizontalAlignment(SwingConstants.CENTER);
-		lblV.setBounds(462, 580, 54, 14);
+		lblV.setBounds(462, 585, 54, 14);
 		frmMainMenu.getContentPane().add(lblV);
 		
 		lblHello = new JLabel("Hello Travis Johnston!");
@@ -296,6 +328,12 @@ public class g_MainMenu {
 		lblHello.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblHello.setBounds(10, 11, 498, 25);
 		frmMainMenu.getContentPane().add(lblHello);
+		
+		lbl_Title = new JLabel("");
+		lbl_Title.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_Title.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lbl_Title.setBounds(10, 28, 498, 25);
+		frmMainMenu.getContentPane().add(lbl_Title);
 	
 		
 		//Menubar for Main Menu

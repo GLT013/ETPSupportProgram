@@ -5,17 +5,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JLabel;
@@ -26,7 +21,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
-import java.awt.Color;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.JPanel;
@@ -35,14 +29,23 @@ import java.awt.event.MouseEvent;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
 import javax.swing.JTree;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
+import javax.swing.JTextArea;
 
 public class g_ViewSites {
 
 	public static JFrame frmButaneSites;
-	private static JList<String> list = new JList<String>();
+	private static JList<String> list_ButaneSites = new JList<String>();
+	private static JList<String> list_ServersExt = new JList<String>();
+	private static JList<String> list_ServersInt = new JList<String>();
 	private static JTree tree_sites;
 	private static DefaultListModel<String> listModel = new DefaultListModel<String>();
-	private JScrollPane scrollPane_Listbox;
+	private static DefaultListModel<String> listModel2 = new DefaultListModel<String>();
+	private static DefaultListModel<String> listModel3 = new DefaultListModel<String>();
+	private JScrollPane scrollPane_ButaneSites;
+	private JScrollPane scrollPane_ServersExt;
+	private JScrollPane scrollPane_ServersInt;
 	JTextField txtSite = new JTextField("");
 	JTextField txtSiteID = new JTextField("");
 	JTextField txtAddress = new JTextField("");
@@ -52,6 +55,8 @@ public class g_ViewSites {
 	private final JButton btnAccept = new JButton("");
 	private final JButton btnCancel = new JButton("");
 	final ArrayList <c_ButaneSites> result = new ArrayList<c_ButaneSites>();
+	final ArrayList <c_Servers> ServersExt = new ArrayList<c_Servers>();
+	final ArrayList <c_Servers> ServersInt = new ArrayList<c_Servers>();
 	private final JButton btnAddSite = new JButton("");
 	private final JButton btnNewButton = new JButton("Back");
 	private JTextField txtClientAbbrv;
@@ -69,6 +74,14 @@ public class g_ViewSites {
 	private JTextField txtState;
 	private JCheckBox chk_HighPerformance;
 	private JCheckBox chk_Twic;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JRadioButton rdbtnButaneSites;
+	private JRadioButton rdbtnServers;
+	private JTextField txt_ServerName;
+	private JTextField txt_ServerIP;
+	private JTextArea txt_ServerDesc;
+	private JPanel panel_4;
+	private JPanel panel_5;
 	
 
 	/**
@@ -93,6 +106,8 @@ public class g_ViewSites {
 	public g_ViewSites() {
 		initialize();
 		PopulateSites();
+		PopulateServersExt();
+		PopulateServersInt();
 		//PopulateSitesTree();
 	}
 
@@ -112,42 +127,59 @@ public class g_ViewSites {
 			 @Override
 			    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 				 listModel.removeAllElements();
-				 list.setModel(listModel);
+				 list_ButaneSites.setModel(listModel);
+				 listModel2.removeAllElements();
+				 list_ServersExt.setModel(listModel2);
+				 listModel3.removeAllElements();
+				 list_ServersInt.setModel(listModel3);
 				 frmButaneSites.dispose(); 
 			 }
 		
 		});
 		frmButaneSites.getContentPane().setLayout(null);
 
-		scrollPane_Listbox = new JScrollPane();
-		scrollPane_Listbox.setBounds(36, 47, 263, 589);
-		scrollPane_Listbox.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		frmButaneSites.getContentPane().add(scrollPane_Listbox);
+		scrollPane_ButaneSites = new JScrollPane();
+		scrollPane_ButaneSites.setBounds(36, 47, 263, 589);
+		scrollPane_ButaneSites.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		frmButaneSites.getContentPane().add(scrollPane_ButaneSites);
+		btnEdit.setIcon(new ImageIcon(g_ViewSites.class.getResource("/edit.png")));
 		btnEdit.setBounds(828, 11, 32, 32);
 		btnEdit.setToolTipText("Edit");
-		btnEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {				
-				txtClient.setEditable(true);
-				txtSite.setEditable(true);
-				//txtSiteID.setEditable(true); do not allow siteID to be changed.
-				txtClientAbbrv.setEditable(true);
-				txtSiteAbbrv.setEditable(true);
-				txtiDrac.setEditable(true);
-				txtState.setEditable(true);
-				txtHost.setEditable(true);
-				txtView.setEditable(true);
-				txtSQL.setEditable(true);
-				txtDev.setEditable(true);
-				txtGeneration.setEditable(true);
-				txtHMI.setEditable(true);
-				txtAddress.setEditable(true);
-				txtPhone.setEditable(true);
-				txtFieldTech.setEditable(true);
-				txtFieldSupervisor.setEditable(true);
-				txtTimezone.setEditable(true);	
-				chk_HighPerformance.setEnabled(true);
-				chk_Twic.setEnabled(true);
-			
+		btnEdit.addActionListener(new ActionListener() {			
+			public void actionPerformed(ActionEvent arg0) {
+				if(rdbtnButaneSites.isSelected())
+					{
+					txtClient.setEditable(true);
+					txtSite.setEditable(true);
+					//txtSiteID.setEditable(true); do not allow siteID to be changed.
+					txtClientAbbrv.setEditable(true);
+					txtSiteAbbrv.setEditable(true);
+					txtiDrac.setEditable(true);
+					txtState.setEditable(true);
+					txtHost.setEditable(true);
+					txtView.setEditable(true);
+					txtSQL.setEditable(true);
+					txtDev.setEditable(true);
+					txtGeneration.setEditable(true);
+					txtHMI.setEditable(true);
+					txtAddress.setEditable(true);
+					txtPhone.setEditable(true);
+					txtFieldTech.setEditable(true);
+					txtFieldSupervisor.setEditable(true);
+					txtTimezone.setEditable(true);	
+					chk_HighPerformance.setEnabled(true);
+					chk_Twic.setEnabled(true);
+				
+					
+				}
+				else
+				{
+					txt_ServerName.setEditable(true);
+					txt_ServerIP.setEditable(true);
+					txt_ServerDesc.setEditable(true);
+					
+				}
+				
 				btnEdit.setEnabled(false);
 				btnEdit.setVisible(false);
 				btnCancel.setVisible(true);
@@ -157,6 +189,7 @@ public class g_ViewSites {
 			}
 		});     
 		
+		/*
 		JScrollPane scrollPane_Tree = new JScrollPane();
 		scrollPane_Tree.setEnabled(false);
 		scrollPane_Tree.setBounds(36, 47, 263, 568);
@@ -167,8 +200,7 @@ public class g_ViewSites {
 		tree_sites.setBackground(Color.WHITE);
 		scrollPane_Tree.setViewportView(tree_sites);
 		btnEdit.setIcon(new ImageIcon(g_ViewSites.class.getResource("/edit.png")));
-		
-		/*
+	
 		tree_sites.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				System.out.println("TEsting");
@@ -235,7 +267,7 @@ public class g_ViewSites {
 		frmButaneSites.getContentPane().add(btnEdit);
 		btnAccept.setBounds(786, 11, 34, 34);
 		btnAccept.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {				
 				AcceptEdits();
 			}
 		});
@@ -256,17 +288,17 @@ public class g_ViewSites {
 		btnCancel.setIcon(new ImageIcon(g_ViewSites.class.getResource("/Actions-window-close-icon.png")));
 		
 		frmButaneSites.getContentPane().add(btnCancel);
-		
-		JLabel lblSites = new JLabel("Butane Sites");
-		lblSites.setBounds(36, 18, 260, 18);
-		lblSites.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSites.setForeground(Color.RED);
-		lblSites.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		frmButaneSites.getContentPane().add(lblSites);
 		btnAddSite.setBounds(267, 638, 32, 32);
 		btnAddSite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_NewSite.run();				
+				if(rdbtnButaneSites.isSelected())
+				{
+					g_NewSite.run();
+				}
+				else
+				{
+					g_NewServer.run();
+				}
 				frmButaneSites.dispose();
 			}
 		});
@@ -274,35 +306,35 @@ public class g_ViewSites {
 		btnAddSite.setToolTipText("New Site");
 		
 		frmButaneSites.getContentPane().add(btnAddSite);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list_ButaneSites.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		
-		list.addListSelectionListener(new ListSelectionListener() {
+		list_ButaneSites.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 				try{
 					if(!arg0.getValueIsAdjusting())
 					{
 						CancelEdits();
-						txtClient.setText(result.get(list.getSelectedIndex()).getClient());
-						txtSite.setText(result.get(list.getSelectedIndex()).getSite());
-						txtSiteID.setText(String.valueOf(result.get(list.getSelectedIndex()).getSiteID()));
-						txtState.setText(result.get(list.getSelectedIndex()).getState());
-						txtClientAbbrv.setText(result.get(list.getSelectedIndex()).getClientAbbrv());
-						txtSiteAbbrv.setText(result.get(list.getSelectedIndex()).getSiteAbbrv());
-						txtiDrac.setText(String.valueOf(result.get(list.getSelectedIndex()).getiDrac()));
-						txtHost.setText(String.valueOf(result.get(list.getSelectedIndex()).getHost()));
-						txtView.setText(String.valueOf(result.get(list.getSelectedIndex()).getView()));
-						txtSQL.setText(String.valueOf(result.get(list.getSelectedIndex()).getSQL()));
-						txtDev.setText(String.valueOf(result.get(list.getSelectedIndex()).getDev()));
-						txtGeneration.setText(String.valueOf(result.get(list.getSelectedIndex()).getGeneration()));
-						txtHMI.setText(result.get(list.getSelectedIndex()).getHMI());
-						txtAddress.setText(result.get(list.getSelectedIndex()).getAddress());
-						txtPhone.setText(result.get(list.getSelectedIndex()).getPhone());
-						txtFieldTech.setText(result.get(list.getSelectedIndex()).getFieldTech());
-						txtFieldSupervisor.setText(result.get(list.getSelectedIndex()).getFieldSupervisor());
-						txtTimezone.setText(result.get(list.getSelectedIndex()).getTimezone());
+						txtClient.setText(result.get(list_ButaneSites.getSelectedIndex()).getClient());
+						txtSite.setText(result.get(list_ButaneSites.getSelectedIndex()).getSite());
+						txtSiteID.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getSiteID()));
+						txtState.setText(result.get(list_ButaneSites.getSelectedIndex()).getState());
+						txtClientAbbrv.setText(result.get(list_ButaneSites.getSelectedIndex()).getClientAbbrv());
+						txtSiteAbbrv.setText(result.get(list_ButaneSites.getSelectedIndex()).getSiteAbbrv());
+						txtiDrac.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getiDrac()));
+						txtHost.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getHost()));
+						txtView.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getView()));
+						txtSQL.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getSQL()));
+						txtDev.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getDev()));
+						txtGeneration.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getGeneration()));
+						txtHMI.setText(result.get(list_ButaneSites.getSelectedIndex()).getHMI());
+						txtAddress.setText(result.get(list_ButaneSites.getSelectedIndex()).getAddress());
+						txtPhone.setText(result.get(list_ButaneSites.getSelectedIndex()).getPhone());
+						txtFieldTech.setText(result.get(list_ButaneSites.getSelectedIndex()).getFieldTech());
+						txtFieldSupervisor.setText(result.get(list_ButaneSites.getSelectedIndex()).getFieldSupervisor());
+						txtTimezone.setText(result.get(list_ButaneSites.getSelectedIndex()).getTimezone());
 						
-						if(result.get(list.getSelectedIndex()).getTwic())
+						if(result.get(list_ButaneSites.getSelectedIndex()).getTwic())
 						{
 							chk_Twic.setSelected(true);
 						}
@@ -311,7 +343,7 @@ public class g_ViewSites {
 							chk_Twic.setSelected(false);
 						}
 						
-						if(result.get(list.getSelectedIndex()).getHighPerformance())
+						if(result.get(list_ButaneSites.getSelectedIndex()).getHighPerformance())
 						{
 							chk_HighPerformance.setSelected(true);
 						}
@@ -329,7 +361,7 @@ public class g_ViewSites {
 		});
 		
 		listModel.removeAllElements();
-		list.setModel(listModel);
+		list_ButaneSites.setModel(listModel);
 		btnNewButton.setBounds(10, 660, 83, 32);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -340,7 +372,7 @@ public class g_ViewSites {
 		
 		frmButaneSites.getContentPane().add(btnNewButton);
 		
-		JPanel panel = new JPanel();
+		final JPanel panel = new JPanel();
 		panel.setBounds(643, 47, 240, 161);
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frmButaneSites.getContentPane().add(panel);
@@ -488,7 +520,7 @@ public class g_ViewSites {
 		panel.add(lblDev);
 		lblDev.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JPanel panel_1 = new JPanel();
+		final JPanel panel_1 = new JPanel();
 		panel_1.setBounds(323, 47, 310, 161);
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frmButaneSites.getContentPane().add(panel_1);
@@ -557,7 +589,8 @@ public class g_ViewSites {
 		panel_1.add(lblSiteAbbrv);
 		lblSiteAbbrv.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		JPanel panel_2 = new JPanel();
+		
+		final JPanel panel_2 = new JPanel();
 		panel_2.setBounds(323, 235, 560, 278);
 		panel_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frmButaneSites.getContentPane().add(panel_2);
@@ -628,7 +661,7 @@ public class g_ViewSites {
 		txtState.setBounds(113, 73, 310, 30);
 		panel_2.add(txtState);
 		
-		JPanel panel_3 = new JPanel();
+		final JPanel panel_3 = new JPanel();
 		panel_3.setBounds(323, 515, 560, 121);
 		panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frmButaneSites.getContentPane().add(panel_3);
@@ -695,6 +728,171 @@ public class g_ViewSites {
 		chk_Twic = new JCheckBox("");
 		chk_Twic.setBounds(479, 56, 36, 23);
 		panel_3.add(chk_Twic);
+		
+		rdbtnButaneSites = new JRadioButton("Butane Sites");
+		rdbtnButaneSites.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scrollPane_ButaneSites.setVisible(true);
+				panel.setVisible(true);
+				panel_1.setVisible(true);
+				panel_2.setVisible(true);
+				panel_3.setVisible(true);
+				panel_4.setVisible(false);
+				panel_5.setVisible(false);
+			}
+		});
+		rdbtnButaneSites.setFont(new Font("Tahoma", Font.BOLD, 12));
+		buttonGroup.add(rdbtnButaneSites);
+		rdbtnButaneSites.setBounds(50, 20, 109, 23);
+		rdbtnButaneSites.setSelected(true);
+		frmButaneSites.getContentPane().add(rdbtnButaneSites);
+		
+		rdbtnServers = new JRadioButton("Servers");
+		rdbtnServers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				scrollPane_ButaneSites.setVisible(false);
+				panel.setVisible(false);
+				panel_1.setVisible(false);
+				panel_2.setVisible(false);
+				panel_3.setVisible(false);
+				panel_4.setVisible(true);
+				panel_5.setVisible(true);
+			}
+		});
+		rdbtnServers.setFont(new Font("Tahoma", Font.BOLD, 12));
+		buttonGroup.add(rdbtnServers);
+		rdbtnServers.setBounds(180, 20, 109, 23);
+		frmButaneSites.getContentPane().add(rdbtnServers);
+		
+		panel_4 = new JPanel();
+		panel_4.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_4.setBounds(325, 47, 568, 589);
+		frmButaneSites.getContentPane().add(panel_4);
+		panel_4.setLayout(null);
+		panel_4.setVisible(false);
+		
+		txt_ServerName = new JTextField();
+		txt_ServerName.setEditable(false);
+		txt_ServerName.setBounds(41, 40, 165, 28);
+		panel_4.add(txt_ServerName);
+		txt_ServerName.setColumns(10);
+		
+		txt_ServerIP = new JTextField();
+		txt_ServerIP.setEditable(false);
+		txt_ServerIP.setColumns(10);
+		txt_ServerIP.setBounds(277, 40, 165, 28);
+		panel_4.add(txt_ServerIP);
+		
+		JLabel lblServerName = new JLabel("Server Name");
+		lblServerName.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblServerName.setBounds(43, 15, 115, 28);
+		panel_4.add(lblServerName);
+		
+		JLabel lblServerIp = new JLabel("Server IP");
+		lblServerIp.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblServerIp.setBounds(275, 15, 115, 28);
+		panel_4.add(lblServerIp);
+		
+		txt_ServerDesc = new JTextArea();
+		txt_ServerDesc.setEditable(false);
+		txt_ServerDesc.setLineWrap(true);
+		txt_ServerDesc.setBounds(40, 110, 493, 316);
+		panel_4.add(txt_ServerDesc);
+		
+		JLabel lblDescription = new JLabel("Description");
+		lblDescription.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblDescription.setBounds(41, 79, 115, 28);
+		panel_4.add(lblDescription);
+		
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {				
+				String width;
+				String height;				
+				width = "1920";
+				height = "1080";
+				
+				try {
+					Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+txt_ServerIP.getText() + " /w:" + width + " /h:" + height});
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					
+				}
+			}
+		});
+		lblNewLabel_1.setToolTipText("RDP");
+		lblNewLabel_1.setIcon(new ImageIcon(g_ViewSites.class.getResource("/sql.png")));
+		lblNewLabel_1.setBounds(479, 40, 32, 32);
+		panel_4.add(lblNewLabel_1);
+		
+		panel_5 = new JPanel();
+		panel_5.setBorder(null);
+		panel_5.setBounds(34, 47, 265, 589);
+		frmButaneSites.getContentPane().add(panel_5);
+		panel_5.setLayout(null);
+		panel_5.setVisible(false);
+		
+		scrollPane_ServersInt = new JScrollPane();
+		scrollPane_ServersInt.setBounds(0, 314, 263, 275);
+		panel_5.add(scrollPane_ServersInt);
+		scrollPane_ServersInt.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		
+		list_ServersInt = new JList<String>();
+		list_ServersInt.setSelectedIndex(0);
+		scrollPane_ServersInt.setViewportView(list_ServersInt);
+		
+		scrollPane_ServersExt = new JScrollPane();
+		scrollPane_ServersExt.setBounds(0, 0, 263, 275);
+		panel_5.add(scrollPane_ServersExt);
+		scrollPane_ServersExt.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		listModel3.removeAllElements();
+		list_ServersInt.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				try{
+					if(!arg0.getValueIsAdjusting())
+					{
+						CancelEdits();
+						list_ServersExt.clearSelection();
+						txt_ServerName.setText(ServersInt.get(list_ServersInt.getSelectedIndex()).getServer());
+						txt_ServerIP.setText(ServersInt.get(list_ServersInt.getSelectedIndex()).getIP());
+						txt_ServerDesc.setText(ServersInt.get(list_ServersInt.getSelectedIndex()).getDescription());						
+					}
+				}
+				catch(Exception e)
+				{
+					
+				}
+			}
+		});
+		
+		
+		scrollPane_ServersExt.setViewportView(list_ServersExt);
+		
+		JLabel lblInternalServers = new JLabel("Internal Servers");
+		lblInternalServers.setBounds(10, 285, 115, 28);
+		panel_5.add(lblInternalServers);
+		lblInternalServers.setFont(new Font("Tahoma", Font.BOLD, 14));
+		listModel2.removeAllElements();
+		list_ServersExt.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				try{
+					if(!arg0.getValueIsAdjusting())
+					{
+						CancelEdits();
+						list_ServersInt.clearSelection();
+						txt_ServerName.setText(ServersExt.get(list_ServersExt.getSelectedIndex()).getServer());
+						txt_ServerIP.setText(ServersExt.get(list_ServersExt.getSelectedIndex()).getIP());
+						txt_ServerDesc.setText(ServersExt.get(list_ServersExt.getSelectedIndex()).getDescription());												
+					}
+				}
+				catch(Exception e)
+				{
+					
+				}
+			}
+		});
 		
 		
 		//Menubar
@@ -787,26 +985,35 @@ public class g_ViewSites {
 	
 	private void CancelEdits()
 	{
-		txtClient.setEditable(false);
-		txtSite.setEditable(false);
-		txtSiteID.setEditable(false);
-		txtClientAbbrv.setEditable(false);
-		txtSiteAbbrv.setEditable(false);
-		txtiDrac.setEditable(false);
-		txtState.setEditable(false);
-		txtHost.setEditable(false);
-		txtView.setEditable(false);
-		txtSQL.setEditable(false);
-		txtDev.setEditable(false);
-		txtGeneration.setEditable(false);
-		txtHMI.setEditable(false);
-		txtAddress.setEditable(false);
-		txtPhone.setEditable(false);
-		txtFieldTech.setEditable(false);
-		txtFieldSupervisor.setEditable(false);
-		txtTimezone.setEditable(false);
-		chk_HighPerformance.setEnabled(false);
-		chk_Twic.setEnabled(false);
+		if(rdbtnButaneSites.isSelected())
+		{
+			txtClient.setEditable(false);
+			txtSite.setEditable(false);
+			txtSiteID.setEditable(false);
+			txtClientAbbrv.setEditable(false);
+			txtSiteAbbrv.setEditable(false);
+			txtiDrac.setEditable(false);
+			txtState.setEditable(false);
+			txtHost.setEditable(false);
+			txtView.setEditable(false);
+			txtSQL.setEditable(false);
+			txtDev.setEditable(false);
+			txtGeneration.setEditable(false);
+			txtHMI.setEditable(false);
+			txtAddress.setEditable(false);
+			txtPhone.setEditable(false);
+			txtFieldTech.setEditable(false);
+			txtFieldSupervisor.setEditable(false);
+			txtTimezone.setEditable(false);
+			chk_HighPerformance.setEnabled(false);
+			chk_Twic.setEnabled(false);
+		}
+		else
+		{
+			txt_ServerName.setEditable(false);
+			txt_ServerIP.setEditable(false);
+			txt_ServerDesc.setEditable(false);
+		}
 		
 		btnEdit.setEnabled(true);
 		btnEdit.setVisible(true);
@@ -928,38 +1135,147 @@ public class g_ViewSites {
 			System.out.println("ERROR " + e.toString());
 		}
 		
-		scrollPane_Listbox.setViewportView(list);
+		scrollPane_ButaneSites.setViewportView(list_ButaneSites);
 
-		list.setModel(listModel);
+		list_ButaneSites.setModel(listModel);
 		
-		list.setSelectedIndex(0);
+		list_ButaneSites.setSelectedIndex(0);
+		
+	}
+	
+	private void PopulateServersExt()
+	{	
+		String commandText = "SELECT [ServerName],[ServerIP],[Description] FROM Servers WHERE Internal = 0 ORDER BY ServerName";
+		ResultSet rs = c_Query.ExecuteResultSet(commandText);
+		try{
+
+			while ((rs!=null) && (rs.next()))
+			{
+				  c_Servers servers = new c_Servers();
+				  servers.setServer(rs.getString(1));
+				  servers.setIP(rs.getString(2));
+				  servers.setDescription(rs.getString(3));				 		  
+				  ServersExt.add(servers);
+				  listModel2.addElement(servers.getName());				  
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("ERROR " + e.toString());
+		}
+		
+		scrollPane_ServersExt.setViewportView(list_ServersExt);
+		
+		list_ServersExt.setModel(listModel2);		
+		//list_ServersExt.setSelectedIndex(0);
+		
+	
+		
+	}
+	
+	
+	private void PopulateServersInt()
+	{	
+
+		String commandText = "SELECT [ServerName],[ServerIP],[Description] FROM Servers WHERE Internal = 1 ORDER BY ServerName";
+		ResultSet rs = c_Query.ExecuteResultSet(commandText);
+		try{
+
+			while ((rs!=null) && (rs.next()))
+			{
+				  c_Servers servers = new c_Servers();
+				  servers.setServer(rs.getString(1));
+				  servers.setIP(rs.getString(2));
+				  servers.setDescription(rs.getString(3));				 		  
+				  ServersInt.add(servers);
+				  listModel3.addElement(servers.getName());				  
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("ERROR " + e.toString());
+		}
+		
+		scrollPane_ServersInt.setViewportView(list_ServersInt);
+
+		list_ServersInt.setModel(listModel3);
+		
+		//list_ServersInt.setSelectedIndex(0);
 		
 	}
 	
 	/* This function will refresh the list of the JPanel on the left hand side after an edit has been made. */
 	private void RefreshList()
 	{
-		int index = list.getSelectedIndex();
+		int index = list_ButaneSites.getSelectedIndex();
 		listModel.removeAllElements();
-		list.setModel(listModel);
+		
+		list_ButaneSites.setModel(listModel);
 		PopulateSites();
 		//PopulateSitesTree();
-		list.setSelectedIndex(index);
+		list_ButaneSites.setSelectedIndex(index);
 	}
+	
+	/* This function will refresh the list of the JPanel on the left hand side after an edit has been made. */
+	private void RefreshListServersExt()
+	{
+		int index = list_ServersExt.getSelectedIndex();		
+		listModel2.removeAllElements();		
+		list_ServersExt.setModel(listModel2);		
+		PopulateServersExt();		
+		list_ServersExt.setSelectedIndex(index);		
+	}
+	
+	/* This function will refresh the list of the JPanel on the left hand side after an edit has been made. */
+	private void RefreshListServersInt()
+	{
+		int index = list_ServersInt.getSelectedIndex();		
+		listModel3.removeAllElements();		
+		list_ServersInt.setModel(listModel3);
+		PopulateServersInt();		
+		list_ServersInt.setSelectedIndex(index);
+		
+	}
+	
 	
 	
 	private void AcceptEdits()
 	{
-		int siteID = result.get(list.getSelectedIndex()).getSiteID();
-
-		result.get(list.getSelectedIndex()).updateSites(txtClient.getText(),  txtSite.getText(),  txtState.getText(), Integer.parseInt(txtSiteID.getText()),  txtClientAbbrv.getText(),  txtSiteAbbrv.getText(), Integer.parseInt(txtiDrac.getText()), 
-				Integer.parseInt(txtHost.getText()), Integer.parseInt(txtView.getText()), Integer.parseInt(txtSQL.getText()), Integer.parseInt(txtDev.getText()), Float.parseFloat(txtGeneration.getText()),  txtHMI.getText(),  txtAddress.getText(),  txtPhone.getText(),  txtFieldTech.getText(),  txtFieldSupervisor.getText(),
-			chk_Twic.isSelected(),  txtTimezone.getText(), chk_HighPerformance.isSelected());
-		String commandText = "Update Sites set Client = '" + txtClient.getText() + "', Site = '" + txtSite.getText() + "', State = '" + txtState.getText() + "', SiteID = '" + txtSiteID.getText() + "', ClientAbbrv = '" + txtClientAbbrv.getText() + "', SiteAbbrv = '" + txtSiteAbbrv.getText() + "', iDracIP = '" + txtiDrac.getText() + "', HostIP = '" + txtHost.getText() + "', ViewIP = '" + txtView.getText() + "', SQLIP = '" + txtSQL.getText() + "', DevIP = '" + txtDev.getText() + "', Generation = '" + txtGeneration.getText() + "', HMI = '" + txtHMI.getText() + "', Address = '" + txtAddress.getText() + "', Phone = '" + txtPhone.getText() + "', Field_Tech = '" + txtFieldTech.getText() + "', Field_Supervisor = '" + txtFieldSupervisor.getText() + "', Twic = '" + chk_Twic.isSelected() + "', Timezone = '" + txtTimezone.getText() + "', HighPerformance = '" + chk_HighPerformance.isSelected() + "' WHERE SiteID = '" + siteID + "'";
-		
-		c_Query.ExecuteQuery(commandText);		
-		result.set(list.getSelectedIndex(), result.get(list.getSelectedIndex()));
-		RefreshList();
+		if(rdbtnButaneSites.isSelected())
+		{
+			int siteID = result.get(list_ButaneSites.getSelectedIndex()).getSiteID();
+	
+			result.get(list_ButaneSites.getSelectedIndex()).updateSites(txtClient.getText(),  txtSite.getText(),  txtState.getText(), Integer.parseInt(txtSiteID.getText()),  txtClientAbbrv.getText(),  txtSiteAbbrv.getText(), Integer.parseInt(txtiDrac.getText()), 
+					Integer.parseInt(txtHost.getText()), Integer.parseInt(txtView.getText()), Integer.parseInt(txtSQL.getText()), Integer.parseInt(txtDev.getText()), Float.parseFloat(txtGeneration.getText()),  txtHMI.getText(),  txtAddress.getText(),  txtPhone.getText(),  txtFieldTech.getText(),  txtFieldSupervisor.getText(),
+				chk_Twic.isSelected(),  txtTimezone.getText(), chk_HighPerformance.isSelected());
+			String commandText = "Update Sites set Client = '" + txtClient.getText() + "', Site = '" + txtSite.getText() + "', State = '" + txtState.getText() + "', SiteID = '" + txtSiteID.getText() + "', ClientAbbrv = '" + txtClientAbbrv.getText() + "', SiteAbbrv = '" + txtSiteAbbrv.getText() + "', iDracIP = '" + txtiDrac.getText() + "', HostIP = '" + txtHost.getText() + "', ViewIP = '" + txtView.getText() + "', SQLIP = '" + txtSQL.getText() + "', DevIP = '" + txtDev.getText() + "', Generation = '" + txtGeneration.getText() + "', HMI = '" + txtHMI.getText() + "', Address = '" + txtAddress.getText() + "', Phone = '" + txtPhone.getText() + "', Field_Tech = '" + txtFieldTech.getText() + "', Field_Supervisor = '" + txtFieldSupervisor.getText() + "', Twic = '" + chk_Twic.isSelected() + "', Timezone = '" + txtTimezone.getText() + "', HighPerformance = '" + chk_HighPerformance.isSelected() + "' WHERE SiteID = '" + siteID + "'";
+			
+			c_Query.ExecuteQuery(commandText);		
+			result.set(list_ButaneSites.getSelectedIndex(), result.get(list_ButaneSites.getSelectedIndex()));
+			RefreshList();
+		}
+		else
+		{
+			String serverName = ServersExt.get(list_ServersExt.getSelectedIndex()).getServer();
+			if(serverName.compareTo("") == 0)
+			{
+				serverName = txt_ServerName.getText();
+				ServersInt.get(list_ServersInt.getSelectedIndex()).updateServer(txt_ServerName.getText(),txt_ServerIP.getText(),txt_ServerDesc.getText());
+				String commandText = "Update Servers set ServerName = '" + txt_ServerName.getText() + "', ServerIP = '" + txt_ServerIP.getText() + "', Description = '" + txt_ServerDesc.getText() + "' WHERE ServerName = '" + serverName + "'";
+				c_Query.ExecuteQuery(commandText);					
+				ServersInt.set(list_ServersInt.getSelectedIndex(), ServersInt.get(list_ServersInt.getSelectedIndex()));
+				RefreshListServersInt();
+				
+			}
+			else
+			{
+				ServersExt.get(list_ServersExt.getSelectedIndex()).updateServer(txt_ServerName.getText(),txt_ServerIP.getText(),txt_ServerDesc.getText());
+				String commandText = "Update Servers set ServerName = '" + txt_ServerName.getText() + "', ServerIP = '" + txt_ServerIP.getText() + "', Description = '" + txt_ServerDesc.getText() + "' WHERE ServerName = '" + serverName + "'";
+				c_Query.ExecuteQuery(commandText);					
+				ServersExt.set(list_ServersExt.getSelectedIndex(), ServersExt.get(list_ServersExt.getSelectedIndex()));
+				RefreshListServersExt();
+			}
+		}
 		
 		
 	}
