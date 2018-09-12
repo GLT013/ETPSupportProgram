@@ -11,8 +11,7 @@ public class c_ButaneSites {
 	private int view;
 	private int sql;
 	private int dev;
-	private float generation;
-	private String HMI;	
+	private float generation;	
 	private String address;
 	private String phone;
 	private String fieldtech;
@@ -20,6 +19,8 @@ public class c_ButaneSites {
 	private boolean twic;
 	private String timezone;
 	private boolean highperformance;
+	private boolean centralSQL;
+	private boolean centralView;
 	
 	
 	//Get functions
@@ -35,7 +36,6 @@ public class c_ButaneSites {
 	public int getSQL() { return this.sql; }
 	public int getDev() { return this.dev; }
 	public float getGeneration() { return this.generation; }	
-	public String getHMI() { return this.HMI; }
 	public String getAddress() { return this.address; }
 	public String getPhone() { return this.phone; }
 	public String getFieldTech() { return this.fieldtech; }
@@ -43,6 +43,8 @@ public class c_ButaneSites {
 	public boolean getTwic() { return this.twic; }
 	public String getTimezone() { return this.timezone; }
 	public boolean getHighPerformance() { return this.highperformance; }
+	public boolean getCentralSQL() { return this.centralSQL; }
+	public boolean getCentralView() { return this.centralView; }
 	
 	//Set Functions
 	public void setClient(String client){ this.client = client;}
@@ -56,8 +58,8 @@ public class c_ButaneSites {
 	public void setView(int view){ this.view = view;}
 	public void setSQL(int sql){ this.sql = sql;}
 	public void setDev(int dev){ this.dev = dev;}
-	public void setGeneration(float generation){ this.generation = generation;}	
-	public void setHMI(String HMI){ this.HMI = HMI;}
+	public void setGeneration(float generation){ this.generation = generation;}
+	
 	public void setAddress(String address){ this.address = address;}
 	public void setPhone(String phone){ this.phone = phone;}
 	public void setFieldTech(String fieldtech){ this.fieldtech = fieldtech;}
@@ -65,11 +67,13 @@ public class c_ButaneSites {
 	public void setTwic(boolean twic){ this.twic = twic;}
 	public void setTimezone(String timezone){ this.timezone = timezone;}
 	public void setHighPerformance(boolean highperformance){ this.highperformance = highperformance;}
+	public void setCentralSQL(boolean centralSQL){ this.centralSQL = centralSQL;}
+	public void setCentralView(boolean centralView){ this.centralView = centralView;}
 	
 	@Override
 	public String toString(){
-		//return this.client + " " + this.site + " (" + this.siteid + ")";
-		return this.site + " (" + this.siteid + ")";
+		return this.client + " " + this.site + " (" + this.siteid + ")";
+		//return this.site + " (" + this.siteid + ")";
 }
 	
 	public String getName()
@@ -79,8 +83,8 @@ public class c_ButaneSites {
 	}
 	
 	public void updateSites(String client, String site, String state, int siteid, String clientabbrv, String siteabbrv, int idrac, 
-			int host, int view, int sql, int dev, float generation, String HMI, String address, String phone, String fieldtech, String fieldsupervisor,
-			boolean twic, String timezone, boolean highperformance)		
+			int host, int view, int sql, int dev, float generation, String address, String phone, String fieldtech, String fieldsupervisor,
+			boolean twic, String timezone, boolean highperformance, boolean centralSQL, boolean centralView)		
 	{
 		this.client = client;
 		this.site = site;
@@ -93,8 +97,7 @@ public class c_ButaneSites {
 		this.view = view;
 		this.sql = sql;
 		this.dev = dev;
-		this.generation = generation;
-		this.HMI = HMI;
+		this.generation = generation;		
 		this.address = address;
 		this.phone = phone;
 		this.fieldtech = fieldtech;
@@ -102,6 +105,8 @@ public class c_ButaneSites {
 		this.twic = twic;
 		this.timezone = timezone;
 		this.highperformance = highperformance;
+		this.centralSQL = centralSQL;
+		this.centralView = centralView;
 	}
 	
 

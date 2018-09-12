@@ -101,11 +101,15 @@ public class g_CurrentTickets {
 	private String site;
 	private int siteid;
 	private boolean highperformance;
+	private boolean centralSQL;
+	private boolean centralView;
 	private static JCheckBox chckbxCcNotified;
 	private static boolean CCNotifiedState = false;
 	private static JRadioButton rdbtnAllTickets;
+	private static JRadioButton rdbtnUpdates;
 	private static JRadioButton rdbtnMyTickets;
 	private static JLabel lblLastUpdatedByStr;	
+	private static boolean AssignChange = false;
 	
 
 	public static void run() {				
@@ -151,7 +155,7 @@ public class g_CurrentTickets {
 		panel_1.setLayout(null);
 		
 		lbl_ClientSite = new JLabel("Client Site (ID)");
-		lbl_ClientSite.setBounds(10, 11, 268, 20);
+		lbl_ClientSite.setBounds(10, 11, 493, 20);
 		lbl_ClientSite.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
 		panel_1.add(lbl_ClientSite);
 		
@@ -179,7 +183,13 @@ public class g_CurrentTickets {
 				else
 				{
 					UpdateTicket();
-				}				
+				}	
+				
+				if(AssignChange)
+				{
+					c_ConnectToDatabase.SendUpdateEmail(cb_Assigned.getSelectedItem().toString(), client, site, TicketNum, txt_Issue.getText());
+				}
+				AssignChange = false;
 			}
 		});
 		btnSave.setBounds(569, 696, 89, 23);
@@ -248,7 +258,6 @@ public class g_CurrentTickets {
 					try {						
 						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", filePath});
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						JOptionPane.showMessageDialog(frmCurrentTickets, "Could not find file.");
 					}
@@ -258,6 +267,7 @@ public class g_CurrentTickets {
 		});
 		btn_OpenFile.setBounds(358, 237, 105, 23);
 		panel_Internal.add(btn_OpenFile);
+		btn_OpenFile.setEnabled(false);
 		
 		btn_DeleteFile = new JButton("Delete File");
 		btn_DeleteFile.addActionListener(new ActionListener() {
@@ -303,6 +313,7 @@ public class g_CurrentTickets {
 		});
 		btn_DeleteFile.setBounds(358, 271, 105, 23);
 		panel_Internal.add(btn_DeleteFile);
+		btn_DeleteFile.setEnabled(false);
 		
 		scrollPane_2 = new JScrollPane();
 		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -337,7 +348,7 @@ public class g_CurrentTickets {
 		        
 			}
 		});
-		
+		btnFileUpload.setEnabled(false);
 		panel_Update = new JPanel();
 		panel_Update.setBounds(10, 322, 648, 324);
 		panel_1.add(panel_Update);
@@ -397,11 +408,12 @@ public class g_CurrentTickets {
 		lblhours.setBounds(75, 284, 156, 20);
 		panel_Update.add(lblhours);
 		
-		JButton btn_SiteData = new JButton("Site Data");
+		JButton btn_SiteData = new JButton("Site Changes");
 		btn_SiteData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//ViewSiteData2();
-				g_ViewSiteData2.run(siteID);
+				//g_ViewSiteData2.run(siteID);
+				g_SiteChanges.run(lbl_ClientSite.getText());
 			}
 		});
 		btn_SiteData.setBounds(10, 43, 105, 23);
@@ -473,11 +485,20 @@ public class g_CurrentTickets {
 					width = "1920";
 					height = "1080";
 				}
-					String ipAddress = "10.219." + siteID + "." + viewIP; 
+				String ipAddress = "";
+				
+				if(!centralView)
+				{
+					ipAddress = "10.219." + siteID + "." + viewIP;
+				}
+				else
+				{
+					ipAddress = "192.168.32.74";
+				}
+					
 					try {
 						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -498,11 +519,20 @@ public class g_CurrentTickets {
 			public void mouseClicked(MouseEvent e) {
 				String width = "1920";
 				String height = "1080";			
-					String ipAddress = "10.219." + siteID + "." + SQLIP; 
+				String ipAddress = "";
+				
+				if(!centralSQL)
+				{
+					ipAddress = "10.219." + siteID + "." + SQLIP;
+				}
+				else
+				{
+					ipAddress = "192.168.32.75";
+				}
+					 
 					try {
 						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
 					} catch (IOException e2) {
-						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
 				}
@@ -523,7 +553,6 @@ public class g_CurrentTickets {
 					try {
 						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
 					} catch (IOException e3) {
-						// TODO Auto-generated catch block
 						e3.printStackTrace();
 					}
 				
@@ -612,7 +641,6 @@ public class g_CurrentTickets {
 
 							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894409"});
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 			        }
@@ -627,7 +655,6 @@ public class g_CurrentTickets {
 
 							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894408"});
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 			        }
@@ -732,7 +759,7 @@ public class g_CurrentTickets {
 				frmCurrentTickets.getContentPane().add(panel_4);
 				panel_4.setLayout(null);
 				
-				rdbtnAllTickets = new JRadioButton("All Tickets");
+				rdbtnAllTickets = new JRadioButton("All");
 				rdbtnAllTickets.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						PopulateActiveTickets();
@@ -741,7 +768,7 @@ public class g_CurrentTickets {
 				rdbtnAllTickets.setSelected(true);
 				buttonGroup.add(rdbtnAllTickets);
 				rdbtnAllTickets.setBackground(Color.WHITE);
-				rdbtnAllTickets.setBounds(17, 2, 96, 18);
+				rdbtnAllTickets.setBounds(3, 1, 55, 18);
 				panel_4.add(rdbtnAllTickets);
 				
 				rdbtnMyTickets = new JRadioButton("My Tickets");
@@ -752,8 +779,19 @@ public class g_CurrentTickets {
 				});
 				buttonGroup.add(rdbtnMyTickets);
 				rdbtnMyTickets.setBackground(Color.WHITE);
-				rdbtnMyTickets.setBounds(125, 3, 96, 15);
+				rdbtnMyTickets.setBounds(55, 3, 80, 15);
 				panel_4.add(rdbtnMyTickets);												
+				
+				rdbtnUpdates = new JRadioButton("New Updates");
+				rdbtnUpdates.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						PopulateActiveTickets();
+					}
+				});
+				buttonGroup.add(rdbtnUpdates);
+				rdbtnUpdates.setBackground(Color.WHITE);
+				rdbtnUpdates.setBounds(140, 3, 102, 15);
+				panel_4.add(rdbtnUpdates);
 				SpellChecker.setUserDictionaryProvider(new FileUserDictionary(userDictionaryPath));
 				SpellChecker.registerDictionaries(getClass().getResource(userDictionaryPath), "en");
 				SpellChecker.getOptions().setIgnoreAllCapsWords(true);
@@ -1014,7 +1052,7 @@ public class g_CurrentTickets {
 		String commandText = "";
 		
 		
-		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.EnteredDate, 113) as EnteredDate, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
+		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, a.CentralSQL, a.CentralView, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.EnteredDate, 113) as EnteredDate, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -1035,6 +1073,8 @@ public class g_CurrentTickets {
 				hostIP = rs.getInt("HostIP");
 				lbl_TicketEntered.setText(rs.getString("EnteredDate"));
 				highperformance = rs.getBoolean("HighPerformance");
+				centralSQL = rs.getBoolean("CentralSQL");
+				centralView = rs.getBoolean("CentralView");
 				
 				lbl_Ticket.setText("(#" + rs.getString("Ticket") + ")");
 				lbl_Assigned.setText(rs.getString("Assigned"));
@@ -1090,6 +1130,19 @@ public class g_CurrentTickets {
 		{
 			System.out.println(e.toString());
 		}
+		
+		if(txt_Internal.getText().compareTo("") != 0)
+		{
+			btn_Internal.setText("* Internal *");
+			btn_Internal.setBackground(Color.orange);
+		}
+		else
+		{
+			btn_Internal.setText("Internal");
+			btn_Internal.setBackground(Color.getColor("240,240,240"));
+			
+		}
+		
 		fileListModel = new DefaultListModel<c_Files>();
 		
 		commandText = "SELECT Filename FROM Files WHERE TicketNum = '" + TicketNum + "'";		
@@ -1119,7 +1172,8 @@ public class g_CurrentTickets {
 		btnEdit.setVisible(false);
 		lbl_Assigned.setVisible(false);
 		cb_Assigned.setVisible(true);
-		String commandText = "SELECT DISTINCT Name FROM EN_Employees WHERE Active = 1 ORDER BY Name Asc";        
+		String commandText = "SELECT DISTINCT Name FROM EN_Employees WHERE Active = 1 ORDER BY Name Asc";       
+		
         ResultSet rs = c_Query.ExecuteResultSet(commandText);
         try {
 			while((rs!=null) && (rs.next()))
@@ -1134,6 +1188,8 @@ public class g_CurrentTickets {
 		} catch (SQLException e) {
 		
 		}
+        AssignChange = true;
+        
 	}
 	
 	
@@ -1282,7 +1338,7 @@ public class g_CurrentTickets {
 			}	
 			
 		}
-		else
+		else if (rdbtnAllTickets.isSelected())
 		{
 			try {				
 				tree_active.setModel(new DefaultTreeModel(
@@ -1329,6 +1385,57 @@ public class g_CurrentTickets {
 				e.printStackTrace();
 			}	
 		}
+		else if (rdbtnUpdates.isSelected())
+		{
+			try {				
+				tree_active.setModel(new DefaultTreeModel(
+						new DefaultMutableTreeNode("Active Tickets") {
+							private static final long serialVersionUID = 1L;
+							{
+								DefaultMutableTreeNode proj;
+								
+								DefaultMutableTreeNode projnum;
+								String commandText = "SELECT DISTINCT Client from SupportTickets WHERE (Status != 'Complete' AND Status != 'Closed By ETP') AND (EmailSent is null OR EmailSent = 0) ORDER BY Client ASC";
+								ResultSet rs = c_Query.ExecuteResultSet(commandText);
+								
+								while((rs!=null) && (rs.next()))
+								{
+									String projectname = rs.getString(1);
+									proj = new DefaultMutableTreeNode(projectname);
+										
+										String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 AND (EmailSent is null OR EmailSent = 0) ORDER BY Site ASC";
+										
+										ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
+										boolean emailSent = false;
+										while((rs2!=null) && (rs2.next()))
+										{
+											emailSent = rs2.getBoolean("EmailSent");
+											
+											if(emailSent)
+											{
+												projnum = new DefaultMutableTreeNode("<html><div style=background-color:#FF5733;>" + rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")</div></html>");
+											}
+											else
+											{
+												projnum = new DefaultMutableTreeNode(rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")");											
+											}
+																					
+											proj.add(projnum);										
+										}							
+									add(proj);
+								}
+							}
+						}
+					));
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}	
+			
+			
+		}
+		
+			
 	}
 	
 	
@@ -1449,7 +1556,6 @@ public class g_CurrentTickets {
 					try {
 						copyFileUsingStream(inputFile, outputFile);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -1540,7 +1646,6 @@ public class g_CurrentTickets {
 					try {
 						copyFileUsingStream(inputFile, outputFile);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}

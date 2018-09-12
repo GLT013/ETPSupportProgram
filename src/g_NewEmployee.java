@@ -247,7 +247,6 @@ public class g_NewEmployee {
 			rs.next();			
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -273,10 +272,8 @@ public class g_NewEmployee {
 				
 			}
 		} catch (HeadlessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 

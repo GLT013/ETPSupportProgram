@@ -16,15 +16,13 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
-import javax.swing.border.MatteBorder;
-import java.awt.Color;
 import javax.swing.border.EtchedBorder;
 //icons https://icons8.com/web-app/for/all/return
 //flaticon.com
 public class g_MainMenu {
 
 	public static JFrame frmMainMenu;
-	public static double version = 3.8;
+	public static double version = 3.10;
 	public static int ticketMax;
 	public static boolean firstrun = true;
 	public static String TitleOnline = "EN Automation Support Program v" + version + "";	
@@ -265,7 +263,7 @@ public class g_MainMenu {
 				}
 				else if ((abs) < .2)
 				{
-					JOptionPane.showMessageDialog(frmMainMenu, "There is a newer version of the program located on the I Drive!");
+					JOptionPane.showMessageDialog(frmMainMenu, "There is a newer version of the program located on subversion!");
 					return true;
 				}
 				else
@@ -274,7 +272,6 @@ public class g_MainMenu {
 				}
 				
 			} catch (SQLException e) {		
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		
 			return true;	

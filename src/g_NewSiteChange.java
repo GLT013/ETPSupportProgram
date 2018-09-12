@@ -1,6 +1,4 @@
 import java.awt.Color;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -362,14 +360,14 @@ public class g_NewSiteChange {
 		
 		try{
 			c_Query.ExecuteQuery(commandText);
-			JOptionPane.showMessageDialog(null, "Site change entered successfully.");
+			JOptionPane.showMessageDialog(frm_NewSiteChange, "Site change entered successfully.");
 			flag = true;
 			g_SiteChanges.run();
 			frm_NewSiteChange.dispose();
 		}
 		catch(Exception e)
 		{
-			JOptionPane.showMessageDialog(null, "Error inserting change." + e.toString());
+			JOptionPane.showMessageDialog(frm_NewSiteChange, "Error inserting change." + e.toString());
 			
 		}
 		

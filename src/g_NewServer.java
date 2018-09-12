@@ -234,14 +234,13 @@ public class g_NewServer {
 			rs.next();			
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		try {
 			if(rs.getInt("total") > 0)
 			{
-			//employee already exists.
+				//server already exists
 				JOptionPane.showMessageDialog(frmNewServer, "Server " + Server + " already exists in the database.");
 				
 			}
@@ -261,11 +260,9 @@ public class g_NewServer {
 				
 			}
 		} catch (HeadlessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 

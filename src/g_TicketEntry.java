@@ -4,12 +4,6 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -467,8 +461,12 @@ public class g_TicketEntry {
 		
 		
 		c_Query.UpdateResultSet(commandText);
-		//SendEmail(Assigned, Client, Site, TicketNum, Description);
-		JOptionPane.showMessageDialog(null, "Ticket # " + TicketNum + " entered successfully");	
+		//Send email only if the assigned user is not the current user.
+		if(Assigned.compareTo(g_MainMenu.CurrentUser) != 0)
+		{
+			c_ConnectToDatabase.SendEmail(Assigned, Client, Site, TicketNum, Description);
+		}
+		JOptionPane.showMessageDialog(frmTicketEntry, "Ticket # " + TicketNum + " entered successfully");	
 		if(g_MainMenu.CurrentTicketsNav)
 		{
 			g_CurrentTickets.run();
@@ -509,66 +507,5 @@ public class g_TicketEntry {
 	}
 	
 	
-	 public static void SendEmail(String Assigned, String Client, String Site, String Ticket, String Description){  
-		 //final String username = "ENE.TJOHNSTON@gmail.com";
-		 final String username = "butane.support@enengineering.com";
-			//final String password = "Butane#Ops";
-		 final String password = "Sunoco2017$";
-
-
-			Properties props = new Properties();
-			/*props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.smtp.host", "smtp.gmail.com");
-			props.put("mail.smtp.port", "587");
-			 */
-			props.put("mail.transport.protocol", "smtp");
-			props.put("mail.smtp.host", "mail.enengineering.com");
-			props.put("mail.smtp.port", "2525");
-			props.put("mail.smtp.auth", "true");
-			Session session = Session.getInstance(props,
-			  new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(username, password);
-				}
-			  });
-			
-			String commandText = "SELECT Email from EN_Employees WHERE Name= '" + Assigned + "'";
-			String emailAddr = "";
-			ResultSet rs = c_Query.ExecuteResultSet(commandText);
-			try {
-				rs.next();
-				emailAddr = rs.getString(1);
-			} catch (SQLException e) {
-			}
-	        try {
-				rs.close();
-			} catch (SQLException e) {
-			}
-	      
-			try {
-
-				Message message = new MimeMessage(session);
-				//message.setFrom(new InternetAddress("travisreidjohnston@gmail.com"));
-				message.setFrom(new InternetAddress("butane.support@enengineering.com"));
-				message.setRecipients(Message.RecipientType.TO,
-					InternetAddress.parse(emailAddr));
-				message.setSubject("New Ticket Assigned: " + Client + " - " + Site + ": #" + Ticket);
-				message.setText("Dear " + Assigned + ","
-					+ "\n\n Please look into the ticket below"
-					+ "\n\n " + Client + "-" + Site + " " + Ticket  
-					+ "\n\n Issue: " + Description + " "
-					+ "\n\n Thanks," 
-					+ "\n\n Butane.Support"			
-					);
-
-				Transport.send(message);
-
-				//System.out.println("Done");
-			}
-			catch(Exception e)
-			{
-				
-			}
-	 }
+	
 }

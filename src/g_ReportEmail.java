@@ -134,10 +134,8 @@ public class g_ReportEmail {
 				try {
 					c_Email.mailto(Arrays.asList(test),date2 + " " + am_pm + " Support Update", "");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -456,93 +454,97 @@ public class g_ReportEmail {
 
 	@SuppressWarnings("deprecation")
 	public static void GenerateEmailReport(List<String> TicketList )
-	{		
-		c_ConnectToDatabase.Connect();		
-		String client = "";
-		String site = "";
-		String ticketnumber = "";
-		String issue = "";
-		String investigation = "";
-		String status = "";
-		Timestamp TOC = null; //time of completion
-		String duration = "";
-		String TOC_Formatted = "";
-		SupportEmail = "<html>";
-		
-		for(int i = 0; i < TicketList.size(); i++)
+	{
+		if(TicketList.isEmpty())
 		{
-			boolean ccnotified = true;
-			String update = "Update SupportTickets SET EmailSent = 1 WHERE Ticket = '" + TicketList.get(i) +"'";
-			c_Query.ExecuteQuery(update);
-			String commandText = "SELECT Client,Site,Ticket,Description,Status,Resolution,UpdateDate,TimeSpent,CCNotified FROM SupportTickets WHERE Ticket = '" + TicketList.get(i) +"'";
-			ResultSet rs = c_Query.ExecuteResultSet(commandText);
-			Timestamp ccNotifiedTime = null;
-			String ccNotifiedTime_Formatted  = "";
-			try {
-				while((rs!=null) && (rs.next()))
+			SupportEmail = "<html> There have been no further updates. <br /> <br /> Thank You. </html>";
+		}
+		else
+			{
+				c_ConnectToDatabase.Connect();		
+				String client = "";
+				String site = "";
+				String ticketnumber = "";
+				String issue = "";
+				String investigation = "";
+				String status = "";
+				Timestamp TOC = null; //time of completion
+				String duration = "";
+				String TOC_Formatted = "";
+				SupportEmail = "<html>";
+				
+				for(int i = 0; i < TicketList.size(); i++)
 				{
+					boolean ccnotified = true;
+					String update = "Update SupportTickets SET EmailSent = 1 WHERE Ticket = '" + TicketList.get(i) +"'";
+					c_Query.ExecuteQuery(update);
+					String commandText = "SELECT Client,Site,Ticket,Description,Status,Resolution,UpdateDate,TimeSpent,CCNotified FROM SupportTickets WHERE Ticket = '" + TicketList.get(i) +"'";
+					ResultSet rs = c_Query.ExecuteResultSet(commandText);
+					Timestamp ccNotifiedTime = null;
+					String ccNotifiedTime_Formatted  = "";
+					try {
+						while((rs!=null) && (rs.next()))
+						{
+							
+							client = rs.getString("client");
+							site = rs.getString("site");
+							ticketnumber = rs.getString("ticket");
+							if(ticketnumber.charAt(0) == '3')
+							{
+								ticketnumber = "?-?????";
+							}
+							
+							issue = rs.getString("Description");
+							investigation = rs.getString("Resolution");
+							status = rs.getString("Status");
 					
-					client = rs.getString("client");
-					site = rs.getString("site");
-					ticketnumber = rs.getString("ticket");
-					if(ticketnumber.charAt(0) == '3')
-					{
-						ticketnumber = "?-?????";
+							TOC = rs.getTimestamp("UpdateDate");
+							TOC.setHours(TOC.getHours()+1); //Update to Eastern Time Zone.
+							TOC_Formatted = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(TOC);
+							
+							
+							duration = rs.getString("TimeSpent");	
+							if((rs.getString("CCNotified") != null) && (rs.getString("CCNotified").compareTo("null") != 0))
+							{						
+									ccNotifiedTime = rs.getTimestamp("CCNotified");							
+									ccNotifiedTime.setHours(ccNotifiedTime.getHours()+1); //Update to Eastern Time Zone.
+									ccNotifiedTime_Formatted = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(ccNotifiedTime) + " EST.";												
+							}
+							else
+							{
+								ccNotifiedTime_Formatted = "N/A";
+								ccnotified = false;
+							}
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
 					}
-					
-					issue = rs.getString("Description");
-					investigation = rs.getString("Resolution");
-					status = rs.getString("Status");
-			
-					TOC = rs.getTimestamp("UpdateDate");
-					TOC.setHours(TOC.getHours()+1); //Update to Eastern Time Zone.
-					TOC_Formatted = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(TOC);
-					
-					
-					duration = rs.getString("TimeSpent");	
-					if((rs.getString("CCNotified") != null) && (rs.getString("CCNotified").compareTo("null") != 0))
-					{						
-							ccNotifiedTime = rs.getTimestamp("CCNotified");							
-							ccNotifiedTime.setHours(ccNotifiedTime.getHours()+1); //Update to Eastern Time Zone.
-							ccNotifiedTime_Formatted = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(ccNotifiedTime) + " EST.";												
+					SupportEmail = SupportEmail + "<u>" + client + " " + site + " " + " #" + ticketnumber + ":" + "</u> <br />" +
+							"<b>Issue: </b>" + issue + "<br />" +
+							"<b>Investigation: </b>" + investigation + "<br />";
+					if(status.compareTo("Complete") != 0)
+					{
+						SupportEmail = SupportEmail + "<b>Status: </b><u><span style='background-color: #FFFF00'>" + status +"</span></u><br />" +
+								"<b>Time of Investigation: </b>" + TOC_Formatted + " EST.<br />" +
+								"<b>Duration: </b>" + duration + " hours. <br />";
 					}
 					else
 					{
-						ccNotifiedTime_Formatted = "N/A";
-						ccnotified = false;
-					}
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			SupportEmail = SupportEmail + "<u>" + client + " " + site + " " + " #" + ticketnumber + ":" + "</u> <br />" +
-					"<b>Issue: </b>" + issue + "<br />" +
-					"<b>Investigation: </b>" + investigation + "<br />";
-			if(status.compareTo("Complete") != 0)
-			{
-				SupportEmail = SupportEmail + "<b>Status: </b><u><span style='background-color: #FFFF00'>" + status +"</span></u><br />" +
-						"<b>Time of Investigation: </b>" + TOC_Formatted + " EST.<br />" +
+						SupportEmail = SupportEmail + "<b>Status: </b> " + status +"<br />" +
+						"<b>Time of Completion: </b>" + TOC_Formatted + " EST.<br />" + 
 						"<b>Duration: </b>" + duration + " hours. <br />";
+					}		
+					
+					if(ccnotified)
+					{			
+					SupportEmail = SupportEmail + "<b>CCNotified: </b>" + ccNotifiedTime_Formatted + " <br />";
+					}			
+					
+					SupportEmail = SupportEmail + "<br />"; //add a break between tickets.
+				}
+								
+				SupportEmail = SupportEmail + "</html>";
 			}
-			else
-			{
-				SupportEmail = SupportEmail + "<b>Status: </b> " + status +"<br />" +
-				"<b>Time of Completion: </b>" + TOC_Formatted + " EST.<br />" + 
-				"<b>Duration: </b>" + duration + " hours. <br />";
-			}		
-			
-			if(ccnotified)
-			{			
-			SupportEmail = SupportEmail + "<b>CCNotified: </b>" + ccNotifiedTime_Formatted + " <br />";
-			}			
-			
-			SupportEmail = SupportEmail + "<br />"; //add a break between tickets.
-		}
-		
-		
-		SupportEmail = SupportEmail + "</html>";
-		
 		run();
 		
 	}

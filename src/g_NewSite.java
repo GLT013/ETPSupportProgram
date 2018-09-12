@@ -34,11 +34,12 @@ public class g_NewSite {
 	private JTextField txtFieldTech;
 	private JTextField txtFieldSupervisor;
 	private JTextField txtGeneration;
-	private JTextField txtHMI;
 	private JCheckBox txtTwic;
 	private JTextField txtState;
 	private JTextField txtTimezone;
 	private JCheckBox chk_HighPerformance;
+	private JCheckBox chk_CentralSQL;
+	private JCheckBox chk_CentralView;
 
 	/**
 	 * Launch the application.
@@ -251,23 +252,13 @@ public class g_NewSite {
 		txtGeneration.setBounds(600, 302, 40, 35);
 		frmNewSite.getContentPane().add(txtGeneration);
 		
-		JLabel lblHmi = new JLabel("HMI");
-		lblHmi.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
-		lblHmi.setBounds(502, 359, 75, 14);
-		frmNewSite.getContentPane().add(lblHmi);
-		
-		txtHMI = new JTextField();
-		txtHMI.setColumns(10);
-		txtHMI.setBounds(600, 350, 40, 35);
-		frmNewSite.getContentPane().add(txtHMI);
-		
 		JLabel lblTwic = new JLabel("TWIC");
 		lblTwic.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
-		lblTwic.setBounds(502, 450, 75, 14);
+		lblTwic.setBounds(502, 409, 75, 14);
 		frmNewSite.getContentPane().add(lblTwic);
 		
 		txtTwic = new JCheckBox("\r\n");
-		txtTwic.setBounds(602, 444, 38, 23);
+		txtTwic.setBounds(602, 403, 38, 23);
 		frmNewSite.getContentPane().add(txtTwic);
 		
 		JLabel lblState = new JLabel("State");
@@ -282,27 +273,45 @@ public class g_NewSite {
 		
 		JLabel lblTimezone = new JLabel("Timezone");
 		lblTimezone.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
-		lblTimezone.setBounds(502, 407, 75, 14);
+		lblTimezone.setBounds(502, 366, 75, 14);
 		frmNewSite.getContentPane().add(lblTimezone);
 		
 		txtTimezone = new JTextField();
 		txtTimezone.setColumns(10);
-		txtTimezone.setBounds(600, 398, 40, 35);
+		txtTimezone.setBounds(600, 357, 40, 35);
 		frmNewSite.getContentPane().add(txtTimezone);
 		
 		JLabel lblHighPerformance = new JLabel("High \r");
 		lblHighPerformance.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
-		lblHighPerformance.setBounds(502, 487, 94, 19);
+		lblHighPerformance.setBounds(502, 446, 94, 19);
 		frmNewSite.getContentPane().add(lblHighPerformance);
 		
 		chk_HighPerformance = new JCheckBox("\r\n");
-		chk_HighPerformance.setBounds(602, 487, 38, 23);
+		chk_HighPerformance.setBounds(602, 446, 38, 23);
 		frmNewSite.getContentPane().add(chk_HighPerformance);
 		
 		JLabel lblPerformance = new JLabel("Performance");
 		lblPerformance.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
-		lblPerformance.setBounds(502, 500, 94, 19);
+		lblPerformance.setBounds(502, 460, 94, 19);
 		frmNewSite.getContentPane().add(lblPerformance);
+		
+		JLabel lblCentralSql = new JLabel("Central SQL");
+		lblCentralSql.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
+		lblCentralSql.setBounds(502, 493, 88, 14);
+		frmNewSite.getContentPane().add(lblCentralSql);
+		
+		chk_CentralSQL = new JCheckBox("\r\n");
+		chk_CentralSQL.setBounds(602, 487, 38, 23);
+		frmNewSite.getContentPane().add(chk_CentralSQL);
+		
+		JLabel lblCentralView = new JLabel("Central View");
+		lblCentralView.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
+		lblCentralView.setBounds(502, 527, 94, 14);
+		frmNewSite.getContentPane().add(lblCentralView);
+		
+		chk_CentralView = new JCheckBox("\r\n");
+		chk_CentralView.setBounds(602, 521, 38, 23);
+		frmNewSite.getContentPane().add(chk_CentralView);
 		
 		//Menubar
 		JMenuBar menuBar = new JMenuBar();
@@ -405,8 +414,7 @@ public class g_NewSite {
 		String View = txtView.getText();
 		String SQL = txtSQL.getText();
 		String Dev = txtDev.getText();
-		String Generation = txtGeneration.getText();
-		String HMI = txtHMI.getText();
+		String Generation = txtGeneration.getText();		
 		String Address = txtAddress.getText();
 		String Phone = txtPhone.getText();
 		String FieldTech = txtFieldTech.getText();
@@ -414,6 +422,9 @@ public class g_NewSite {
 		String Timezone = txtTimezone.getText();
 		boolean HP = false;
 		boolean TWIC = false;
+		boolean CentralSQL = false;
+		boolean CentralView = false;
+		
 		if(txtTwic.isSelected())
 		{
 			TWIC = true;
@@ -421,6 +432,14 @@ public class g_NewSite {
 		if(chk_HighPerformance.isSelected())
 		{
 			HP = true;
+		}
+		if(chk_CentralSQL.isSelected())
+		{
+			CentralSQL = true;
+		}
+		if(chk_CentralView.isSelected())
+		{
+			CentralView = true;
 		}
 		
 		
@@ -437,23 +456,22 @@ public class g_NewSite {
 			rs.next();			
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		try {
 			if(rs.getInt("total") > 0)
 			{
-			//employee already exists.
+				//employee already exists.
 				JOptionPane.showMessageDialog(frmNewSite, "Site ID " + SiteID + " already exists in the database.");
 				
 			}
 			else
 			{
 			
-			commandText = "INSERT INTO Sites(Client,Site,State,SiteID,ClientAbbrv,SiteAbbrv,iDracIP,HostIP,ViewIP,SQLIP,DevIP,Generation,HMI,Address,Phone,Field_Tech,Field_Supervisor,Twic,Timezone,HighPerformance) "
+			commandText = "INSERT INTO Sites(Client,Site,State,SiteID,ClientAbbrv,SiteAbbrv,iDracIP,HostIP,ViewIP,SQLIP,DevIP,Generation,Address,Phone,Field_Tech,Field_Supervisor,Twic,Timezone,HighPerformance,CentralSQL,CentralView) "
 						+ "VALUES ( '" + Client + "','" + Site + "','" + State + "','" + SiteID + "','" + ClientAbbrv + "','" + SiteAbbrv + "','" + iDrac + "','" + Host + "','" + View + "','" + SQL + "','" + 
-						 Dev + "','" + Generation + "','" + HMI + "','" + Address + "','" + Phone + "','" + FieldTech + "','" + FieldSupervisor + "','" + TWIC + "','" + Timezone + "','" + HP + "')";
+						 Dev + "','" + Generation + "','" + Address + "','" + Phone + "','" + FieldTech + "','" + FieldSupervisor + "','" + TWIC + "','" + Timezone + "','" + HP + "','" + CentralSQL + "','" + CentralView + "')";
 			System.out.println(commandText);	
 			c_Query.UpdateResultSet(commandText);
 				JOptionPane.showMessageDialog(frmNewSite, "Site " + Client + " " + Site + " was successfully added.");
@@ -465,10 +483,8 @@ public class g_NewSite {
 				
 			}
 		} catch (HeadlessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 
@@ -487,14 +503,16 @@ public class g_NewSite {
 		txtView.setText("");
 		txtSQL.setText("");
 		txtDev.setText("");
-		txtGeneration.setText("");
-		txtHMI.setText("");
+		txtGeneration.setText("");		
 		txtAddress.setText("");
 		txtPhone.setText("");
 		txtFieldTech.setText("");
 		txtFieldSupervisor.setText("");
 		txtTimezone.setText("");
 		txtTwic.setSelected(false);
+		chk_CentralSQL.setSelected(false);
+		chk_CentralView.setSelected(false);
+		chk_HighPerformance.setSelected(false);
 		
 		
 	}

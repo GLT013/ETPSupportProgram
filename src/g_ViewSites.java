@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
@@ -28,7 +27,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
-import javax.swing.JTree;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JTextArea;
@@ -39,7 +37,7 @@ public class g_ViewSites {
 	private static JList<String> list_ButaneSites = new JList<String>();
 	private static JList<String> list_ServersExt = new JList<String>();
 	private static JList<String> list_ServersInt = new JList<String>();
-	private static JTree tree_sites;
+	//private static JTree tree_sites;
 	private static DefaultListModel<String> listModel = new DefaultListModel<String>();
 	private static DefaultListModel<String> listModel2 = new DefaultListModel<String>();
 	private static DefaultListModel<String> listModel3 = new DefaultListModel<String>();
@@ -67,13 +65,14 @@ public class g_ViewSites {
 	private JTextField txtSQL;
 	private JTextField txtDev;
 	private JTextField txtGeneration;
-	private JTextField txtHMI;
 	private JTextField txtFieldTech;
 	private JTextField txtFieldSupervisor;
 	private JTextField txtTimezone;
 	private JTextField txtState;
 	private JCheckBox chk_HighPerformance;
 	private JCheckBox chk_Twic;
+	private JCheckBox chk_SQL;
+	private JCheckBox chk_View;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButton rdbtnButaneSites;
 	private JRadioButton rdbtnServers;
@@ -82,6 +81,8 @@ public class g_ViewSites {
 	private JTextArea txt_ServerDesc;
 	private JPanel panel_4;
 	private JPanel panel_5;
+	private JLabel lbl_CentralSQL;
+	private JLabel lbl_CentralView;
 	
 
 	/**
@@ -160,8 +161,7 @@ public class g_ViewSites {
 					txtView.setEditable(true);
 					txtSQL.setEditable(true);
 					txtDev.setEditable(true);
-					txtGeneration.setEditable(true);
-					txtHMI.setEditable(true);
+					txtGeneration.setEditable(true);					
 					txtAddress.setEditable(true);
 					txtPhone.setEditable(true);
 					txtFieldTech.setEditable(true);
@@ -169,6 +169,8 @@ public class g_ViewSites {
 					txtTimezone.setEditable(true);	
 					chk_HighPerformance.setEnabled(true);
 					chk_Twic.setEnabled(true);
+					chk_SQL.setEnabled(true);
+					chk_View.setEnabled(true);
 				
 					
 				}
@@ -326,8 +328,7 @@ public class g_ViewSites {
 						txtView.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getView()));
 						txtSQL.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getSQL()));
 						txtDev.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getDev()));
-						txtGeneration.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getGeneration()));
-						txtHMI.setText(result.get(list_ButaneSites.getSelectedIndex()).getHMI());
+						txtGeneration.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getGeneration()));						
 						txtAddress.setText(result.get(list_ButaneSites.getSelectedIndex()).getAddress());
 						txtPhone.setText(result.get(list_ButaneSites.getSelectedIndex()).getPhone());
 						txtFieldTech.setText(result.get(list_ButaneSites.getSelectedIndex()).getFieldTech());
@@ -350,6 +351,33 @@ public class g_ViewSites {
 						else
 						{
 							chk_HighPerformance.setSelected(false);
+						}
+						
+						if(result.get(list_ButaneSites.getSelectedIndex()).getCentralSQL())
+						{
+							chk_SQL.setSelected(true);
+							txtSQL.setVisible(false);
+							lbl_CentralSQL.setVisible(true);
+						}
+						else
+						{
+							chk_SQL.setSelected(false);
+							txtSQL.setVisible(true);
+							lbl_CentralSQL.setVisible(false);
+							
+						}
+						
+						if(result.get(list_ButaneSites.getSelectedIndex()).getCentralView())
+						{
+							chk_View.setSelected(true);							
+							txtView.setVisible(false);
+							lbl_CentralView.setVisible(true);
+						}
+						else
+						{
+							chk_View.setSelected(false);
+							txtView.setVisible(true);
+							lbl_CentralView.setVisible(false);
 						}
 					}
 				}
@@ -381,16 +409,24 @@ public class g_ViewSites {
 		txtiDrac = new JTextField("");
 		txtiDrac.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent arg5) {
 				if(!txtiDrac.isEditable())
 				{
-					String ipAddress = "10.219." + txtSiteID.getText() + "." + txtiDrac.getText(); 
-					try {
-						//Runtime.getRuntime().exec("iexplore.exe "+ipAddress);
-						Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress);
-					} catch (IOException e2) {
-						// TODO Auto-generated catch block
-						System.out.println(e2.toString());
+					if(arg5.getButton() == MouseEvent.BUTTON1)
+					{
+						String ipAddress = "10.219." + txtSiteID.getText() + "." + txtiDrac.getText(); 
+						try {
+							Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress);
+						} catch (IOException e2) {
+						}
+					}
+					else if(arg5.getButton() == MouseEvent.BUTTON3)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txtiDrac.getText()+""});												
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -413,10 +449,27 @@ public class g_ViewSites {
 		panel.add(lblServer);
 		
 		txtHost = new JTextField("");
+		txtHost.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg4) {
+				if(!txtHost.isEditable())
+				{
+					if(arg4.getButton() == MouseEvent.BUTTON3)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txtHost.getText()+""});												
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		});
 		txtHost.setBounds(48, 95, 45, 30);
 		panel.add(txtHost);
 		txtHost.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		txtHost.setEditable(false);
+		
 		
 		JLabel lblHost = new JLabel("Host");
 		lblHost.setBounds(48, 130, 45, 14);
@@ -426,28 +479,57 @@ public class g_ViewSites {
 		txtView = new JTextField("");
 		txtView.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {				
-				
+			public void mouseClicked(MouseEvent arg0) {													
 				if(!txtView.isEditable())
 				{
-					String width;
-					String height;
-					if(!chk_HighPerformance.isSelected())
+					String ipAddress = "";
+					if(!chk_View.isSelected())
 					{
-						width = "1280";
-						height = "1024";
+						ipAddress = "10.219." + txtSiteID.getText() + "." + txtView.getText();
 					}
-					else
+					else //central view
 					{
-						width = "1920";
-						height = "1080";
+						ipAddress = "192.168.32.74";
 					}
-					String ipAddress = "10.219." + txtSiteID.getText() + "." + txtView.getText(); 
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					
+					if(arg0.getButton() == MouseEvent.BUTTON1)
+					{			
+						String width;
+						String height;
+						if(!chk_HighPerformance.isSelected())
+						{
+							width = "1280";
+							height = "1024";
+						}
+						else
+						{
+							width = "1920";
+							height = "1080";
+						}
+						
+						
+						
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}				
+					else if(arg0.getButton() == MouseEvent.BUTTON2)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					else if(arg0.getButton() == MouseEvent.BUTTON3)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -466,17 +548,45 @@ public class g_ViewSites {
 		txtSQL = new JTextField("");
 		txtSQL.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent arg2) {				
 				if(!txtSQL.isEditable())
 				{
-					String width = "1920";
-					String height = "1080";			
-					String ipAddress = "10.219." + txtSiteID.getText() + "." + txtSQL.getText(); 
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
-					} catch (IOException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
+					String ipAddress = ""; 
+					if(!chk_SQL.isSelected())
+					{
+						ipAddress = "10.219." + txtSiteID.getText() + "." + txtSQL.getText(); 
+					}
+					else //central view
+					{
+						ipAddress = "192.168.32.76";
+					}
+					if(arg2.getButton() == MouseEvent.BUTTON1)
+					{
+						String width = "1920";
+						String height = "1080";			
+						
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+						} catch (IOException e2) {
+							e2.printStackTrace();
+						}
+					}
+				
+					else if(arg2.getButton() == MouseEvent.BUTTON2)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});							
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+					else if(arg2.getButton() == MouseEvent.BUTTON3)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -495,17 +605,35 @@ public class g_ViewSites {
 		txtDev = new JTextField("");
 		txtDev.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent arg1) {				
 				if(!txtDev.isEditable())
-				{
-					String width = "1920";
-					String height = "1080";			
-					String ipAddress = "10.219." + txtSiteID.getText() + "." + txtDev.getText(); 
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
-					} catch (IOException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
+				{					
+					if(arg1.getButton() == MouseEvent.BUTTON1)
+					{
+						String width = "1920";
+						String height = "1080";			
+						String ipAddress = "10.219." + txtSiteID.getText() + "." + txtDev.getText(); 
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+						} catch (IOException e2) {
+							e2.printStackTrace();
+						}
+					}
+					else if(arg1.getButton() == MouseEvent.BUTTON2)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\10.219."+txtSiteID.getText()+"."+txtDev.getText()+"\\c$"});
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+					else if(arg1.getButton() == MouseEvent.BUTTON3)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txtDev.getText()+""});												
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -519,6 +647,103 @@ public class g_ViewSites {
 		lblDev.setBounds(148, 70, 45, 14);
 		panel.add(lblDev);
 		lblDev.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		lbl_CentralView = new JLabel("");
+		lbl_CentralView.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(!txtView.isEditable())
+				{
+					String ipAddress = "192.168.32.74";										
+					if(arg0.getButton() == MouseEvent.BUTTON1)
+					{			
+						String width;
+						String height;
+						if(!chk_HighPerformance.isSelected())
+						{
+							width = "1280";
+							height = "1024";
+						}
+						else
+						{
+							width = "1920";
+							height = "1080";
+						}
+																		
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}				
+					else if(arg0.getButton() == MouseEvent.BUTTON2)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					else if(arg0.getButton() == MouseEvent.BUTTON3)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		});
+		lbl_CentralView.setIcon(new ImageIcon(g_ViewSites.class.getResource("/view.png")));
+		lbl_CentralView.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lbl_CentralView.setBounds(28, 35, 32, 32);
+		panel.add(lbl_CentralView);
+		lbl_CentralView.setVisible(false);
+		
+		lbl_CentralSQL = new JLabel("");
+		lbl_CentralSQL.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg2) {
+				if(!txtSQL.isEditable())
+				{					 					
+					String ipAddress = "192.168.32.76";					
+					if(arg2.getButton() == MouseEvent.BUTTON1)
+					{
+						String width = "1920";
+						String height = "1080";			
+						
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+						} catch (IOException e2) {
+							e2.printStackTrace();
+						}
+					}
+				
+					else if(arg2.getButton() == MouseEvent.BUTTON2)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});							
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+					else if(arg2.getButton() == MouseEvent.BUTTON3)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		});
+		lbl_CentralSQL.setIcon(new ImageIcon(g_ViewSites.class.getResource("/sql.png")));
+		lbl_CentralSQL.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lbl_CentralSQL.setBounds(87, 33, 32, 32);
+		panel.add(lbl_CentralSQL);
+		lbl_CentralSQL.setVisible(false);
 		
 		final JPanel panel_1 = new JPanel();
 		panel_1.setBounds(323, 47, 310, 161);
@@ -684,50 +909,57 @@ public class g_ViewSites {
 		panel_3.add(lblGeneration);
 		lblGeneration.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		
-		txtHMI = new JTextField("");
-		txtHMI.setBounds(135, 52, 83, 30);
-		panel_3.add(txtHMI);
-		txtHMI.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		txtHMI.setEditable(false);
-		
-		JLabel lblHmi = new JLabel("HMI");
-		lblHmi.setBounds(135, 87, 83, 14);
-		panel_3.add(lblHmi);
-		lblHmi.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		
 		JLabel lblTwic = new JLabel("TWIC");
-		lblTwic.setBounds(476, 87, 60, 14);
+		lblTwic.setBounds(299, 83, 60, 14);
 		panel_3.add(lblTwic);
-		lblTwic.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTwic.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		
 		txtTimezone = new JTextField("");
 		txtTimezone.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		txtTimezone.setEditable(false);
-		txtTimezone.setBounds(261, 52, 83, 30);
+		txtTimezone.setBounds(124, 52, 83, 30);
 		panel_3.add(txtTimezone);
 		
 		JLabel lblTimezone = new JLabel("Timezone");
 		lblTimezone.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblTimezone.setBounds(261, 87, 83, 14);
+		lblTimezone.setBounds(124, 87, 83, 14);
 		panel_3.add(lblTimezone);
 		
 		chk_HighPerformance = new JCheckBox("");
-		chk_HighPerformance.setBounds(391, 52, 36, 23);
+		chk_HighPerformance.setBounds(233, 52, 36, 23);
 		panel_3.add(chk_HighPerformance);
 		
 		JLabel lblHighPerformance = new JLabel("High");
 		lblHighPerformance.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblHighPerformance.setBounds(391, 73, 46, 14);
+		lblHighPerformance.setBounds(230, 75, 46, 14);
 		panel_3.add(lblHighPerformance);
 		
 		JLabel lblPerformance = new JLabel("Performance");
 		lblPerformance.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblPerformance.setBounds(375, 87, 79, 14);
+		lblPerformance.setBounds(217, 87, 79, 14);
 		panel_3.add(lblPerformance);
 		
 		chk_Twic = new JCheckBox("");
-		chk_Twic.setBounds(479, 56, 36, 23);
+		chk_Twic.setBounds(302, 52, 36, 23);
 		panel_3.add(chk_Twic);
+		
+		JLabel lblCentralSlq = new JLabel("Central SQL");
+		lblCentralSlq.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblCentralSlq.setBounds(360, 83, 80, 14);
+		panel_3.add(lblCentralSlq);
+		
+		chk_SQL = new JCheckBox("");
+		chk_SQL.setBounds(376, 52, 36, 23);
+		panel_3.add(chk_SQL);
+		
+		JLabel lblCentralView = new JLabel("Central View");
+		lblCentralView.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblCentralView.setBounds(438, 83, 91, 14);
+		panel_3.add(lblCentralView);
+		
+		chk_View = new JCheckBox("");
+		chk_View.setBounds(464, 52, 36, 23);
+		panel_3.add(chk_View);
 		
 		rdbtnButaneSites = new JRadioButton("Butane Sites");
 		rdbtnButaneSites.addActionListener(new ActionListener() {
@@ -807,18 +1039,36 @@ public class g_ViewSites {
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {				
-				String width;
-				String height;				
-				width = "1920";
-				height = "1080";
+			public void mouseClicked(MouseEvent arg3) {
 				
-				try {
-					Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+txt_ServerIP.getText() + " /w:" + width + " /h:" + height});
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(arg3.getButton() == MouseEvent.BUTTON1)
+					{
+					String width;
+					String height;				
+					width = "1920";
+					height = "1080";
 					
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+txt_ServerIP.getText() + " /w:" + width + " /h:" + height});
+					} catch (IOException e) {
+						e.printStackTrace();						
+						}
+					}				
+				else if(arg3.getButton() == MouseEvent.BUTTON2)
+				{					
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+txt_ServerIP.getText()+"\\c$"});
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+				else if(arg3.getButton() == MouseEvent.BUTTON3)
+				{					
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txt_ServerIP.getText()+""});												
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -998,8 +1248,7 @@ public class g_ViewSites {
 			txtView.setEditable(false);
 			txtSQL.setEditable(false);
 			txtDev.setEditable(false);
-			txtGeneration.setEditable(false);
-			txtHMI.setEditable(false);
+			txtGeneration.setEditable(false);			
 			txtAddress.setEditable(false);
 			txtPhone.setEditable(false);
 			txtFieldTech.setEditable(false);
@@ -1007,6 +1256,8 @@ public class g_ViewSites {
 			txtTimezone.setEditable(false);
 			chk_HighPerformance.setEnabled(false);
 			chk_Twic.setEnabled(false);
+			chk_SQL.setEnabled(false);
+			chk_View.setEnabled(false);
 		}
 		else
 		{
@@ -1099,7 +1350,7 @@ public class g_ViewSites {
 	private void PopulateSites()
 	{	
 		
-		String commandText = "SELECT [Client],[Site],[State],[SiteID],[ClientAbbrv],[SiteAbbrv],[iDracIP],[HostIP],[ViewIP],[SQLIP],[DevIP],[Generation],[HMI],[Address],[Phone],[Field_Tech],[Field_Supervisor],[Twic],[Timezone],[HighPerformance] FROM Sites ORDER BY Client asc, Site asc";
+		String commandText = "SELECT [Client],[Site],[State],[SiteID],[ClientAbbrv],[SiteAbbrv],[iDracIP],[HostIP],[ViewIP],[SQLIP],[DevIP],[Generation],[CentralSQL],[Address],[Phone],[Field_Tech],[Field_Supervisor],[Twic],[Timezone],[HighPerformance],[CentralView] FROM Sites ORDER BY Client asc, Site asc";
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		try{
 
@@ -1117,15 +1368,16 @@ public class g_ViewSites {
 				  sites.setView(rs.getInt(9));
 				  sites.setSQL(rs.getInt(10));
 				  sites.setDev(rs.getInt(11));
-				  sites.setGeneration(rs.getFloat(12));
-				  sites.setHMI(rs.getString(13));
+				  sites.setGeneration(rs.getFloat(12));				  
+				  sites.setCentralSQL(rs.getBoolean(13));
 				  sites.setAddress(rs.getString(14));
 				  sites.setPhone(rs.getString(15));
 				  sites.setFieldTech(rs.getString(16));
 				  sites.setFieldSupervisor(rs.getString(17));
 				  sites.setTwic(rs.getBoolean(18));
 				  sites.setTimezone(rs.getString(19));
-				  sites.setHighPerformance(rs.getBoolean(20));				  
+				  sites.setHighPerformance(rs.getBoolean(20));
+				  sites.setCentralView(rs.getBoolean(21));			
 				  result.add(sites);
 				  listModel.addElement(sites.getName());				  
 			}
@@ -1167,9 +1419,6 @@ public class g_ViewSites {
 		scrollPane_ServersExt.setViewportView(list_ServersExt);
 		
 		list_ServersExt.setModel(listModel2);		
-		//list_ServersExt.setSelectedIndex(0);
-		
-	
 		
 	}
 	
@@ -1198,10 +1447,7 @@ public class g_ViewSites {
 		
 		scrollPane_ServersInt.setViewportView(list_ServersInt);
 
-		list_ServersInt.setModel(listModel3);
-		
-		//list_ServersInt.setSelectedIndex(0);
-		
+		list_ServersInt.setModel(listModel3);			
 	}
 	
 	/* This function will refresh the list of the JPanel on the left hand side after an edit has been made. */
@@ -1244,11 +1490,13 @@ public class g_ViewSites {
 		if(rdbtnButaneSites.isSelected())
 		{
 			int siteID = result.get(list_ButaneSites.getSelectedIndex()).getSiteID();
-	
+
 			result.get(list_ButaneSites.getSelectedIndex()).updateSites(txtClient.getText(),  txtSite.getText(),  txtState.getText(), Integer.parseInt(txtSiteID.getText()),  txtClientAbbrv.getText(),  txtSiteAbbrv.getText(), Integer.parseInt(txtiDrac.getText()), 
-					Integer.parseInt(txtHost.getText()), Integer.parseInt(txtView.getText()), Integer.parseInt(txtSQL.getText()), Integer.parseInt(txtDev.getText()), Float.parseFloat(txtGeneration.getText()),  txtHMI.getText(),  txtAddress.getText(),  txtPhone.getText(),  txtFieldTech.getText(),  txtFieldSupervisor.getText(),
-				chk_Twic.isSelected(),  txtTimezone.getText(), chk_HighPerformance.isSelected());
-			String commandText = "Update Sites set Client = '" + txtClient.getText() + "', Site = '" + txtSite.getText() + "', State = '" + txtState.getText() + "', SiteID = '" + txtSiteID.getText() + "', ClientAbbrv = '" + txtClientAbbrv.getText() + "', SiteAbbrv = '" + txtSiteAbbrv.getText() + "', iDracIP = '" + txtiDrac.getText() + "', HostIP = '" + txtHost.getText() + "', ViewIP = '" + txtView.getText() + "', SQLIP = '" + txtSQL.getText() + "', DevIP = '" + txtDev.getText() + "', Generation = '" + txtGeneration.getText() + "', HMI = '" + txtHMI.getText() + "', Address = '" + txtAddress.getText() + "', Phone = '" + txtPhone.getText() + "', Field_Tech = '" + txtFieldTech.getText() + "', Field_Supervisor = '" + txtFieldSupervisor.getText() + "', Twic = '" + chk_Twic.isSelected() + "', Timezone = '" + txtTimezone.getText() + "', HighPerformance = '" + chk_HighPerformance.isSelected() + "' WHERE SiteID = '" + siteID + "'";
+					Integer.parseInt(txtHost.getText()), Integer.parseInt(txtView.getText()), Integer.parseInt(txtSQL.getText()), Integer.parseInt(txtDev.getText()), Float.parseFloat(txtGeneration.getText()),  txtAddress.getText(),  txtPhone.getText(),  txtFieldTech.getText(),  txtFieldSupervisor.getText(),
+				chk_Twic.isSelected(),  txtTimezone.getText(), chk_HighPerformance.isSelected(), chk_SQL.isSelected(), chk_View.isSelected());
+			
+			
+			String commandText = "Update Sites set Client = '" + txtClient.getText() + "', Site = '" + txtSite.getText() + "', State = '" + txtState.getText() + "', SiteID = '" + txtSiteID.getText() + "', ClientAbbrv = '" + txtClientAbbrv.getText() + "', SiteAbbrv = '" + txtSiteAbbrv.getText() + "', iDracIP = '" + txtiDrac.getText() + "', HostIP = '" + txtHost.getText() + "', ViewIP = '" + txtView.getText() + "', SQLIP = '" + txtSQL.getText() + "', DevIP = '" + txtDev.getText() + "', Generation = '" + txtGeneration.getText() + "', Address = '" + txtAddress.getText() + "', Phone = '" + txtPhone.getText() + "', Field_Tech = '" + txtFieldTech.getText() + "', Field_Supervisor = '" + txtFieldSupervisor.getText() + "', Twic = '" + chk_Twic.isSelected() + "', Timezone = '" + txtTimezone.getText() + "', HighPerformance = '" + chk_HighPerformance.isSelected() + "', CentralSQL = '" + chk_SQL.isSelected() +"', CentralView = '" + chk_View.isSelected() + "' WHERE SiteID = '" + siteID + "'";
 			
 			c_Query.ExecuteQuery(commandText);		
 			result.set(list_ButaneSites.getSelectedIndex(), result.get(list_ButaneSites.getSelectedIndex()));
@@ -1256,16 +1504,22 @@ public class g_ViewSites {
 		}
 		else
 		{
-			String serverName = ServersExt.get(list_ServersExt.getSelectedIndex()).getServer();
+			String serverName = "";
+			try
+			{
+				serverName = ServersExt.get(list_ServersExt.getSelectedIndex()).getServer();			
+			}
+			catch(Exception e)
+			{}
+
 			if(serverName.compareTo("") == 0)
 			{
-				serverName = txt_ServerName.getText();
+				serverName = txt_ServerName.getText();	
 				ServersInt.get(list_ServersInt.getSelectedIndex()).updateServer(txt_ServerName.getText(),txt_ServerIP.getText(),txt_ServerDesc.getText());
-				String commandText = "Update Servers set ServerName = '" + txt_ServerName.getText() + "', ServerIP = '" + txt_ServerIP.getText() + "', Description = '" + txt_ServerDesc.getText() + "' WHERE ServerName = '" + serverName + "'";
+				String commandText = "Update Servers set ServerName = '" + txt_ServerName.getText() + "', ServerIP = '" + txt_ServerIP.getText() + "', Description = '" + txt_ServerDesc.getText() + "' WHERE ServerName = '" + list_ServersInt.getSelectedValue().toString() + "'";				
 				c_Query.ExecuteQuery(commandText);					
 				ServersInt.set(list_ServersInt.getSelectedIndex(), ServersInt.get(list_ServersInt.getSelectedIndex()));
-				RefreshListServersInt();
-				
+				RefreshListServersInt();				
 			}
 			else
 			{
@@ -1273,7 +1527,7 @@ public class g_ViewSites {
 				String commandText = "Update Servers set ServerName = '" + txt_ServerName.getText() + "', ServerIP = '" + txt_ServerIP.getText() + "', Description = '" + txt_ServerDesc.getText() + "' WHERE ServerName = '" + serverName + "'";
 				c_Query.ExecuteQuery(commandText);					
 				ServersExt.set(list_ServersExt.getSelectedIndex(), ServersExt.get(list_ServersExt.getSelectedIndex()));
-				RefreshListServersExt();
+				RefreshListServersExt();				
 			}
 		}
 		

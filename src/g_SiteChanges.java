@@ -1,22 +1,10 @@
-import java.awt.EventQueue;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.border.EtchedBorder;
-
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
 
 import javax.swing.JScrollPane;
 import javax.swing.JList;
@@ -24,11 +12,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.AbstractListModel;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-import java.awt.FlowLayout;
-import java.awt.LayoutManager;
+import java.awt.Toolkit;
 
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
@@ -47,7 +33,7 @@ import javax.swing.event.ListSelectionEvent;
 public class g_SiteChanges {
 
 	public static JFrame frmSiteChanges;
-	private JComboBox<c_ButaneSites> cb_Sites;
+	private static JComboBox<c_ButaneSites> cb_Sites;
 	private JPanel panel_1;
 	private JTextField txt_MOC;
 	private JTextField txt_RequestedBy;
@@ -72,6 +58,7 @@ public class g_SiteChanges {
 	private JCheckBox chkbx_Other;
 	private int rowID;
 	private JButton button;
+	private static boolean currentTicketsFlag = false;
 
 
 	/**
@@ -80,9 +67,25 @@ public class g_SiteChanges {
 
 			public static void run() {
 				try {
-					g_SiteChanges window = new g_SiteChanges();
-					window.frmSiteChanges.setVisible(true);
+					new g_SiteChanges();
+					g_SiteChanges.frmSiteChanges.setVisible(true);
 					frmSiteChanges.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					currentTicketsFlag = false;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			
+			public static void run(String siteName) {
+				try {
+					new g_SiteChanges();
+					g_SiteChanges.frmSiteChanges.setVisible(true);
+					frmSiteChanges.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frmSiteChanges.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					frmSiteChanges.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSites.class.getResource("/icon.png")));
+					setSelectedValue(cb_Sites, siteName);
+					currentTicketsFlag = true;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -112,6 +115,7 @@ public class g_SiteChanges {
 		frmSiteChanges.setResizable(false);
 		frmSiteChanges.setBounds(100, 100, 858, 678);
 		frmSiteChanges.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSiteChanges.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSites.class.getResource("/icon.png")));
 		frmSiteChanges.getContentPane().setLayout(null);
 		frmSiteChanges.setTitle("Automated Support Program v." + g_MainMenu.version);
 		
@@ -461,8 +465,15 @@ public class g_SiteChanges {
 		button = new JButton("Back");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_MainMenu.run(frmSiteChanges);
-				frmSiteChanges.dispose();				
+				if(!currentTicketsFlag)
+				{
+					g_MainMenu.run(frmSiteChanges);
+					frmSiteChanges.dispose();
+				}
+				else
+				{
+					frmSiteChanges.dispose();
+				}
 			}
 		});
 		button.setBounds(10, 583, 89, 23);
@@ -716,4 +727,18 @@ public class g_SiteChanges {
 		}
 		
 	}
+	
+	public static void setSelectedValue(JComboBox<c_ButaneSites> comboBox, String value)
+    {
+	
+        for (int i = 0; i < comboBox.getItemCount(); i++)
+        {
+           String tmp = comboBox.getItemAt(i).toString();
+            if (value.compareTo(tmp) == 0)
+            {
+                comboBox.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
 }

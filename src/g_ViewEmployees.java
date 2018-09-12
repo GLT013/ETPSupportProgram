@@ -292,7 +292,6 @@ public class g_ViewEmployees {
 
 						Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 1"+getMobile});
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 		        }
@@ -316,7 +315,6 @@ public class g_ViewEmployees {
 
 						Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 1"+getOffice});
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 		        }
@@ -334,10 +332,8 @@ public class g_ViewEmployees {
 				try {
 					c_Email.mailto(Arrays.asList(test)," ", " ");
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (URISyntaxException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -352,10 +348,8 @@ public class g_ViewEmployees {
 		button_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					//Runtime.getRuntime().exec("iexplore.exe "+ipAddress);
 					Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + server);
 				} catch (IOException e2) {
-					// TODO Auto-generated catch block
 					System.out.println(e2.toString());
 				}
 			}
@@ -372,14 +366,10 @@ public class g_ViewEmployees {
 				sip_address = sip_address.replace("-", "");
 				StringSelection selection = new StringSelection(sip_address);
 				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				clipboard.setContents(selection, selection);
-				//JOptionPane.showMessageDialog(frmViewEmployees, sip_address + " copied to clipboard.");
-				
+				clipboard.setContents(selection, selection);			
 				try {
-					//Runtime.getRuntime().exec("iexplore.exe "+ipAddress);
 					Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + server);
 				} catch (IOException e2) {
-					// TODO Auto-generated catch block
 					System.out.println(e2.toString());
 				}
 				

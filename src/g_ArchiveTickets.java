@@ -188,6 +188,7 @@ public class g_ArchiveTickets {
 		scrollPane_1.setViewportView(JList_FileList);
 		
 		JButton btn_OpenFile = new JButton("Open File");
+		btn_OpenFile.setEnabled(false);
 		btn_OpenFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (JList_FileList.getSelectedIndex() == -1)
@@ -205,7 +206,6 @@ public class g_ArchiveTickets {
 					try {						
 						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", filePath});
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						JOptionPane.showMessageDialog(frmArchiveTickets, "Could not find file.");
 					}
@@ -393,12 +393,6 @@ public class g_ArchiveTickets {
 		scrollPane_3.setViewportView(txt_Issue);
 		txt_Issue.setEditable(false);
 		
-		JLabel lblOffline = new JLabel("Offline!");
-		lblOffline.setForeground(Color.RED);
-		lblOffline.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		lblOffline.setBounds(294, 11, 97, 20);
-		panel_1.add(lblOffline);
-		
 		btnSearch = new JButton("");
 		btnSearch.setBounds(487, 727, 32, 32);
 		panel_1.add(btnSearch);
@@ -433,7 +427,6 @@ public class g_ArchiveTickets {
 
 							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894409"});
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 			        }
@@ -448,7 +441,6 @@ public class g_ArchiveTickets {
 
 							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894408"});
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 			        }
@@ -471,7 +463,6 @@ public class g_ArchiveTickets {
 		txtStatus.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
 		txtStatus.setBounds(248, 739, 178, 20);
 		panel_1.add(txtStatus);
-		lblOffline.setVisible(false);				
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -665,7 +656,19 @@ public class g_ArchiveTickets {
 						}
 					}
 				});
-							
+				
+				if(txt_Internal.getText().compareTo("") != 0)
+				{
+					btn_Internal.setText("* Internal *");
+					btn_Internal.setBackground(Color.orange);
+				}
+				else
+				{
+					btn_Internal.setText("Internal");
+					btn_Internal.setBackground(Color.getColor("240,240,240"));
+					
+				}
+				
 				listModel.removeAllElements();
 				searchList.setModel(listModel);
 				
@@ -795,17 +798,32 @@ public class g_ArchiveTickets {
 					  listModel.addElement(arch.getClient() + " " + arch.getSite() + " (" + arch.getTicket() + ")");	
 				}
 				
+				if(txt_Internal.getText().compareTo("") != 0)
+				{
+					btn_Internal.setText("* Internal *");
+					btn_Internal.setBackground(Color.orange);
+				}
+				else
+				{
+					btn_Internal.setText("Internal");
+					btn_Internal.setBackground(Color.getColor("240,240,240"));
+					
+				}
+				
 				scrollPane_4.setViewportView(searchList);
 	
 				searchList.setModel(listModel);
 				
 				searchList.setSelectedIndex(0);
 			
-			}
+			}	
+			
 			catch (SQLException e)
 			{
 				
-			}					
+			}	
+			
+			
 		}
 		
 	}
@@ -902,11 +920,25 @@ public class g_ArchiveTickets {
 		{
 			System.out.println(e.toString());
 		}
+		
+		if(txt_Internal.getText().compareTo("") != 0)
+		{
+			btn_Internal.setText("* Internal *");
+			btn_Internal.setBackground(Color.orange);
+		}
+		else
+		{
+			btn_Internal.setText("Internal");
+			btn_Internal.setBackground(Color.getColor("240,240,240"));
+			
+		}
+		
 		fileListModel = new DefaultListModel<c_Files>();
 		
 		commandText = "SELECT Filename FROM Files WHERE TicketNum = '" + TicketNum + "'";		
 		
 		rs = c_Query.ExecuteResultSet(commandText);
+		
 		
 		try
 		{
