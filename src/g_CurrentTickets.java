@@ -473,18 +473,6 @@ public class g_CurrentTickets {
 		icon_view.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				String width;
-				String height;
-				if(!highperformance)
-				{
-					width = "1280";
-					height = "1024";
-				}
-				else
-				{
-					width = "1920";
-					height = "1080";
-				}
 				String ipAddress = "";
 				
 				if(!centralView)
@@ -495,13 +483,45 @@ public class g_CurrentTickets {
 				{
 					ipAddress = "192.168.32.74";
 				}
-					
+				
+				if(arg0.getButton() == MouseEvent.BUTTON1)
+				{
+					String width;
+					String height;
+					if(!highperformance)
+					{
+						width = "1280";
+						height = "1024";
+					}
+					else
+					{
+						width = "1920";
+						height = "1080";
+					}					
+						
 					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
 					} catch (IOException e) {
-						e.printStackTrace();
+						e.printStackTrace();						
 					}
 				}
+				else if(arg0.getButton() == MouseEvent.BUTTON2)
+				{
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
+					} catch (IOException e) {
+						e.printStackTrace();
+					}					
+				}
+				else if(arg0.getButton() == MouseEvent.BUTTON3)
+				{
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+					} catch (IOException e) {
+						e.printStackTrace();
+					}					
+				}
+			}
 			
 		});
 		icon_view.setToolTipText("View");
@@ -529,13 +549,33 @@ public class g_CurrentTickets {
 				{
 					ipAddress = "192.168.32.75";
 				}
-					 
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
-					} catch (IOException e2) {
-						e2.printStackTrace();
-					}
+				
+				if(e.getButton() == MouseEvent.BUTTON1)
+				{
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+						} catch (IOException e2) {
+							e2.printStackTrace();
+						}
+					
 				}
+				else if(e.getButton() == MouseEvent.BUTTON2)
+				{
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}					
+				}
+				else if(e.getButton() == MouseEvent.BUTTON3)
+				{
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}					
+				}
+			}
 			
 		});
 		icon_sql.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/sql.png")));
@@ -550,12 +590,30 @@ public class g_CurrentTickets {
 				String width = "1920";
 				String height = "1080";	
 				String ipAddress = "10.219." + siteID + "." + DevIP; 
+				if(e.getButton() == MouseEvent.BUTTON1)
+				{
 					try {
 						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
 					} catch (IOException e3) {
 						e3.printStackTrace();
 					}
-				
+				}
+				else if(e.getButton() == MouseEvent.BUTTON2)
+				{
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}		
+				}
+				else if(e.getButton() == MouseEvent.BUTTON3)
+				{
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}					
+				}
 			}
 		});
 		icon_dev.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/dev.png")));
@@ -576,12 +634,22 @@ public class g_CurrentTickets {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String ipAddress = "10.219." + siteID + "." + iDracIP; 
-				try {					
-					Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress);
-				} catch (IOException e2) {
-				
-				}
-			
+				if(e.getButton() == MouseEvent.BUTTON1)
+				{
+					try {					
+						Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress);
+					} catch (IOException e2) {
+					
+					}
+				}				
+				else if(e.getButton() == MouseEvent.BUTTON3)
+				{
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}					
+				}			
 			}
 		});
 		icon_idrac.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/idrac.png")));
@@ -592,9 +660,24 @@ public class g_CurrentTickets {
 		JLabel icon_host = new JLabel("");
 		icon_host.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				String ip = "10.219." + siteID + "." + hostIP; 
-				JOptionPane.showMessageDialog(frmCurrentTickets, "VSphere Host IP: \n " + ip);
+			public void mouseClicked(MouseEvent e) {				
+				String ipAddress = "10.219." + siteID + "." + hostIP;
+				if(e.getButton() == MouseEvent.BUTTON1)
+				{
+					try {					
+						Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress + "\\ui");
+					} catch (IOException e2) {
+					}
+				}
+				else if (e.getButton() == MouseEvent.BUTTON3)
+				{
+					try {
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}					
+				}
+				
 			}
 		});
 		icon_host.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/host.png")));
@@ -1403,7 +1486,7 @@ public class g_CurrentTickets {
 									String projectname = rs.getString(1);
 									proj = new DefaultMutableTreeNode(projectname);
 										
-										String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 AND (EmailSent is null OR EmailSent = 0) ORDER BY Site ASC";
+										String commandText2 = "SELECT Site, Ticket, EmailSent from SupportTickets WHERE Active = 1 AND (EmailSent is null OR EmailSent = 0) and Client ='" + projectname + "' ORDER BY Site ASC";
 										
 										ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);
 										boolean emailSent = false;

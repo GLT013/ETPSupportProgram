@@ -558,7 +558,7 @@ public class g_ViewSites {
 					}
 					else //central view
 					{
-						ipAddress = "192.168.32.76";
+						ipAddress = "192.168.32.75";
 					}
 					if(arg2.getButton() == MouseEvent.BUTTON1)
 					{
@@ -1065,7 +1065,7 @@ public class g_ViewSites {
 				else if(arg3.getButton() == MouseEvent.BUTTON3)
 				{					
 					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txt_ServerIP.getText()+""});												
+						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+txt_ServerIP.getText()+""});												
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

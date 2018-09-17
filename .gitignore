@@ -5,3 +5,5 @@
 *.class
 *.class
 src/c_ConnectToDatabase.java
+*.class
+bin/c_ConnectToDatabase.class

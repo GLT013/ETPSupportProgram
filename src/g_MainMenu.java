@@ -20,9 +20,8 @@ import javax.swing.border.EtchedBorder;
 //icons https://icons8.com/web-app/for/all/return
 //flaticon.com
 public class g_MainMenu {
-
 	public static JFrame frmMainMenu;
-	public static double version = 3.10;
+	public static double version = 3.12;
 	public static int ticketMax;
 	public static boolean firstrun = true;
 	public static String TitleOnline = "EN Automation Support Program v" + version + "";	
