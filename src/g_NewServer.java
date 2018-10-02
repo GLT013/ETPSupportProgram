@@ -29,11 +29,12 @@ public class g_NewServer {
 	 * Launch the application.
 	 */
 	
-			public static void run() {
+			public static void run(JFrame frame) {
 				try {
 					g_NewServer window = new g_NewServer();
 					window.frmNewServer.setVisible(true);
-					window.frmNewServer.setLocationRelativeTo( g_ViewSites.frmButaneSites );
+					window.frmNewServer.setLocationRelativeTo(frame);
+					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -89,8 +90,7 @@ public class g_NewServer {
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmNewServer.dispose();
+				g_ViewSites.run(frmNewServer);
 			}
 		});
 		btnBack.setBounds(10, 431, 89, 23);
@@ -138,8 +138,7 @@ public class g_NewServer {
 				g_MainMenu.checkVersion();
 				if(c_CheckOpenTickets.CheckTickets())
 				{							
-					g_TicketEntry.run();
-					frmNewServer.dispose();
+					g_TicketEntry.run(frmNewServer);
 				}
 				else
 				{
@@ -153,8 +152,7 @@ public class g_NewServer {
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmNewServer.dispose();
+				g_CurrentTickets.run(frmNewServer);
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -162,8 +160,7 @@ public class g_NewServer {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frmNewServer.dispose();
+				g_ArchiveTickets.run(frmNewServer);
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -174,8 +171,7 @@ public class g_NewServer {
 		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 		mntmButaneSites.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmNewServer.dispose();
+				g_ViewSites.run(frmNewServer);
 			}
 		});
 		mnSites.add(mntmButaneSites);
@@ -183,8 +179,7 @@ public class g_NewServer {
 		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 		mntmSiteChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frmNewServer.dispose();
+				g_SiteChanges.run(frmNewServer);
 			}
 		});
 		mnSites.add(mntmSiteChanges);
@@ -195,8 +190,7 @@ public class g_NewServer {
 		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 		mntmENEmployees.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmNewServer.dispose();
+				g_ViewEmployees.run(frmNewServer);
 			}
 		});
 		mnContacts.add(mntmENEmployees);
@@ -204,15 +198,26 @@ public class g_NewServer {
 		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 		mntmEtpContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmNewServer.dispose();
+				g_ViewSunoco.run(frmNewServer);
 			}
 		});
 		mnContacts.add(mntmEtpContacts);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frmNewServer);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
+
 	}
 	
-	public void InsertSite(){
-		
+	public void InsertSite()
+	{		
 		String Server = txtServerName.getText();
 		String ServerIP = txtServerIP.getText();
 		String ServerDesc = txtServerDesc.getText();
@@ -241,23 +246,16 @@ public class g_NewServer {
 			if(rs.getInt("total") > 0)
 			{
 				//server already exists
-				JOptionPane.showMessageDialog(frmNewServer, "Server " + Server + " already exists in the database.");
-				
+				JOptionPane.showMessageDialog(frmNewServer, "Server " + Server + " already exists in the database.");				
 			}
 			else
-			{
-			
-			commandText = "INSERT INTO Servers(ServerName,ServerIP,Description,Internal) "
-						+ "VALUES ( '" + Server + "','" + ServerIP + "','" + ServerDesc + "','" + internal + "')";
-			
-			c_Query.UpdateResultSet(commandText);
+			{			
+				commandText = "INSERT INTO Servers(ServerName,ServerIP,Description,Internal) "
+							+ "VALUES ( '" + Server + "','" + ServerIP + "','" + ServerDesc + "','" + internal + "')";			
+				c_Query.UpdateResultSet(commandText);
 				JOptionPane.showMessageDialog(frmNewServer, "Server " + Server + " was successfully added.");
-				ClearFields();
-				
-				g_ViewSites.run();
-				frmNewServer.dispose();
-				
-				
+				ClearFields();					
+				g_ViewSites.run(frmNewServer);								
 			}
 		} catch (HeadlessException e) {
 			e.printStackTrace();

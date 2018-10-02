@@ -45,11 +45,12 @@ public class g_ViewSiteData2 {
 	private static DefaultListModel<String> listModel = new DefaultListModel<String>();
 	private static JList<String> searchList = new JList<String>();
 	
-	public static void run(String siteID) {				
+	public static void run(String siteID, JFrame frame) {				
 		try {
 			g_ViewSiteData2 window = new g_ViewSiteData2();
 			window.frmArchiveTickets.setVisible(true);
-			window.frmArchiveTickets.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+			window.frmArchiveTickets.setLocationRelativeTo(frame);
+			frame.dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

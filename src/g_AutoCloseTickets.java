@@ -22,11 +22,12 @@ public class g_AutoCloseTickets {
 	 * Launch the application.
 	 */
 
-			public static void run() {
+			public static void run(JFrame frame) {
 				try {
 					g_AutoCloseTickets window = new g_AutoCloseTickets();
 					window.frame.setVisible(true);
-					window.frame.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					window.frame.setLocationRelativeTo(frame);
+					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

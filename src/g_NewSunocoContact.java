@@ -25,18 +25,16 @@ public class g_NewSunocoContact {
 	/**
 	 * Launch the application.
 	 */
-	
-			public static void run() {
+			public static void run(JFrame frame) {
 				try {
 					g_NewSunocoContact window = new g_NewSunocoContact();
 					window.frmNewSunocoContact.setVisible(true);
-					window.frmNewSunocoContact.setLocationRelativeTo( g_ViewSunoco.frmSunocoContacts );
+					window.frmNewSunocoContact.setLocationRelativeTo(frame);
+					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-		
-	
 
 	/**
 	 * Create the application.
@@ -115,8 +113,7 @@ public class g_NewSunocoContact {
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmNewSunocoContact.dispose();
+				g_ViewSunoco.run(frmNewSunocoContact);
 			}
 		});
 		btnBack.setBounds(10, 355, 89, 23);
@@ -137,8 +134,7 @@ public class g_NewSunocoContact {
 				g_MainMenu.checkVersion();
 				if(c_CheckOpenTickets.CheckTickets())
 				{							
-					g_TicketEntry.run();
-					frmNewSunocoContact.dispose();
+					g_TicketEntry.run(frmNewSunocoContact);
 				}
 				else
 				{
@@ -152,8 +148,7 @@ public class g_NewSunocoContact {
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmNewSunocoContact.dispose();
+				g_CurrentTickets.run(frmNewSunocoContact);
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -161,8 +156,7 @@ public class g_NewSunocoContact {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frmNewSunocoContact.dispose();
+				g_ArchiveTickets.run(frmNewSunocoContact);
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -173,8 +167,7 @@ public class g_NewSunocoContact {
 		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 		mntmButaneSites.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmNewSunocoContact.dispose();
+				g_ViewSites.run(frmNewSunocoContact);
 			}
 		});
 		mnSites.add(mntmButaneSites);
@@ -182,8 +175,7 @@ public class g_NewSunocoContact {
 		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 		mntmSiteChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frmNewSunocoContact.dispose();
+				g_SiteChanges.run(frmNewSunocoContact);
 			}
 		});
 		mnSites.add(mntmSiteChanges);
@@ -194,8 +186,7 @@ public class g_NewSunocoContact {
 		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 		mntmENEmployees.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmNewSunocoContact.dispose();
+				g_ViewEmployees.run(frmNewSunocoContact);
 			}
 		});
 		mnContacts.add(mntmENEmployees);
@@ -203,11 +194,22 @@ public class g_NewSunocoContact {
 		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 		mntmEtpContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmNewSunocoContact.dispose();
+				g_ViewSunoco.run(frmNewSunocoContact);
 			}
 		});
 		mnContacts.add(mntmEtpContacts);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frmNewSunocoContact);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
+
 	}
 	
 	public void InsertEmployee(){
@@ -243,16 +245,13 @@ public class g_NewSunocoContact {
 			else
 			{
 			
-			commandText = "INSERT INTO Sunoco_Contacts(Name,Company,Email,Mobile_Phone) "
-						+ "VALUES ( '" + name + "','" + company + "','" + email + "','" + mobile + "')";
+				commandText = "INSERT INTO Sunoco_Contacts(Name,Company,Email,Mobile_Phone) "
+							+ "VALUES ( '" + name + "','" + company + "','" + email + "','" + mobile + "')";
 				c_Query.UpdateResultSet(commandText);
 				JOptionPane.showMessageDialog(frmNewSunocoContact, "Contact " + name + " was successfully added.");
-				ClearFields();
-				
-				g_ViewSunoco.run();
-				frmNewSunocoContact.dispose();
-				
-				
+				ClearFields();				
+				g_ViewSunoco.run(frmNewSunocoContact);
+
 			}
 		} catch (HeadlessException e) {
 			e.printStackTrace();

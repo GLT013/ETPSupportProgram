@@ -46,7 +46,8 @@ public class g_ReportEmail {
 					@SuppressWarnings("unused")
 					g_ReportEmail window = new g_ReportEmail();
 					g_ReportEmail.frmReportEmail.setVisible(true);
-					g_ReportEmail.frmReportEmail.setLocationRelativeTo( g_CurrentTickets.frmCurrentTickets );
+					g_ReportEmail.frmReportEmail.setLocationRelativeTo(g_CurrentTickets.frmCurrentTickets);
+					//frame.dispose();
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -210,8 +211,7 @@ public class g_ReportEmail {
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmReportEmail.dispose();
+				g_CurrentTickets.run(frmReportEmail);
 			}
 		});
 		btnBack.setBounds(10, 834, 89, 23);
@@ -222,6 +222,11 @@ public class g_ReportEmail {
 		panel.setBounds(544, 587, 193, 54);
 		frmReportEmail.getContentPane().add(panel);
 		panel.setLayout(null);
+		panel.setVisible(false);
+		if(g_MainMenu.BlendSeason)
+		{
+			panel.setVisible(true);
+		}
 		
 		JButton btnDayShift = new JButton("Day Shift");
 		btnDayShift.setBounds(10, 22, 77, 23);
@@ -242,6 +247,11 @@ public class g_ReportEmail {
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_1.setBounds(544, 663, 193, 94);
 		frmReportEmail.getContentPane().add(panel_1);
+		panel_1.setVisible(false);
+		if(!g_MainMenu.BlendSeason)
+		{
+			panel_1.setVisible(true);
+		}
 		
 		JButton button_1 = new JButton("Day Shift");
 		button_1.addActionListener(new ActionListener() {
@@ -316,7 +326,7 @@ public class g_ReportEmail {
 		       name.compareTo("James Waymire") == 0 ||   name.compareTo("Joe Klems") == 0 ||
 		       name.compareTo("Chris Sheedy") == 0 || name.compareTo("Sean McCausland") == 0 ||
 		       name.compareTo("James McClintock") == 0 || name.compareTo("James Banks") == 0 ||
-		       name.compareTo("Elizabeth Parzanese") == 0 || name.compareTo("Keegan Lowry") == 0)
+		       name.compareTo("Elizabeth Parzanese") == 0)
 		    {
 		    	addRecipients(i);
 		    	i--;
@@ -332,8 +342,8 @@ public class g_ReportEmail {
 			name = EmailList.getModel().getElementAt(i).getName().toString();
 		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
 		       name.compareTo("Joe Klems") == 0 ||     name.compareTo("Chris Sheedy") == 0 || 
-		       name.compareTo("Jim Robbins") == 0 ||   name.compareTo("James McClintock") == 0 || 
-		       name.compareTo("Keegan Lowry") == 0)
+		       name.compareTo("Jim Robbins") == 0 ||   name.compareTo("James McClintock") == 0
+		       )
 		    {
 		    	addRecipients(i);
 		    	i--;
@@ -349,8 +359,7 @@ public class g_ReportEmail {
 			name = EmailList.getModel().getElementAt(i).getName().toString();
 		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
 		       name.compareTo("Joe Klems") == 0 	|| name.compareTo("James McClintock") == 0 || 
-		       name.compareTo("Jim Robbins") == 0   ||   name.compareTo("Keegan Lowry") == 0 ||
-		       name.compareTo("Chris Sheedy") == 0)
+		       name.compareTo("Jim Robbins") == 0   || name.compareTo("Chris Sheedy") == 0)
 		    {
 		    	addRecipients(i);
 		    	i--;
@@ -387,7 +396,7 @@ public class g_ReportEmail {
 			name = EmailList.getModel().getElementAt(i).getName().toString();
 		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
 		       name.compareTo("Joe Klems") == 0 ||  name.compareTo("Chris Sheedy") == 0 || 
-		       name.compareTo("James McClintock") == 0 || name.compareTo("Keegan Lowry") == 0)
+		       name.compareTo("James McClintock") == 0)
 		    {
 		    	addRecipients(i);
 		    	i--;

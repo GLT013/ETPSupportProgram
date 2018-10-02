@@ -31,7 +31,7 @@ public class c_GetMacAddress{
 		                    sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));		                	
 		                }	         
 		            		            
-		                commandText = "SELECT a.EmployeeID, a.ComputerName, b.Name, b.Title from MacAddress a, EN_Employees b WHERE a.MacAddress= '" + sb.toString() + "' AND b.Active = 1 and a.EmployeeID = b.rowID";
+		                commandText = "SELECT a.EmployeeID, a.ComputerName, b.Name, b.Title, b.Admin from MacAddress a, EN_Employees b WHERE a.MacAddress= '" + sb.toString() + "' AND b.Active = 1 and a.EmployeeID = b.rowID";
 		                rs = c_Query.ExecuteResultSet(commandText);
 		                
 		    	    try{
@@ -40,6 +40,7 @@ public class c_GetMacAddress{
 		    			{		    				
 		    				g_MainMenu.CurrentUser = rs.getString("Name");
 		    				g_MainMenu.CurrentUserTitle = rs.getString("Title");
+		    				 g_MainMenu.adminMode = rs.getBoolean("Admin");
 		    				mac_found = true;
 		    			}
 		    		}

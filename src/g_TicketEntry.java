@@ -41,13 +41,13 @@ public class g_TicketEntry {
 	private JDatePickerImpl datePicker;
 	private static JCheckBox chkbx_NoTicketNum;
 
-			public static void run() {			
+			public static void run(JFrame frame) {			
 				try {	
-					new g_TicketEntry();
-					@SuppressWarnings("unused")
+					//new g_TicketEntry(); Not sure what this was doing...
 					g_TicketEntry window = new g_TicketEntry();
 					g_TicketEntry.frmTicketEntry.setVisible(true);
-					g_TicketEntry.frmTicketEntry.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					g_TicketEntry.frmTicketEntry.setLocationRelativeTo(frame);
+					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -56,8 +56,11 @@ public class g_TicketEntry {
 
 
 	public g_TicketEntry() {
+		//long startTime = System.currentTimeMillis();
 		initialize();
 		PopulateClientCB();		
+		//long stopTime = System.currentTimeMillis();
+		//System.out.println("Elapsed time was " + (stopTime - startTime) + " miliseconds.");
 	}
 
 	/**
@@ -70,7 +73,7 @@ public class g_TicketEntry {
 		frmTicketEntry.setBounds(100, 100, 767, 576);
 		frmTicketEntry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTicketEntry.getContentPane().setLayout(null);		
-		frmTicketEntry.setTitle("Automated Support Program v." + g_MainMenu.version);
+		frmTicketEntry.setTitle(g_MainMenu.TitleOnline);
 		
 		
 		cb_Site.addItemListener(new ItemListener() {
@@ -147,13 +150,11 @@ public class g_TicketEntry {
 			public void actionPerformed(ActionEvent e) {
 				if(g_MainMenu.CurrentTicketsNav)
 				{
-					g_CurrentTickets.run();
-					frmTicketEntry.dispose();
+					g_CurrentTickets.run(frmTicketEntry);
 				}
 				else
 				{
 					g_MainMenu.run(frmTicketEntry);
-					frmTicketEntry.dispose();
 				}
 			}
 		});
@@ -219,35 +220,18 @@ public class g_TicketEntry {
 		//Menubar
 		JMenuBar menuBar = new JMenuBar();
 		frmTicketEntry.setJMenuBar(menuBar);
-		
-		
-				
+								
 		JMenu mnSupport = new JMenu("Support");
 		menuBar.add(mnSupport);
 		
-		JMenuItem mntmNewTicket = new JMenuItem("New Ticket");
-		mntmNewTicket.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				g_MainMenu.checkVersion();
-				if(c_CheckOpenTickets.CheckTickets())
-				{							
-					g_TicketEntry.run();
-					frmTicketEntry.dispose();
-				}
-				else
-				{
-					JOptionPane.showMessageDialog(frmTicketEntry, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
-				}
-				
-			}
-		});
+		JMenuItem mntmNewTicket = new JMenuItem("New Ticket");		
 		mnSupport.add(mntmNewTicket);
+		mntmNewTicket.setEnabled(false);
 		
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmTicketEntry.dispose();
+				g_CurrentTickets.run(frmTicketEntry);
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -255,8 +239,7 @@ public class g_TicketEntry {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frmTicketEntry.dispose();
+				g_ArchiveTickets.run(frmTicketEntry);
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -267,8 +250,7 @@ public class g_TicketEntry {
 		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 		mntmButaneSites.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmTicketEntry.dispose();
+				g_ViewSites.run(frmTicketEntry);
 			}
 		});
 		mnSites.add(mntmButaneSites);
@@ -276,8 +258,7 @@ public class g_TicketEntry {
 		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 		mntmSiteChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frmTicketEntry.dispose();
+				g_SiteChanges.run(frmTicketEntry);
 			}
 		});
 		mnSites.add(mntmSiteChanges);
@@ -288,8 +269,7 @@ public class g_TicketEntry {
 		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 		mntmENEmployees.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmTicketEntry.dispose();
+				g_ViewEmployees.run(frmTicketEntry);
 			}
 		});
 		mnContacts.add(mntmENEmployees);
@@ -297,42 +277,47 @@ public class g_TicketEntry {
 		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 		mntmEtpContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmTicketEntry.dispose();
+				g_ViewSunoco.run(frmTicketEntry);
 			}
 		});
 		mnContacts.add(mntmEtpContacts);
-
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frmTicketEntry);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
 	}
 	
-	private void PopulateClientCB(){
-		 String commandText = "SELECT DISTINCT Client FROM Sites ORDER BY Client Asc";        
+	private void PopulateClientCB()
+	{
+		 	String commandText = "SELECT DISTINCT Client FROM Sites ORDER BY Client Asc";        
 	        ResultSet rs = c_Query.ExecuteResultSet(commandText);
 	        	     
 	        try {
 				while((rs!=null) && (rs.next()))
-				{					
-					String client = rs.getString(1);				
-					cb_Client.addItem(client);	
+				{							
+					cb_Client.addItem(rs.getString("Client"));	
 				}
 			} catch (SQLException e) {
 			}
-	        try {
-				rs.close();
-			} catch (SQLException e) {
-			
-			}
-	        
+	
 	        commandText = "SELECT DISTINCT Name FROM EN_Employees WHERE Active = 1 ORDER BY Name Asc";        
 	        rs = c_Query.ExecuteResultSet(commandText);
 	        try {
 				while((rs!=null) && (rs.next()))
-				{					
-					String name = rs.getString(1);				
-					cb_Assign.addItem(name);	
+				{				
+					cb_Assign.addItem(rs.getString("Name"));	
 				}
 			} catch (SQLException e) {
 			}
+	        
+	        
 	        try {
 				rs.close();
 			} catch (SQLException e) {
@@ -356,7 +341,7 @@ public class g_TicketEntry {
 		try {
 			while((rs!=null) && (rs.next()))
 			{								
-				cb_Site.addItem(rs.getString(1));	
+				cb_Site.addItem(rs.getString("Site"));	
 			}
 		} catch (SQLException e) {
 		}
@@ -387,6 +372,7 @@ public class g_TicketEntry {
 		else
 		{
 			TicketNum = txt_TicketNum.getText();	
+			TicketNum = TicketNum.trim();
 		}
 		
 		 if(Character.isLetter(TicketNum.charAt(0)))
@@ -416,9 +402,8 @@ public class g_TicketEntry {
 				
 			}
 			
-			TicketNum = temp;
-			
-			
+			TicketNum = temp;			
+						
 		}
 		
 		
@@ -469,8 +454,7 @@ public class g_TicketEntry {
 		JOptionPane.showMessageDialog(frmTicketEntry, "Ticket # " + TicketNum + " entered successfully");	
 		if(g_MainMenu.CurrentTicketsNav)
 		{
-			g_CurrentTickets.run();
-			frmTicketEntry.dispose();
+			g_CurrentTickets.run(frmTicketEntry);
 		}
 		else
 		{

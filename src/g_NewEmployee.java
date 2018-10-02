@@ -31,18 +31,16 @@ public class g_NewEmployee {
 	 * Launch the application.
 	 */
 	
-			public static void run() {
+			public static void run(JFrame frame) {
 				try {
 					g_NewEmployee window = new g_NewEmployee();
 					window.frmNewEmployee.setVisible(true);
-					window.frmNewEmployee.setLocationRelativeTo( g_ViewEmployees.frmViewEmployees );
+					window.frmNewEmployee.setLocationRelativeTo(frame);
+					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-		
-	
-
 	/**
 	 * Create the application.
 	 */
@@ -61,8 +59,7 @@ public class g_NewEmployee {
 		frmNewEmployee.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNewEmployee.getContentPane().setLayout(null);		
 		frmNewEmployee.setTitle("Automated Support Program v." + g_MainMenu.version);
-		
-		
+				
 		JLabel lblAddNewEmployee = new JLabel("Add New Employee");
 		lblAddNewEmployee.setBounds(214, 11, 189, 19);
 		lblAddNewEmployee.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 18));
@@ -131,8 +128,7 @@ public class g_NewEmployee {
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmNewEmployee.dispose();
+				g_ViewEmployees.run(frmNewEmployee);
 			}
 		});
 		btnBack.setBounds(10, 403, 89, 23);
@@ -141,9 +137,7 @@ public class g_NewEmployee {
 		//Menubar
 		JMenuBar menuBar = new JMenuBar();
 		frmNewEmployee.setJMenuBar(menuBar);
-		
-		
-				
+
 		JMenu mnSupport = new JMenu("Support");
 		menuBar.add(mnSupport);
 		
@@ -153,8 +147,7 @@ public class g_NewEmployee {
 				g_MainMenu.checkVersion();
 				if(c_CheckOpenTickets.CheckTickets())
 				{							
-					g_TicketEntry.run();
-					frmNewEmployee.dispose();
+					g_TicketEntry.run(frmNewEmployee);
 				}
 				else
 				{
@@ -168,8 +161,7 @@ public class g_NewEmployee {
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmNewEmployee.dispose();
+				g_CurrentTickets.run(frmNewEmployee);
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -177,8 +169,7 @@ public class g_NewEmployee {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frmNewEmployee.dispose();
+				g_ArchiveTickets.run(frmNewEmployee);
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -189,8 +180,7 @@ public class g_NewEmployee {
 		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 		mntmButaneSites.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmNewEmployee.dispose();
+				g_ViewSites.run(frmNewEmployee);
 			}
 		});
 		mnSites.add(mntmButaneSites);
@@ -198,8 +188,7 @@ public class g_NewEmployee {
 		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 		mntmSiteChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frmNewEmployee.dispose();
+				g_SiteChanges.run(frmNewEmployee);
 			}
 		});
 		mnSites.add(mntmSiteChanges);
@@ -210,8 +199,7 @@ public class g_NewEmployee {
 		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 		mntmENEmployees.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmNewEmployee.dispose();
+				g_ViewEmployees.run(frmNewEmployee);
 			}
 		});
 		mnContacts.add(mntmENEmployees);
@@ -219,11 +207,22 @@ public class g_NewEmployee {
 		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 		mntmEtpContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmNewEmployee.dispose();
+				g_ViewSunoco.run(frmNewEmployee);
 			}
 		});
 		mnContacts.add(mntmEtpContacts);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frmNewEmployee);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
+
 	}
 	
 	public void InsertEmployee(){
@@ -266,10 +265,7 @@ public class g_NewEmployee {
 				JOptionPane.showMessageDialog(frmNewEmployee, "Employee " + name + " was successfully added.");
 				ClearFields();
 				
-				g_ViewEmployees.run();
-				frmNewEmployee.dispose();
-				
-				
+				g_ViewEmployees.run(frmNewEmployee);								
 			}
 		} catch (HeadlessException e) {
 			e.printStackTrace();

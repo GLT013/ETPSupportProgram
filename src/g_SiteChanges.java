@@ -65,11 +65,12 @@ public class g_SiteChanges {
 	 * Launch the application.
 	 */
 
-			public static void run() {
+			public static void run(JFrame frame) {
 				try {
 					new g_SiteChanges();
 					g_SiteChanges.frmSiteChanges.setVisible(true);
-					frmSiteChanges.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					frmSiteChanges.setLocationRelativeTo(frame);
+					frame.dispose();
 					currentTicketsFlag = false;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -337,8 +338,7 @@ public class g_SiteChanges {
 				//c_ButaneSites tmp = 	
 				g_NewSiteChange.site = (c_ButaneSites) cb_Sites.getSelectedItem();		
 				selectedIndex = cb_Sites.getSelectedIndex();
-				g_NewSiteChange.run();
-				frmSiteChanges.dispose();
+				g_NewSiteChange.run(frmSiteChanges);				
 			}
 		});
 		btn_AddChange.setIcon(new ImageIcon(g_SiteChanges.class.getResource("/document.png")));
@@ -494,8 +494,7 @@ public class g_SiteChanges {
 				g_MainMenu.checkVersion();
 				if(c_CheckOpenTickets.CheckTickets())
 				{							
-					g_TicketEntry.run();
-					frmSiteChanges.dispose();
+					g_TicketEntry.run(frmSiteChanges);
 				}
 				else
 				{
@@ -509,8 +508,7 @@ public class g_SiteChanges {
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmSiteChanges.dispose();
+				g_CurrentTickets.run(frmSiteChanges);
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -518,8 +516,7 @@ public class g_SiteChanges {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frmSiteChanges.dispose();
+				g_ArchiveTickets.run(frmSiteChanges);
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -530,20 +527,14 @@ public class g_SiteChanges {
 		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 		mntmButaneSites.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmSiteChanges.dispose();
+				g_ViewSites.run(frmSiteChanges);
 			}
 		});
 		mnSites.add(mntmButaneSites);
 		
-		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
-		mntmSiteChanges.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frmSiteChanges.dispose();
-			}
-		});
+		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");		
 		mnSites.add(mntmSiteChanges);
+		mntmSiteChanges.setEnabled(false);
 		
 		JMenu mnContacts = new JMenu("Contacts");
 		menuBar.add(mnContacts);
@@ -551,8 +542,7 @@ public class g_SiteChanges {
 		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 		mntmENEmployees.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmSiteChanges.dispose();
+				g_ViewEmployees.run(frmSiteChanges);
 			}
 		});
 		mnContacts.add(mntmENEmployees);
@@ -560,11 +550,22 @@ public class g_SiteChanges {
 		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 		mntmEtpContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmSiteChanges.dispose();
+				g_ViewSunoco.run(frmSiteChanges);
 			}
 		});
 		mnContacts.add(mntmEtpContacts);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frmSiteChanges);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
+
 		
 	}
 	
@@ -587,17 +588,22 @@ public class g_SiteChanges {
 	
 	private void PopulateSiteList()
 	{		
+		String client, site;
+		int siteid;
 		String commandText = "SELECT Client, Site, SiteID FROM Sites ORDER BY Client, Site Asc";
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		try{
 
 			while ((rs!=null) && (rs.next()))
 			{
-				  c_ButaneSites sites = new c_ButaneSites();
-				  sites.setClient(rs.getString("Client"));
-				  sites.setSite(rs.getString("Site"));				  
-				  sites.setSiteID(rs.getInt("SiteID"));				  				  
-				  cb_Sites.addItem(sites);				  				
+				client = rs.getString("Client");
+				site = rs.getString("Site");
+				siteid = rs.getInt("SiteID");
+				c_ButaneSites sites = new c_ButaneSites(client,site,siteid);
+			  	sites.setClient(client);
+			  	sites.setSite(site);				  
+			  	sites.setSiteID(siteid);				  				  
+			  	cb_Sites.addItem(sites);				  				
 			}					        	     
 		
 		}

@@ -45,11 +45,12 @@ public class g_NewSite {
 	 * Launch the application.
 	 */
 	
-			public static void run() {
+			public static void run(JFrame frame) {
 				try {
 					g_NewSite window = new g_NewSite();
 					window.frmNewSite.setVisible(true);
-					window.frmNewSite.setLocationRelativeTo( g_ViewSites.frmButaneSites );
+					window.frmNewSite.setLocationRelativeTo(frame);
+					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -105,8 +106,7 @@ public class g_NewSite {
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmNewSite.dispose();
+				g_ViewSites.run(frmNewSite);
 			}
 		});
 		btnBack.setBounds(10, 592, 89, 23);
@@ -328,8 +328,7 @@ public class g_NewSite {
 				g_MainMenu.checkVersion();
 				if(c_CheckOpenTickets.CheckTickets())
 				{							
-					g_TicketEntry.run();
-					frmNewSite.dispose();
+					g_TicketEntry.run(frmNewSite);
 				}
 				else
 				{
@@ -343,8 +342,7 @@ public class g_NewSite {
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmNewSite.dispose();
+				g_CurrentTickets.run(frmNewSite);
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -352,8 +350,7 @@ public class g_NewSite {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frmNewSite.dispose();
+				g_ArchiveTickets.run(frmNewSite);
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -364,8 +361,7 @@ public class g_NewSite {
 		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 		mntmButaneSites.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmNewSite.dispose();
+				g_ViewSites.run(frmNewSite);
 			}
 		});
 		mnSites.add(mntmButaneSites);
@@ -373,8 +369,7 @@ public class g_NewSite {
 		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 		mntmSiteChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frmNewSite.dispose();
+				g_SiteChanges.run(frmNewSite);
 			}
 		});
 		mnSites.add(mntmSiteChanges);
@@ -385,8 +380,7 @@ public class g_NewSite {
 		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 		mntmENEmployees.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmNewSite.dispose();
+				g_ViewEmployees.run(frmNewSite);
 			}
 		});
 		mnContacts.add(mntmENEmployees);
@@ -394,11 +388,22 @@ public class g_NewSite {
 		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 		mntmEtpContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmNewSite.dispose();
+				g_ViewSunoco.run(frmNewSite);
 			}
 		});
 		mnContacts.add(mntmEtpContacts);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frmNewSite);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
+
 	}
 	
 	public void InsertSite(){
@@ -467,20 +472,14 @@ public class g_NewSite {
 				
 			}
 			else
-			{
-			
-			commandText = "INSERT INTO Sites(Client,Site,State,SiteID,ClientAbbrv,SiteAbbrv,iDracIP,HostIP,ViewIP,SQLIP,DevIP,Generation,Address,Phone,Field_Tech,Field_Supervisor,Twic,Timezone,HighPerformance,CentralSQL,CentralView) "
-						+ "VALUES ( '" + Client + "','" + Site + "','" + State + "','" + SiteID + "','" + ClientAbbrv + "','" + SiteAbbrv + "','" + iDrac + "','" + Host + "','" + View + "','" + SQL + "','" + 
-						 Dev + "','" + Generation + "','" + Address + "','" + Phone + "','" + FieldTech + "','" + FieldSupervisor + "','" + TWIC + "','" + Timezone + "','" + HP + "','" + CentralSQL + "','" + CentralView + "')";
-			System.out.println(commandText);	
-			c_Query.UpdateResultSet(commandText);
-				JOptionPane.showMessageDialog(frmNewSite, "Site " + Client + " " + Site + " was successfully added.");
-				ClearFields();
-				
-				g_ViewSites.run();
-				frmNewSite.dispose();
-				
-				
+			{			
+				commandText = "INSERT INTO Sites(Client,Site,State,SiteID,ClientAbbrv,SiteAbbrv,iDracIP,HostIP,ViewIP,SQLIP,DevIP,Generation,Address,Phone,Field_Tech,Field_Supervisor,Twic,Timezone,HighPerformance,CentralSQL,CentralView) "
+							+ "VALUES ( '" + Client + "','" + Site + "','" + State + "','" + SiteID + "','" + ClientAbbrv + "','" + SiteAbbrv + "','" + iDrac + "','" + Host + "','" + View + "','" + SQL + "','" + 
+							 Dev + "','" + Generation + "','" + Address + "','" + Phone + "','" + FieldTech + "','" + FieldSupervisor + "','" + TWIC + "','" + Timezone + "','" + HP + "','" + CentralSQL + "','" + CentralView + "')";			
+					c_Query.UpdateResultSet(commandText);
+					JOptionPane.showMessageDialog(frmNewSite, "Site " + Client + " " + Site + " was successfully added.");
+					ClearFields();					
+					g_ViewSites.run(frmNewSite);								
 			}
 		} catch (HeadlessException e) {
 			e.printStackTrace();

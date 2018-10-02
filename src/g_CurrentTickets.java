@@ -2,6 +2,7 @@ import it.cnr.imaa.essi.lablib.gui.checkboxtree.CheckboxTree;
 import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+
 import javax.swing.border.EtchedBorder;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
@@ -66,8 +69,8 @@ public class g_CurrentTickets {
 	private JLabel lbl_Problem;
 	private JLabel lbl_Update;
 	private JLabel lbl_TicketEntered;
-	JTextArea txt_Issue;
-	JTextArea txt_Update;
+	private JTextArea txt_Issue;
+	private JTextArea txt_Update;
 	private JTextArea txt_Internal;
 	private JLabel lblHours;
 	private JTextField txt_TimeSpent;
@@ -91,7 +94,7 @@ public class g_CurrentTickets {
 	private JButton btnEdit;
 	private String directory = "\\\\supportsql\\C$\\SupportProgram\\Files\\";
 	private String userDictionaryPath = "\\\\supportsql\\C$\\SupportProgram\\dictionary\\";
-	private int numFiles; 
+	//private int numFiles; 
 	private int viewIP;
 	private int SQLIP; 
 	private int DevIP; 
@@ -110,30 +113,34 @@ public class g_CurrentTickets {
 	private static JRadioButton rdbtnMyTickets;
 	private static JLabel lblLastUpdatedByStr;	
 	private static boolean AssignChange = false;
-	
 
-	public static void run() {				
-		try {
-			c_ConnectToDatabase.Connect();
+	
+	public static void run(JFrame frame) {
+		try {			
 			@SuppressWarnings("unused")
 			g_CurrentTickets window = new g_CurrentTickets();
 			g_CurrentTickets.frmCurrentTickets.setVisible(true);
-			g_CurrentTickets.frmCurrentTickets.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+			frmCurrentTickets.setVisible(true);				
+			frmCurrentTickets.setLocationRelativeTo(frame);		
+			frame.dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-
-
 	/**
 	 * Create the application.
 	 */
 	public g_CurrentTickets() {
+		//long startTime = System.currentTimeMillis();
 		initialize();		
 		PopulateActiveTickets();
 		PopulateRecentTickets();
+		//long stopTime = System.currentTimeMillis();
+		//System.out.println("Elapsed time was " + (stopTime - startTime) + " miliseconds.");
 	}
+	
+	
 
 	/**
 	 * Initialize the contents of the frame.
@@ -240,6 +247,7 @@ public class g_CurrentTickets {
 		JList_FileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_1.setViewportView(JList_FileList);
 		
+		/*
 		JButton btn_OpenFile = new JButton("Open File");
 		btn_OpenFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -314,7 +322,7 @@ public class g_CurrentTickets {
 		btn_DeleteFile.setBounds(358, 271, 105, 23);
 		panel_Internal.add(btn_DeleteFile);
 		btn_DeleteFile.setEnabled(false);
-		
+		*/
 		scrollPane_2 = new JScrollPane();
 		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane_2.setBounds(0, 27, 648, 176);
@@ -469,7 +477,7 @@ public class g_CurrentTickets {
 		btnNewButton.setBounds(530, 11, 128, 23);
 		panel_2.add(btnNewButton);
 		
-		JLabel icon_view = new JLabel("");		
+		JLabel icon_view = new JLabel("<html> View </html>");		
 		icon_view.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -803,10 +811,9 @@ public class g_CurrentTickets {
 		btnTicketAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(c_CheckOpenTickets.CheckTickets())
-				{
-					
-					g_TicketEntry.run();
-					frmCurrentTickets.dispose();
+				{										
+					g_TicketEntry.run(frmCurrentTickets);
+					//frmCurrentTickets.dispose();
 				}
 				else
 				{
@@ -879,7 +886,7 @@ public class g_CurrentTickets {
 				SpellChecker.registerDictionaries(getClass().getResource(userDictionaryPath), "en");
 				SpellChecker.getOptions().setIgnoreAllCapsWords(true);
 				SpellChecker.getOptions().setIgnoreCapitalization(true);
-			    SpellChecker.register( txt_Internal);		        
+			    SpellChecker.register( txt_Internal);		        			    			   
 			    SpellChecker.register( txt_Update);
 			    
 			    JLabel lblTicketEntered = new JLabel("Ticket Entered:");
@@ -900,57 +907,43 @@ public class g_CurrentTickets {
 		
 				//Menubar
 				JMenuBar menuBar = new JMenuBar();
-				frmCurrentTickets.setJMenuBar(menuBar);
-				
-				
-						
+				frmCurrentTickets.setJMenuBar(menuBar);		
 				JMenu mnSupport = new JMenu("Support");
-				menuBar.add(mnSupport);
-				
+				menuBar.add(mnSupport);			
 				JMenuItem mntmNewTicket = new JMenuItem("New Ticket");
 				mntmNewTicket.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						g_MainMenu.checkVersion();
 						if(c_CheckOpenTickets.CheckTickets())
 						{							
-							g_TicketEntry.run();
-							frmCurrentTickets.dispose();
+							g_TicketEntry.run(frmCurrentTickets);
 						}
 						else
 						{
 							JOptionPane.showMessageDialog(frmCurrentTickets, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
-						}
-						
+						}						
 					}
 				});
 				mnSupport.add(mntmNewTicket);
 				
-				JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
-				mntmCurrentTickets.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						g_CurrentTickets.run();
-						frmCurrentTickets.dispose();
-					}
-				});
+				JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");				
 				mnSupport.add(mntmCurrentTickets);
+				mntmCurrentTickets.setEnabled(false);	
 				
 				JMenuItem mntmArchive = new JMenuItem("Archive");
 				mntmArchive.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_ArchiveTickets.run();
-						frmCurrentTickets.dispose();
+						g_ArchiveTickets.run(frmCurrentTickets);
 					}
 				});
 				mnSupport.add(mntmArchive);
 				
 				JMenu mnSites = new JMenu("Sites");
-				menuBar.add(mnSites);
-				
+				menuBar.add(mnSites);				
 				JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 				mntmButaneSites.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_ViewSites.run();
-						frmCurrentTickets.dispose();
+						g_ViewSites.run(frmCurrentTickets);
 					}
 				});
 				mnSites.add(mntmButaneSites);
@@ -958,8 +951,7 @@ public class g_CurrentTickets {
 				JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 				mntmSiteChanges.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_SiteChanges.run();
-						frmCurrentTickets.dispose();
+						g_SiteChanges.run(frmCurrentTickets);
 					}
 				});
 				mnSites.add(mntmSiteChanges);
@@ -970,8 +962,7 @@ public class g_CurrentTickets {
 				JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 				mntmENEmployees.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_ViewEmployees.run();
-						frmCurrentTickets.dispose();
+						g_ViewEmployees.run(frmCurrentTickets);
 					}
 				});
 				mnContacts.add(mntmENEmployees);
@@ -979,14 +970,21 @@ public class g_CurrentTickets {
 				JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 				mntmEtpContacts.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_ViewSunoco.run();
-						frmCurrentTickets.dispose();
+						g_ViewSunoco.run(frmCurrentTickets);
 					}
 				});
 				mnContacts.add(mntmEtpContacts);
 			
+				JMenu mnTools = new JMenu("Tools");
+				menuBar.add(mnTools);
 				
-		
+				JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+				mntmCreateChecklist.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						g_Tools_CreateChecklist.run(frmCurrentTickets);
+					}
+				});		
+				mnTools.add(mntmCreateChecklist);
 	}
 	
 	int tmp2[];
@@ -1064,8 +1062,7 @@ public class g_CurrentTickets {
 	    }
 	    
 	}
-	
-	
+			
 	private void GetCheckboxes()
 	{
 		TreePath[] active_checkpaths = tree_active.getCheckingModel().getCheckingPaths();	
@@ -1246,8 +1243,9 @@ public class g_CurrentTickets {
 			//do nothing
 		}
 		
-		numFiles = fileListModel.getSize();
+		/*numFiles = fileListModel.getSize();
 		JList_FileList.setModel(fileListModel);
+		*/
 	}
 	
 	private void ChangeAssignment()
@@ -1364,9 +1362,9 @@ public class g_CurrentTickets {
 			//do nothing
 		}
 		
-		numFiles = fileListModel.getSize();
+		/*numFiles = fileListModel.getSize();
 		JList_FileList.setModel(fileListModel);
-		
+		*/
 		tree_active.clearSelection();
 	
 	}

@@ -83,18 +83,21 @@ public class g_ViewSites {
 	private JPanel panel_5;
 	private JLabel lbl_CentralSQL;
 	private JLabel lbl_CentralView;
+	private JTextField txtStateAbbrv;
+	private String sharepointURL;
 	
 
 	/**
 	 * Launch the application.
 	 */
 	
-			public static void run() {
+			public static void run(JFrame frame) {
 				try {
 					@SuppressWarnings("unused")
 					g_ViewSites window = new g_ViewSites();
 					g_ViewSites.frmButaneSites.setVisible(true);
-					g_ViewSites.frmButaneSites.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					g_ViewSites.frmButaneSites.setLocationRelativeTo(frame);
+					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -121,7 +124,7 @@ public class g_ViewSites {
 		frmButaneSites.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSites.class.getResource("/icon.png")));
 		frmButaneSites.setBounds(100, 100, 909, 772);
 		frmButaneSites.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frmButaneSites.setTitle("Automated Support Program v." + g_MainMenu.version);
+		frmButaneSites.setTitle(g_MainMenu.TitleOnline);
 		
 		
 		frmButaneSites.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -157,6 +160,7 @@ public class g_ViewSites {
 					txtSiteAbbrv.setEditable(true);
 					txtiDrac.setEditable(true);
 					txtState.setEditable(true);
+					txtStateAbbrv.setEditable(true);
 					txtHost.setEditable(true);
 					txtView.setEditable(true);
 					txtSQL.setEditable(true);
@@ -170,9 +174,7 @@ public class g_ViewSites {
 					chk_HighPerformance.setEnabled(true);
 					chk_Twic.setEnabled(true);
 					chk_SQL.setEnabled(true);
-					chk_View.setEnabled(true);
-				
-					
+					chk_View.setEnabled(true);									
 				}
 				else
 				{
@@ -295,11 +297,11 @@ public class g_ViewSites {
 			public void actionPerformed(ActionEvent e) {
 				if(rdbtnButaneSites.isSelected())
 				{
-					g_NewSite.run();
+					g_NewSite.run(frmButaneSites);
 				}
 				else
 				{
-					g_NewServer.run();
+					g_NewServer.run(frmButaneSites);
 				}
 				frmButaneSites.dispose();
 			}
@@ -321,6 +323,7 @@ public class g_ViewSites {
 						txtSite.setText(result.get(list_ButaneSites.getSelectedIndex()).getSite());
 						txtSiteID.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getSiteID()));
 						txtState.setText(result.get(list_ButaneSites.getSelectedIndex()).getState());
+						txtStateAbbrv.setText(result.get(list_ButaneSites.getSelectedIndex()).getStateAbbrv());
 						txtClientAbbrv.setText(result.get(list_ButaneSites.getSelectedIndex()).getClientAbbrv());
 						txtSiteAbbrv.setText(result.get(list_ButaneSites.getSelectedIndex()).getSiteAbbrv());
 						txtiDrac.setText(String.valueOf(result.get(list_ButaneSites.getSelectedIndex()).getiDrac()));
@@ -334,7 +337,7 @@ public class g_ViewSites {
 						txtFieldTech.setText(result.get(list_ButaneSites.getSelectedIndex()).getFieldTech());
 						txtFieldSupervisor.setText(result.get(list_ButaneSites.getSelectedIndex()).getFieldSupervisor());
 						txtTimezone.setText(result.get(list_ButaneSites.getSelectedIndex()).getTimezone());
-						
+						sharepointURL = result.get(list_ButaneSites.getSelectedIndex()).getSharepoint();
 						if(result.get(list_ButaneSites.getSelectedIndex()).getTwic())
 						{
 							chk_Twic.setSelected(true);
@@ -434,17 +437,17 @@ public class g_ViewSites {
 		txtiDrac.setBounds(136, 95, 40, 30);
 		txtiDrac.setColumns(1);
 		panel.add(txtiDrac);
-		txtiDrac.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtiDrac.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtiDrac.setEditable(false);
 		
 		JLabel lbliDrac = new JLabel("iDrac");
 		lbliDrac.setBounds(136, 130, 45, 14);
 		panel.add(lbliDrac);
-		lbliDrac.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lbliDrac.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		JLabel lblServer = new JLabel("Server Information");
 		lblServer.setHorizontalAlignment(SwingConstants.CENTER);
-		lblServer.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblServer.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		lblServer.setBounds(0, 10, 240, 14);
 		panel.add(lblServer);
 		
@@ -467,14 +470,14 @@ public class g_ViewSites {
 		});
 		txtHost.setBounds(48, 95, 45, 30);
 		panel.add(txtHost);
-		txtHost.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtHost.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtHost.setEditable(false);
 		
 		
 		JLabel lblHost = new JLabel("Host");
 		lblHost.setBounds(48, 130, 45, 14);
 		panel.add(lblHost);
-		lblHost.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblHost.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		txtView = new JTextField("");
 		txtView.addMouseListener(new MouseAdapter() {
@@ -537,13 +540,13 @@ public class g_ViewSites {
 		
 		txtView.setBounds(28, 35, 45, 30);
 		panel.add(txtView);
-		txtView.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtView.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtView.setEditable(false);
 		
 		JLabel lblView = new JLabel("View");
 		lblView.setBounds(28, 70, 45, 14);
 		panel.add(lblView);
-		lblView.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblView.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		txtSQL = new JTextField("");
 		txtSQL.addMouseListener(new MouseAdapter() {
@@ -594,13 +597,13 @@ public class g_ViewSites {
 		});
 		txtSQL.setBounds(88, 35, 45, 30);
 		panel.add(txtSQL);
-		txtSQL.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtSQL.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtSQL.setEditable(false);
 		
 		JLabel lblSQL = new JLabel("SQL");
 		lblSQL.setBounds(88, 70, 45, 14);
 		panel.add(lblSQL);
-		lblSQL.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSQL.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		txtDev = new JTextField("");
 		txtDev.addMouseListener(new MouseAdapter() {
@@ -640,13 +643,13 @@ public class g_ViewSites {
 		});
 		txtDev.setBounds(148, 35, 45, 30);
 		panel.add(txtDev);
-		txtDev.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtDev.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtDev.setEditable(false);
 		
 		JLabel lblDev = new JLabel("Dev");
 		lblDev.setBounds(148, 70, 45, 14);
 		panel.add(lblDev);
-		lblDev.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblDev.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		lbl_CentralView = new JLabel("");
 		lbl_CentralView.addMouseListener(new MouseAdapter() {
@@ -696,7 +699,7 @@ public class g_ViewSites {
 			}
 		});
 		lbl_CentralView.setIcon(new ImageIcon(g_ViewSites.class.getResource("/view.png")));
-		lbl_CentralView.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lbl_CentralView.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		lbl_CentralView.setBounds(28, 35, 32, 32);
 		panel.add(lbl_CentralView);
 		lbl_CentralView.setVisible(false);
@@ -707,7 +710,7 @@ public class g_ViewSites {
 			public void mouseClicked(MouseEvent arg2) {
 				if(!txtSQL.isEditable())
 				{					 					
-					String ipAddress = "192.168.32.76";					
+					String ipAddress = "192.168.32.75";					
 					if(arg2.getButton() == MouseEvent.BUTTON1)
 					{
 						String width = "1920";
@@ -740,7 +743,7 @@ public class g_ViewSites {
 			}
 		});
 		lbl_CentralSQL.setIcon(new ImageIcon(g_ViewSites.class.getResource("/sql.png")));
-		lbl_CentralSQL.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lbl_CentralSQL.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		lbl_CentralSQL.setBounds(87, 33, 32, 32);
 		panel.add(lbl_CentralSQL);
 		lbl_CentralSQL.setVisible(false);
@@ -753,66 +756,66 @@ public class g_ViewSites {
 		
 		JLabel lblClientInformation = new JLabel("Site Information");
 		lblClientInformation.setHorizontalAlignment(SwingConstants.CENTER);
-		lblClientInformation.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblClientInformation.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		lblClientInformation.setBounds(0, 11, 310, 14);
 		panel_1.add(lblClientInformation);
 		
 		txtClient = new JTextField();
-		txtClient.setBounds(10, 38, 130, 31);
+		txtClient.setBounds(10, 35, 150, 31);
 		panel_1.add(txtClient);
-		txtClient.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtClient.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtClient.setBackground(UIManager.getColor("Button.background"));
 		txtClient.setEditable(false);
 		txtClient.setColumns(10);
-		txtSite.setBounds(158, 36, 130, 30);
+		txtSite.setBounds(170, 35, 130, 30);
 		panel_1.add(txtSite);
 		txtSite.setEditable(false);
 		
 		
-		txtSite.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtSite.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		JLabel lblNewLabel = new JLabel("Client");
 		lblNewLabel.setBounds(10, 70, 130, 14);
 		panel_1.add(lblNewLabel);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		JLabel lblSite = new JLabel("Site");
-		lblSite.setBounds(158, 70, 130, 14);
+		lblSite.setBounds(170, 70, 130, 14);
 		panel_1.add(lblSite);
-		lblSite.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSite.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtSiteID.setBounds(10, 102, 80, 30);
 		panel_1.add(txtSiteID);
 		txtSiteID.setEditable(false);
 		
 		
-		txtSiteID.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtSiteID.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		txtClientAbbrv = new JTextField("");
 		txtClientAbbrv.setBounds(112, 102, 80, 30);
 		panel_1.add(txtClientAbbrv);
-		txtClientAbbrv.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtClientAbbrv.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtClientAbbrv.setEditable(false);
 		
 		txtSiteAbbrv = new JTextField("");
 		txtSiteAbbrv.setBounds(215, 102, 80, 30);
 		panel_1.add(txtSiteAbbrv);
-		txtSiteAbbrv.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtSiteAbbrv.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtSiteAbbrv.setEditable(false);
 		
 		JLabel lblSiteID = new JLabel("Site ID");
 		lblSiteID.setBounds(10, 135, 80, 14);
 		panel_1.add(lblSiteID);
-		lblSiteID.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSiteID.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		JLabel lblClientAbbrv = new JLabel("Client Abbrv");
-		lblClientAbbrv.setBounds(112, 135, 80, 14);
+		lblClientAbbrv.setBounds(112, 135, 93, 14);
 		panel_1.add(lblClientAbbrv);
-		lblClientAbbrv.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblClientAbbrv.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		JLabel lblSiteAbbrv = new JLabel("Site Abbrv");
 		lblSiteAbbrv.setBounds(215, 135, 80, 14);
 		panel_1.add(lblSiteAbbrv);
-		lblSiteAbbrv.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSiteAbbrv.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		
 		final JPanel panel_2 = new JPanel();
@@ -820,71 +823,99 @@ public class g_ViewSites {
 		panel_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frmButaneSites.getContentPane().add(panel_2);
 		panel_2.setLayout(null);
-		txtAddress.setBounds(113, 32, 310, 30);
+		txtAddress.setBounds(113, 32, 365, 30);
 		panel_2.add(txtAddress);
 		txtAddress.setEditable(false);
 		
 		
-		txtAddress.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtAddress.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		JLabel lblTerminalInformation = new JLabel("Terminal Information");
 		lblTerminalInformation.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTerminalInformation.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblTerminalInformation.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		lblTerminalInformation.setBounds(0, 7, 560, 14);
 		panel_2.add(lblTerminalInformation);
 		
 		JLabel lblAddress = new JLabel("Address:");
 		lblAddress.setBounds(10, 37, 77, 14);
 		panel_2.add(lblAddress);
-		lblAddress.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		txtPhone.setBounds(113, 125, 310, 30);
+		lblAddress.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		txtPhone.setBounds(113, 125, 365, 30);
 		panel_2.add(txtPhone);
 		txtPhone.setEditable(false);
 		
-		txtPhone.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtPhone.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		JLabel lblPhone = new JLabel("Phone:");
 		lblPhone.setBounds(10, 130, 113, 14);
 		panel_2.add(lblPhone);
-		lblPhone.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblPhone.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		
 		JLabel lblFieldTech = new JLabel("Field Tech:");
 		lblFieldTech.setBounds(10, 181, 113, 14);
 		panel_2.add(lblFieldTech);
-		lblFieldTech.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblFieldTech.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		
 		txtFieldTech = new JTextField("");
-		txtFieldTech.setBounds(113, 176, 310, 30);
+		txtFieldTech.setBounds(113, 176, 365, 30);
 		panel_2.add(txtFieldTech);
-		txtFieldTech.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtFieldTech.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtFieldTech.setEditable(false);
 		
 		JLabel lblField = new JLabel("Field");
-		lblField.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblField.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		lblField.setBounds(10, 231, 113, 14);
 		panel_2.add(lblField);
 		
 		JLabel lblSupervisor = new JLabel("Supervisor:");
-		lblSupervisor.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblSupervisor.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		lblSupervisor.setBounds(10, 253, 113, 14);
 		panel_2.add(lblSupervisor);
 		
 		txtFieldSupervisor = new JTextField("");
-		txtFieldSupervisor.setBounds(113, 236, 310, 30);
+		txtFieldSupervisor.setBounds(113, 236, 365, 30);
 		panel_2.add(txtFieldSupervisor);
-		txtFieldSupervisor.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtFieldSupervisor.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtFieldSupervisor.setEditable(false);
 		
-		JLabel lblState = new JLabel("State");
-		lblState.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		JLabel lblState = new JLabel("State:");
+		lblState.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		lblState.setBounds(10, 78, 77, 14);
 		panel_2.add(lblState);
 		
 		txtState = new JTextField("");
-		txtState.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtState.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtState.setEditable(false);
-		txtState.setBounds(113, 73, 310, 30);
+		txtState.setBounds(113, 73, 223, 30);
 		panel_2.add(txtState);
+		
+		JLabel lblStateAbbrv = new JLabel("Abbrv:");
+		lblStateAbbrv.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblStateAbbrv.setBounds(364, 78, 63, 14);
+		panel_2.add(lblStateAbbrv);
+		
+		txtStateAbbrv = new JTextField("");
+		txtStateAbbrv.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		txtStateAbbrv.setEditable(false);
+		txtStateAbbrv.setBounds(431, 73, 47, 30);
+		panel_2.add(txtStateAbbrv);
+		txtStateAbbrv.setEditable(false);
+		
+		JLabel lblMapIcon = new JLabel("");
+		lblMapIcon.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try {					
+					Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + "https://google.com/maps/search/" + txtAddress.getText() );
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					System.out.println(e2.toString());
+				}
+			}
+		});
+		lblMapIcon.setIcon(new ImageIcon(g_ViewSites.class.getResource("/google.png")));
+		lblMapIcon.setBounds(488, 32, 28, 28);
+		panel_2.add(lblMapIcon);
 		
 		final JPanel panel_3 = new JPanel();
 		panel_3.setBounds(323, 515, 560, 121);
@@ -894,72 +925,90 @@ public class g_ViewSites {
 		
 		JLabel lblMiscInformation = new JLabel("Misc Information");
 		lblMiscInformation.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMiscInformation.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblMiscInformation.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		lblMiscInformation.setBounds(0, 11, 560, 14);
 		panel_3.add(lblMiscInformation);
 		
 		txtGeneration = new JTextField("");
 		txtGeneration.setBounds(21, 52, 83, 30);
 		panel_3.add(txtGeneration);
-		txtGeneration.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtGeneration.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtGeneration.setEditable(false);
 		
 		JLabel lblGeneration = new JLabel("Generation");
 		lblGeneration.setBounds(21, 87, 83, 14);
 		panel_3.add(lblGeneration);
-		lblGeneration.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblGeneration.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		JLabel lblTwic = new JLabel("TWIC");
-		lblTwic.setBounds(299, 83, 60, 14);
+		lblTwic.setBounds(299, 75, 46, 14);
 		panel_3.add(lblTwic);
-		lblTwic.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblTwic.setFont(new Font("Rockwell", Font.PLAIN, 13));
 		
 		txtTimezone = new JTextField("");
-		txtTimezone.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		txtTimezone.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtTimezone.setEditable(false);
 		txtTimezone.setBounds(124, 52, 83, 30);
 		panel_3.add(txtTimezone);
 		
 		JLabel lblTimezone = new JLabel("Timezone");
-		lblTimezone.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblTimezone.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		lblTimezone.setBounds(124, 87, 83, 14);
 		panel_3.add(lblTimezone);
 		
 		chk_HighPerformance = new JCheckBox("");
-		chk_HighPerformance.setBounds(233, 52, 36, 23);
+		chk_HighPerformance.setBounds(238, 52, 26, 23);
 		panel_3.add(chk_HighPerformance);
 		
-		JLabel lblHighPerformance = new JLabel("High");
-		lblHighPerformance.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblHighPerformance.setBounds(230, 75, 46, 14);
+		JLabel lblHighPerformance = new JLabel("<html><center>High Performance </center></html>");
+		lblHighPerformance.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		lblHighPerformance.setBounds(215, 75, 74, 35);
 		panel_3.add(lblHighPerformance);
 		
-		JLabel lblPerformance = new JLabel("Performance");
-		lblPerformance.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblPerformance.setBounds(217, 87, 79, 14);
-		panel_3.add(lblPerformance);
-		
 		chk_Twic = new JCheckBox("");
-		chk_Twic.setBounds(302, 52, 36, 23);
+		chk_Twic.setBounds(302, 52, 26, 23);
 		panel_3.add(chk_Twic);
 		
-		JLabel lblCentralSlq = new JLabel("Central SQL");
-		lblCentralSlq.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblCentralSlq.setBounds(360, 83, 80, 14);
+		JLabel lblCentralSlq = new JLabel("<html><center>Central SQL</center></html>");
+		lblCentralSlq.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		lblCentralSlq.setBounds(353, 75, 46, 27);
 		panel_3.add(lblCentralSlq);
 		
 		chk_SQL = new JCheckBox("");
-		chk_SQL.setBounds(376, 52, 36, 23);
+		chk_SQL.setBounds(365, 52, 26, 23);
 		panel_3.add(chk_SQL);
 		
-		JLabel lblCentralView = new JLabel("Central View");
-		lblCentralView.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblCentralView.setBounds(438, 83, 91, 14);
+		JLabel lblCentralView = new JLabel("<html><center>Central View</center></html>");
+		lblCentralView.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		lblCentralView.setBounds(416, 75, 51, 27);
 		panel_3.add(lblCentralView);
 		
 		chk_View = new JCheckBox("");
-		chk_View.setBounds(464, 52, 36, 23);
+		chk_View.setBounds(431, 52, 26, 23);
 		panel_3.add(chk_View);
+		
+		JLabel lblSharePoint = new JLabel("");
+		lblSharePoint.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				try {					
+					Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + sharepointURL );
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					System.out.println(e2.toString());
+				}
+			}
+			
+		});
+		lblSharePoint.setToolTipText("Sharepoint");
+		lblSharePoint.setBounds(499, 47, 32, 30);
+		panel_3.add(lblSharePoint);
+		lblSharePoint.setIcon(new ImageIcon(g_ViewSites.class.getResource("/sharepoint.png")));
+		
+		JLabel lblsharepoint = new JLabel("<html><center>Sharepoint</center></html>");
+		lblsharepoint.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		lblsharepoint.setBounds(480, 74, 70, 27);
+		panel_3.add(lblsharepoint);
 		
 		rdbtnButaneSites = new JRadioButton("Butane Sites");
 		rdbtnButaneSites.addActionListener(new ActionListener() {
@@ -973,7 +1022,7 @@ public class g_ViewSites {
 				panel_5.setVisible(false);
 			}
 		});
-		rdbtnButaneSites.setFont(new Font("Tahoma", Font.BOLD, 12));
+		rdbtnButaneSites.setFont(new Font("Rockwell", Font.BOLD, 12));
 		buttonGroup.add(rdbtnButaneSites);
 		rdbtnButaneSites.setBounds(50, 20, 109, 23);
 		rdbtnButaneSites.setSelected(true);
@@ -991,7 +1040,7 @@ public class g_ViewSites {
 				panel_5.setVisible(true);
 			}
 		});
-		rdbtnServers.setFont(new Font("Tahoma", Font.BOLD, 12));
+		rdbtnServers.setFont(new Font("Rockwell", Font.BOLD, 12));
 		buttonGroup.add(rdbtnServers);
 		rdbtnServers.setBounds(180, 20, 109, 23);
 		frmButaneSites.getContentPane().add(rdbtnServers);
@@ -1016,12 +1065,12 @@ public class g_ViewSites {
 		panel_4.add(txt_ServerIP);
 		
 		JLabel lblServerName = new JLabel("Server Name");
-		lblServerName.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblServerName.setFont(new Font("Rockwell", Font.BOLD, 14));
 		lblServerName.setBounds(43, 15, 115, 28);
 		panel_4.add(lblServerName);
 		
 		JLabel lblServerIp = new JLabel("Server IP");
-		lblServerIp.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblServerIp.setFont(new Font("Rockwell", Font.BOLD, 14));
 		lblServerIp.setBounds(275, 15, 115, 28);
 		panel_4.add(lblServerIp);
 		
@@ -1032,7 +1081,7 @@ public class g_ViewSites {
 		panel_4.add(txt_ServerDesc);
 		
 		JLabel lblDescription = new JLabel("Description");
-		lblDescription.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblDescription.setFont(new Font("Rockwell", Font.BOLD, 14));
 		lblDescription.setBounds(41, 79, 115, 28);
 		panel_4.add(lblDescription);
 		
@@ -1123,7 +1172,7 @@ public class g_ViewSites {
 		JLabel lblInternalServers = new JLabel("Internal Servers");
 		lblInternalServers.setBounds(10, 285, 115, 28);
 		panel_5.add(lblInternalServers);
-		lblInternalServers.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblInternalServers.setFont(new Font("Rockwell", Font.BOLD, 14));
 		listModel2.removeAllElements();
 		list_ServersExt.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
@@ -1160,8 +1209,7 @@ public class g_ViewSites {
 				g_MainMenu.checkVersion();
 				if(c_CheckOpenTickets.CheckTickets())
 				{							
-					g_TicketEntry.run();
-					frmButaneSites.dispose();
+					g_TicketEntry.run(frmButaneSites);
 				}
 				else
 				{
@@ -1175,8 +1223,7 @@ public class g_ViewSites {
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmButaneSites.dispose();
+				g_CurrentTickets.run(frmButaneSites);
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -1184,8 +1231,7 @@ public class g_ViewSites {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frmButaneSites.dispose();
+				g_ArchiveTickets.run(frmButaneSites);
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -1193,20 +1239,14 @@ public class g_ViewSites {
 		JMenu mnSites = new JMenu("Sites");
 		menuBar.add(mnSites);
 		
-		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
-		mntmButaneSites.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmButaneSites.dispose();
-			}
-		});
+		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");		
 		mnSites.add(mntmButaneSites);
+		mntmButaneSites.setEnabled(false);
 		
 		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 		mntmSiteChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frmButaneSites.dispose();
+				g_SiteChanges.run(frmButaneSites);
 			}
 		});
 		mnSites.add(mntmSiteChanges);
@@ -1217,8 +1257,7 @@ public class g_ViewSites {
 		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 		mntmENEmployees.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmButaneSites.dispose();
+				g_ViewEmployees.run(frmButaneSites);
 			}
 		});
 		mnContacts.add(mntmENEmployees);
@@ -1226,11 +1265,22 @@ public class g_ViewSites {
 		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 		mntmEtpContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmButaneSites.dispose();
+				g_ViewSunoco.run(frmButaneSites);
 			}
 		});
 		mnContacts.add(mntmEtpContacts);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frmButaneSites);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
+
 	}
 	
 	private void CancelEdits()
@@ -1244,6 +1294,7 @@ public class g_ViewSites {
 			txtSiteAbbrv.setEditable(false);
 			txtiDrac.setEditable(false);
 			txtState.setEditable(false);
+			txtStateAbbrv.setEditable(false);
 			txtHost.setEditable(false);
 			txtView.setEditable(false);
 			txtSQL.setEditable(false);
@@ -1349,37 +1400,66 @@ public class g_ViewSites {
 	*/
 	private void PopulateSites()
 	{	
-		
-		String commandText = "SELECT [Client],[Site],[State],[SiteID],[ClientAbbrv],[SiteAbbrv],[iDracIP],[HostIP],[ViewIP],[SQLIP],[DevIP],[Generation],[CentralSQL],[Address],[Phone],[Field_Tech],[Field_Supervisor],[Twic],[Timezone],[HighPerformance],[CentralView] FROM Sites ORDER BY Client asc, Site asc";
+		String client, site, state, clientabbrv, siteabbrv, address, phone, fieldtech, fieldsupervisor, timezone, stateabbrv, sharepoint;
+		int siteid, idrac, host, view, sql, dev;
+		float generation;
+		boolean twic, highperformance, centralSQL, centralView;
+
+		String commandText = "SELECT [Client],[Site],[State],[StateAbbrv],[SiteID],[ClientAbbrv],[SiteAbbrv],[iDracIP],[HostIP],[ViewIP],[SQLIP],[DevIP],[Generation],[CentralSQL],[Address],[Phone],[Field_Tech],[Field_Supervisor],[Twic],[Timezone],[HighPerformance],[CentralView],[SharepointURL] FROM Sites ORDER BY Client asc, Site asc";
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
 		try{
 
 			while ((rs!=null) && (rs.next()))
 			{
-				  c_ButaneSites sites = new c_ButaneSites();
-				  sites.setClient(rs.getString(1));
-				  sites.setSite(rs.getString(2));
-				  sites.setState(rs.getString(3));
-				  sites.setSiteID(rs.getInt(4));
-				  sites.setClientAbbrv(rs.getString(5));
-				  sites.setSiteAbbrv(rs.getString(6));
-				  sites.setiDrac(rs.getInt(7));
-				  sites.setHost(rs.getInt(8));
-				  sites.setView(rs.getInt(9));
-				  sites.setSQL(rs.getInt(10));
-				  sites.setDev(rs.getInt(11));
-				  sites.setGeneration(rs.getFloat(12));				  
-				  sites.setCentralSQL(rs.getBoolean(13));
-				  sites.setAddress(rs.getString(14));
-				  sites.setPhone(rs.getString(15));
-				  sites.setFieldTech(rs.getString(16));
-				  sites.setFieldSupervisor(rs.getString(17));
-				  sites.setTwic(rs.getBoolean(18));
-				  sites.setTimezone(rs.getString(19));
-				  sites.setHighPerformance(rs.getBoolean(20));
-				  sites.setCentralView(rs.getBoolean(21));			
-				  result.add(sites);
-				  listModel.addElement(sites.getName());				  
+				client = rs.getString("Client"); 
+				site = rs.getString("Site");
+				state = rs.getString("State");
+				stateabbrv = rs.getString("StateAbbrv");
+				clientabbrv = rs.getString("ClientAbbrv");
+				siteabbrv = rs.getString("SiteAbbrv");
+				address = rs.getString("Address");
+				phone = rs.getString("Phone");
+				fieldtech = rs.getString("Field_Tech");
+				fieldsupervisor = rs.getString("Field_Supervisor");
+				timezone = rs.getString("Timezone");
+				siteid = rs.getInt("SiteID");
+				idrac = rs.getInt("iDracIP");
+				host = rs.getInt("HostIP");
+				view = rs.getInt("ViewIP");
+				sql = rs.getInt("SQLIP");
+				dev = rs.getInt("DevIP");
+				generation = rs.getFloat("Generation");
+				twic = rs.getBoolean("Twic");
+				highperformance = rs.getBoolean("HighPerformance");
+				centralSQL = rs.getBoolean("CentralSQL");
+				centralView = rs.getBoolean("CentralView");
+				sharepoint = rs.getString("SharepointURL");
+				c_ButaneSites sites = new c_ButaneSites(client,site,state,stateabbrv,siteid,clientabbrv,siteabbrv,idrac,host,view,sql,dev,generation,address,phone,fieldtech,fieldsupervisor,twic,timezone,highperformance,centralSQL,centralView, sharepoint);
+				sites.setClient(client);
+				sites.setSite(site);
+				sites.setState(state);
+				sites.setStateAbbrv(stateabbrv);
+				sites.setSiteID(siteid);
+				sites.setClientAbbrv(clientabbrv);
+				sites.setSiteAbbrv(siteabbrv);
+				sites.setiDrac(idrac);
+				sites.setHost(host);
+				sites.setView(view);
+				sites.setSQL(sql);
+				sites.setDev(dev);
+				sites.setGeneration(generation);				  
+				sites.setCentralSQL(centralSQL);
+				sites.setAddress(address);
+				sites.setPhone(phone);
+				sites.setFieldTech(fieldtech);
+				sites.setFieldSupervisor(fieldsupervisor);
+				sites.setTwic(twic);
+				sites.setTimezone(timezone);
+				sites.setHighPerformance(highperformance);
+				sites.setCentralView(centralView);		
+				sites.setSharepoint(sharepoint);
+				result.add(sites);
+				listModel.addElement(sites.getName());				  
 			}
 		}
 		catch(Exception e)
@@ -1491,12 +1571,12 @@ public class g_ViewSites {
 		{
 			int siteID = result.get(list_ButaneSites.getSelectedIndex()).getSiteID();
 
-			result.get(list_ButaneSites.getSelectedIndex()).updateSites(txtClient.getText(),  txtSite.getText(),  txtState.getText(), Integer.parseInt(txtSiteID.getText()),  txtClientAbbrv.getText(),  txtSiteAbbrv.getText(), Integer.parseInt(txtiDrac.getText()), 
+			result.get(list_ButaneSites.getSelectedIndex()).updateSites(txtClient.getText(),  txtSite.getText(),  txtState.getText(),  txtStateAbbrv.getText(), Integer.parseInt(txtSiteID.getText()),  txtClientAbbrv.getText(),  txtSiteAbbrv.getText(), Integer.parseInt(txtiDrac.getText()), 
 					Integer.parseInt(txtHost.getText()), Integer.parseInt(txtView.getText()), Integer.parseInt(txtSQL.getText()), Integer.parseInt(txtDev.getText()), Float.parseFloat(txtGeneration.getText()),  txtAddress.getText(),  txtPhone.getText(),  txtFieldTech.getText(),  txtFieldSupervisor.getText(),
 				chk_Twic.isSelected(),  txtTimezone.getText(), chk_HighPerformance.isSelected(), chk_SQL.isSelected(), chk_View.isSelected());
 			
 			
-			String commandText = "Update Sites set Client = '" + txtClient.getText() + "', Site = '" + txtSite.getText() + "', State = '" + txtState.getText() + "', SiteID = '" + txtSiteID.getText() + "', ClientAbbrv = '" + txtClientAbbrv.getText() + "', SiteAbbrv = '" + txtSiteAbbrv.getText() + "', iDracIP = '" + txtiDrac.getText() + "', HostIP = '" + txtHost.getText() + "', ViewIP = '" + txtView.getText() + "', SQLIP = '" + txtSQL.getText() + "', DevIP = '" + txtDev.getText() + "', Generation = '" + txtGeneration.getText() + "', Address = '" + txtAddress.getText() + "', Phone = '" + txtPhone.getText() + "', Field_Tech = '" + txtFieldTech.getText() + "', Field_Supervisor = '" + txtFieldSupervisor.getText() + "', Twic = '" + chk_Twic.isSelected() + "', Timezone = '" + txtTimezone.getText() + "', HighPerformance = '" + chk_HighPerformance.isSelected() + "', CentralSQL = '" + chk_SQL.isSelected() +"', CentralView = '" + chk_View.isSelected() + "' WHERE SiteID = '" + siteID + "'";
+			String commandText = "Update Sites set Client = '" + txtClient.getText() + "', Site = '" + txtSite.getText() + "', State = '" + txtState.getText() + "', StateAbbrv = '" + txtStateAbbrv.getText() + "', SiteID = '" + txtSiteID.getText() + "', ClientAbbrv = '" + txtClientAbbrv.getText() + "', SiteAbbrv = '" + txtSiteAbbrv.getText() + "', iDracIP = '" + txtiDrac.getText() + "', HostIP = '" + txtHost.getText() + "', ViewIP = '" + txtView.getText() + "', SQLIP = '" + txtSQL.getText() + "', DevIP = '" + txtDev.getText() + "', Generation = '" + txtGeneration.getText() + "', Address = '" + txtAddress.getText() + "', Phone = '" + txtPhone.getText() + "', Field_Tech = '" + txtFieldTech.getText() + "', Field_Supervisor = '" + txtFieldSupervisor.getText() + "', Twic = '" + chk_Twic.isSelected() + "', Timezone = '" + txtTimezone.getText() + "', HighPerformance = '" + chk_HighPerformance.isSelected() + "', CentralSQL = '" + chk_SQL.isSelected() +"', CentralView = '" + chk_View.isSelected() + "' WHERE SiteID = '" + siteID + "'";
 			
 			c_Query.ExecuteQuery(commandText);		
 			result.set(list_ButaneSites.getSelectedIndex(), result.get(list_ButaneSites.getSelectedIndex()));

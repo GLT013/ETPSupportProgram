@@ -48,12 +48,13 @@ public class g_ViewSunoco {
 	 * Launch the application.
 	 */
 	
-			public static void run() {
+			public static void run(JFrame frame) {
 				try {
 					@SuppressWarnings("unused")
 					g_ViewSunoco window = new g_ViewSunoco();
 					g_ViewSunoco.frmSunocoContacts.setVisible(true);
-					g_ViewSunoco.frmSunocoContacts.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					g_ViewSunoco.frmSunocoContacts.setLocationRelativeTo(frame);
+					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -221,11 +222,10 @@ public class g_ViewSunoco {
 		btnRemoveContact.setBounds(198, 292, 32, 32);
 		frmSunocoContacts.getContentPane().add(btnRemoveContact);		
 			btnNewContact.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					
-					g_NewSunocoContact.run();
-					frmSunocoContacts.dispose();
-					}
+				public void actionPerformed(ActionEvent e) 
+				{					
+					g_NewSunocoContact.run(frmSunocoContacts);
+				}
 				
 			});
 		
@@ -322,8 +322,7 @@ public class g_ViewSunoco {
 				g_MainMenu.checkVersion();
 				if(c_CheckOpenTickets.CheckTickets())
 				{							
-					g_TicketEntry.run();
-					frmSunocoContacts.dispose();
+					g_TicketEntry.run(frmSunocoContacts);
 				}
 				else
 				{
@@ -337,8 +336,7 @@ public class g_ViewSunoco {
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmSunocoContacts.dispose();
+				g_CurrentTickets.run(frmSunocoContacts);
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -346,8 +344,7 @@ public class g_ViewSunoco {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frmSunocoContacts.dispose();
+				g_ArchiveTickets.run(frmSunocoContacts);
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -358,8 +355,7 @@ public class g_ViewSunoco {
 		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 		mntmButaneSites.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmSunocoContacts.dispose();
+				g_ViewSites.run(frmSunocoContacts);
 			}
 		});
 		mnSites.add(mntmButaneSites);
@@ -367,8 +363,7 @@ public class g_ViewSunoco {
 		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 		mntmSiteChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frmSunocoContacts.dispose();
+				g_SiteChanges.run(frmSunocoContacts);
 			}
 		});
 		mnSites.add(mntmSiteChanges);
@@ -379,20 +374,26 @@ public class g_ViewSunoco {
 		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 		mntmENEmployees.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmSunocoContacts.dispose();
+				g_ViewEmployees.run(frmSunocoContacts);
 			}
 		});
 		mnContacts.add(mntmENEmployees);
 		
-		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
-		mntmEtpContacts.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmSunocoContacts.dispose();
-			}
-		});
+		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");		
 		mnContacts.add(mntmEtpContacts);
+		mntmEtpContacts.setEnabled(false);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frmSunocoContacts);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
+
 	}
 	
 	

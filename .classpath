@@ -31,5 +31,6 @@
 	<classpathentry kind="lib" path="References/sqljdbc4.jar"/>
 	<classpathentry kind="lib" path="References/jgoodies-forms-1.8.0.jar"/>
 	<classpathentry kind="lib" path="References/support.jar"/>
+	<classpathentry kind="lib" path="C:/Users/tjohnston/Downloads/swing_library-master"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -2,11 +2,19 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Locale;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.JMenuBar;
@@ -17,11 +25,13 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
+
+import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 //icons https://icons8.com/web-app/for/all/return
 //flaticon.com
 public class g_MainMenu {
 	public static JFrame frmMainMenu;
-	public static double version = 3.12;
+	public static double version = 3.14;
 	public static int ticketMax;
 	public static boolean firstrun = true;
 	public static String TitleOnline = "EN Automation Support Program v" + version + "";	
@@ -34,6 +44,9 @@ public class g_MainMenu {
 	public static boolean adminMode;
 	private static JMenu mnAdmin;
 	private static JButton btnNewTicket;
+	private static Date BlendSeasonStart;
+	private static Date BlendSeasonEnd;
+	public static boolean BlendSeason = false;
 	/**
 	 * Launch the application.
 	 */
@@ -170,40 +183,33 @@ public class g_MainMenu {
 					panel_2.add(lblSites);
 					btnSiteChanges.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							g_SiteChanges.run();
-							frmMainMenu.dispose();
+							g_SiteChanges.run(frmMainMenu);							
 						}
 					});
 					btnSites.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
-							g_ViewSites.run();
-							frmMainMenu.dispose();
+							g_ViewSites.run(frmMainMenu);							
 						}
 					});
 					btnSunocoContacts.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							g_ViewSunoco.run();
-							frmMainMenu.dispose();
+							g_ViewSunoco.run(frmMainMenu);
 						}
 					});
 					btnViewEmployees.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
-							g_ViewEmployees.run();
-							frmMainMenu.dispose();
+							g_ViewEmployees.run(frmMainMenu);
 						}
 					});
 					btnSupportArchive.addActionListener(new ActionListener() {
 						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							g_ArchiveTickets.run();
-							frmMainMenu.dispose();
-											
+						public void actionPerformed(ActionEvent arg0) {							
+							g_ArchiveTickets.run(frmMainMenu);																		
 						}
 					});
 					btnCurrentTickets.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							g_CurrentTickets.run();
-							frmMainMenu.dispose();
+							g_CurrentTickets.run(frmMainMenu);
 						}
 					});
 					btnNewTicket.addActionListener(new ActionListener() {
@@ -213,8 +219,7 @@ public class g_MainMenu {
 							if(c_CheckOpenTickets.CheckTickets())
 							{
 								CurrentTicketsNav = false;
-								g_TicketEntry.run();
-								frmMainMenu.dispose();
+								g_TicketEntry.run(frmMainMenu);								
 							}
 							else
 							{
@@ -223,13 +228,14 @@ public class g_MainMenu {
 						}
 					});
 					
+					
 					if(adminMode)
 					{							
 						mnAdmin.setVisible(true);
 						JMenuItem mntmTicketCleanup = new JMenuItem("Ticket Cleanup");
 						mntmTicketCleanup.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent arg0) {
-								g_AutoCloseTickets.run();
+								g_AutoCloseTickets.run(frmMainMenu);
 							}
 						});
 						mnAdmin.add(mntmTicketCleanup);													
@@ -237,7 +243,8 @@ public class g_MainMenu {
 					else
 					{
 						mnAdmin.setVisible(false);
-					}													
+					}	
+																
 			}
 		});
 	}
@@ -248,14 +255,20 @@ public class g_MainMenu {
 	public static boolean checkVersion()
 	{
 		
-			String _version = "SELECT Version, MaxOpenTickets from Version";
+			String _version = "SELECT Version, MaxOpenTickets, BlendSeasonStart, BlendSeasonEnd from Version";
 			ResultSet rs = c_Query.ExecuteResultSet(_version);
 			
 			try {
-				rs.next();
-				ticketMax = rs.getInt("MaxOpenTickets");
-				double _dbVersion = rs.getDouble("Version");	
-				double abs = Math.abs(version - _dbVersion);				
+					rs.next();
+					ticketMax = rs.getInt("MaxOpenTickets");
+					double _dbVersion = rs.getDouble("Version");	
+					double abs = Math.abs(version - _dbVersion);	
+					BlendSeasonStart = rs.getDate("BlendSeasonStart");
+					BlendSeasonEnd = rs.getDate("BlendSeasonEnd");
+					java.sql.Date today = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+				if(today.after(BlendSeasonStart) && today.before(BlendSeasonEnd)) {
+					BlendSeason = true;
+				}
 				if(_dbVersion == version)
 				{
 					return true;
@@ -284,6 +297,7 @@ public class g_MainMenu {
 			{
 				frmMainMenu.setVisible(true);				
 				frmMainMenu.setLocationRelativeTo(frame);
+				frame.dispose();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -350,8 +364,7 @@ public class g_MainMenu {
 				if(c_CheckOpenTickets.CheckTickets())
 				{
 					CurrentTicketsNav = false;
-					g_TicketEntry.run();
-					frmMainMenu.dispose();
+					g_TicketEntry.run(frmMainMenu);					
 				}
 				else
 				{
@@ -365,8 +378,8 @@ public class g_MainMenu {
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmMainMenu.dispose();
+				g_CurrentTickets.run(frmMainMenu);
+				//frmMainMenu.dispose();
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -374,8 +387,7 @@ public class g_MainMenu {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frmMainMenu.dispose();
+				g_ArchiveTickets.run(frmMainMenu);				
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -386,8 +398,7 @@ public class g_MainMenu {
 		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 		mntmButaneSites.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmMainMenu.dispose();
+				g_ViewSites.run(frmMainMenu);				
 			}
 		});
 		mnSites.add(mntmButaneSites);
@@ -395,8 +406,7 @@ public class g_MainMenu {
 		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 		mntmSiteChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frmMainMenu.dispose();
+				g_SiteChanges.run(frmMainMenu);
 			}
 		});
 		mnSites.add(mntmSiteChanges);
@@ -407,8 +417,7 @@ public class g_MainMenu {
 		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 		mntmENEmployees.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmMainMenu.dispose();
+				g_ViewEmployees.run(frmMainMenu);
 			}
 		});
 		mnContacts.add(mntmENEmployees);
@@ -416,12 +425,23 @@ public class g_MainMenu {
 		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 		mntmEtpContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmMainMenu.dispose();
+				g_ViewSunoco.run(frmMainMenu);
 			}
 		});
 		mnContacts.add(mntmEtpContacts);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frmMainMenu);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
 	
+		
 		
 	}
 }

@@ -55,11 +55,12 @@ public class g_NewSiteChange {
 	/**
 	 * Launch the application.
 	 */
-			public static void run() {
+			public static void run(JFrame frame) {
 				try {
 					g_NewSiteChange window = new g_NewSiteChange();
 					window.frm_NewSiteChange.setVisible(true);
-					frm_NewSiteChange.setLocationRelativeTo( g_SiteChanges.frmSiteChanges);
+					frm_NewSiteChange.setLocationRelativeTo(frame);
+					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -144,8 +145,7 @@ public class g_NewSiteChange {
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				g_SiteChanges.run();
-				frm_NewSiteChange.dispose();
+				g_SiteChanges.run(frm_NewSiteChange);
 			}
 		});
 		btnBack.setBounds(20, 510, 89, 23);
@@ -266,8 +266,7 @@ public class g_NewSiteChange {
 				g_MainMenu.checkVersion();
 				if(c_CheckOpenTickets.CheckTickets())
 				{							
-					g_TicketEntry.run();
-					frm_NewSiteChange.dispose();
+					g_TicketEntry.run(frm_NewSiteChange);
 				}
 				else
 				{
@@ -281,8 +280,7 @@ public class g_NewSiteChange {
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frm_NewSiteChange.dispose();
+				g_CurrentTickets.run(frm_NewSiteChange);
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -290,8 +288,7 @@ public class g_NewSiteChange {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frm_NewSiteChange.dispose();
+				g_ArchiveTickets.run(frm_NewSiteChange);
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -302,8 +299,7 @@ public class g_NewSiteChange {
 		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 		mntmButaneSites.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frm_NewSiteChange.dispose();
+				g_ViewSites.run(frm_NewSiteChange);
 			}
 		});
 		mnSites.add(mntmButaneSites);
@@ -311,8 +307,7 @@ public class g_NewSiteChange {
 		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 		mntmSiteChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frm_NewSiteChange.dispose();
+				g_SiteChanges.run(frm_NewSiteChange);
 			}
 		});
 		mnSites.add(mntmSiteChanges);
@@ -323,8 +318,7 @@ public class g_NewSiteChange {
 		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 		mntmENEmployees.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frm_NewSiteChange.dispose();
+				g_ViewEmployees.run(frm_NewSiteChange);
 			}
 		});
 		mnContacts.add(mntmENEmployees);
@@ -332,11 +326,22 @@ public class g_NewSiteChange {
 		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 		mntmEtpContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frm_NewSiteChange.dispose();
+				g_ViewSunoco.run(frm_NewSiteChange);
 			}
 		});
 		mnContacts.add(mntmEtpContacts);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frm_NewSiteChange);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
+
 	}
 	
 	public static void InsertChange()
@@ -362,8 +367,7 @@ public class g_NewSiteChange {
 			c_Query.ExecuteQuery(commandText);
 			JOptionPane.showMessageDialog(frm_NewSiteChange, "Site change entered successfully.");
 			flag = true;
-			g_SiteChanges.run();
-			frm_NewSiteChange.dispose();
+			g_SiteChanges.run(frm_NewSiteChange);
 		}
 		catch(Exception e)
 		{

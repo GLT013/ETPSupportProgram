@@ -45,7 +45,7 @@ public class g_ViewSiteData {
 	 * Launch the application.
 	 */
 	
-			public static void run(String site) {
+			public static void run(String site, JFrame frame) {
 				try {
 					g_ViewSiteData window = new g_ViewSiteData(siteInfo);
 					window.frmSiteData.setVisible(true);

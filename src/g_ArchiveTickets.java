@@ -1,10 +1,16 @@
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeModel;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -19,6 +25,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
@@ -29,29 +37,40 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
+
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JRadioButton;
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.border.LineBorder;
+import javax.swing.JEditorPane;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.SwingConstants;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 /* http://stackoverflow.com/questions/16157529/how-do-i-pass-objects-between-classes */
 public class g_ArchiveTickets {
 
+	//private static final AbstractButton chckbxSite = null;
 	public static JFrame frmArchiveTickets;
-	private static JTree tree_active;
 	private JLabel lbl_ClientSite;
 	private JLabel lbl_Ticket;
 	private JLabel lbl_Assigned;
 	private JLabel lbl_Problem;
 	private JLabel lbl_Update;
-	JTextArea txt_Issue;
-	JTextArea txt_Update;
-	private JTextArea txt_Internal;
+	private JEditorPane txt_Issue;
+	private JEditorPane txt_Update;
+	private JEditorPane txt_Internal;
 	private JLabel lblHours;
 	private JLabel txt_TimeSpent;
 	private JLabel lblDateLastUpdated;
 	private JLabel lbl_UpdateDate;
-	public static JList<c_Files> JList_FileList;
 	public static DefaultListModel<c_Files> fileListModel;
 	public static DefaultListModel<c_Files> ExistingfileListModel;
 	private JPanel panel_Update;
@@ -61,39 +80,71 @@ public class g_ArchiveTickets {
 	private JButton btn_External;
 	private JButton btn_Internal;
 	private String TicketNum;
-	public String siteID;
-	private String directory = "\\\\10.10.38.252\\C$\\SupportProgram\\Files\\";
-	private int numFiles; 
+	public String siteID;	
 	private String client;
 	private String site;
 	private int siteid;
-	private static JRadioButton rdbtnCategory;
-	private static JRadioButton rdbtnSite;
 	private static JLabel lblLastUpdatedByStr;
 	private static JPanel panel_3;
-	private static JScrollPane scrollPane_5;	
 	final ArrayList <c_Archive> archiveListarr = new ArrayList<c_Archive>();	
 	private static DefaultListModel<String> listModel = new DefaultListModel<String>();
-	private static JCheckBox chckbxTicket;
-	private static JCheckBox chckbxIssue;
-	private static JCheckBox chckbxAssignedTo;
 	private static JCheckBox chckbxInternal;
-	private static JCheckBox chckbxResolution;	
 	private static JList<String> searchList = new JList<String>();
-	private static JScrollPane scrollPane_4;
 	private static JLabel txtEnteredDate;
 	private static JLabel txtStatus;
-	
-	
+	private JScrollPane scrollPane_4;
+	JComboBox<String> cb_Client = new JComboBox<String>();
+	JComboBox<String> cb_Site = new JComboBox<String>();
+	JComboBox<String> cb_Assigned = new JComboBox<String>();
+	private JDatePanelImpl datePanel;
+	private JDatePanelImpl datePanel2; 
+	private JDatePickerImpl datePicker;
+	private JDatePickerImpl datePicker2;
+	private JButton btnFilter;
+	private JPanel panel_2;
+	private boolean Filter_FirstRun = true;
+	private JLabel lblAssignedTo;
+	private JScrollPane scrollPane_2;
+	private JScrollPane scrollPane_3;
+	private JPanel panel;
+	private JButton btnSearch;
+	private JLabel lblTicketStatus;
+	private JPanel panel_4;
+	private JTextArea txtKeywords;
+	private JTextField txtTicketNumber;
+	private JLabel lblIssue;
+	private JLabel lblTicket;
+	private JPanel panel_5;
+	private JCheckBox lbldateRange;
+	private JComboBox<String> cb_DateRange;
+	private JLabel lblstartDate;
+	private JLabel lblendDate;
+	private JComboBox<String> cb_Category;
+	private JComboBox<String> cb_OrderBy1;
+	private JComboBox<String> cb_OrderByType1;
+	private JComboBox<String> cb_OrderBy2;
+	private JComboBox<String> cb_OrderByType2;
+	private JComboBox<String> cb_OrderBy3;
+	private JComboBox<String> cb_OrderByType3;
+	private JLabel lblorderBy;
+	private JLabel lblandThenBy;
+	private JLabel label;
+	private JPanel panel_6;
+	private JLabel lbldateRange_1;
+	private JPanel panel_7;
+	private JButton btnSearch_1;
+	private JLabel lblResults;
+	private JLabel lblqueryExecutedIn;
 
 	
-
-	public static void run() {				
+	
+	public static void run(JFrame frame) {				
 		try {
 			@SuppressWarnings("unused")
 			g_ArchiveTickets window = new g_ArchiveTickets();
 			g_ArchiveTickets.frmArchiveTickets.setVisible(true);
-			g_ArchiveTickets.frmArchiveTickets.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+			g_ArchiveTickets.frmArchiveTickets.setLocationRelativeTo(frame);
+			frame.dispose();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -106,8 +157,6 @@ public class g_ArchiveTickets {
 	 */
 	public g_ArchiveTickets() {
 		initialize();		
-		//PopulateActiveTickets();
-		AdjustWindowSize();
 		
 	}
 
@@ -116,56 +165,44 @@ public class g_ArchiveTickets {
 	 */
 	private void initialize() {
 		frmArchiveTickets = new JFrame();
+		frmArchiveTickets.setResizable(false);
 		frmArchiveTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ArchiveTickets.class.getResource("/icon.png")));		
-		frmArchiveTickets.setTitle("Automated Support Program v." + g_MainMenu.version);
-		frmArchiveTickets.getContentPane().setBackground(Color.LIGHT_GRAY);
-		frmArchiveTickets.setBounds(100, 100, 964, 895);
+		frmArchiveTickets.setTitle(g_MainMenu.TitleOnline);
+		frmArchiveTickets.setBounds(100, 100, 996, 916);
 		frmArchiveTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmArchiveTickets.getContentPane().setLayout(null);
 		
 	
-
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
-		panel_1.setBounds(265, 11, 668, 788);
+		panel_1.setBounds(290, 11, 668, 788);
 		frmArchiveTickets.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
 		lbl_ClientSite = new JLabel("Client Site (ID)");
-		lbl_ClientSite.setBounds(10, 11, 283, 20);
-		lbl_ClientSite.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lbl_ClientSite.setBounds(10, 11, 505, 20);
+		lbl_ClientSite.setFont(new Font("Rockwell", Font.BOLD, 16));
 		panel_1.add(lbl_ClientSite);
 		
 		lbl_Ticket = new JLabel("(Ticket #)");
-		lbl_Ticket.setBounds(544, 11, 114, 20);
-		lbl_Ticket.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lbl_Ticket.setBounds(525, 11, 114, 20);
+		lbl_Ticket.setFont(new Font("Rockwell", Font.BOLD, 16));
 		panel_1.add(lbl_Ticket);
 		
-		lbl_Assigned = new JLabel("");
-		lbl_Assigned.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		lbl_Assigned.setBounds(21, 739, 231, 20);
-		panel_1.add(lbl_Assigned);
-		
-		ExistingfileListModel = new DefaultListModel<c_Files>();
 		
 		lbl_Problem = new JLabel("Issue");
-		lbl_Problem.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lbl_Problem.setFont(new Font("Rockwell", Font.BOLD, 16));
 		lbl_Problem.setBounds(10, 77, 220, 20);
 		panel_1.add(lbl_Problem);
 		
 		panel_Internal = new JPanel();
-		panel_Internal.setBounds(10, 322, 648, 324);
+		panel_Internal.setBounds(10, 310, 648, 336);
 		panel_1.add(panel_Internal);
 		panel_Internal.setLayout(null);
 		panel_Internal.setVisible(false);
 		
-		JButton btnFileUpload = new JButton("File Upload..");
-		btnFileUpload.setEnabled(false);
-		btnFileUpload.setBounds(0, 205, 105, 23);
-		panel_Internal.add(btnFileUpload);
-		
 		lblInternalUpdate = new JLabel("Internal Update");
-		lblInternalUpdate.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lblInternalUpdate.setFont(new Font("Rockwell", Font.BOLD, 16));
 		lblInternalUpdate.setBounds(0, 0, 220, 20);
 		panel_Internal.add(lblInternalUpdate);
 		
@@ -179,165 +216,38 @@ public class g_ArchiveTickets {
 		btn_External.setBounds(559, 0, 89, 23);
 		panel_Internal.add(btn_External);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(0, 239, 328, 74);
-		panel_Internal.add(scrollPane_1);
-		
-		JList_FileList = new JList<c_Files>();
-		JList_FileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPane_1.setViewportView(JList_FileList);
-		
-		JButton btn_OpenFile = new JButton("Open File");
-		btn_OpenFile.setEnabled(false);
-		btn_OpenFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (JList_FileList.getSelectedIndex() == -1)
-				{
-					JOptionPane.showMessageDialog(frmArchiveTickets, "No file was selected.");
-				}
-				else if(JList_FileList.getSelectedIndex() > (numFiles-1))
-				{
-					JOptionPane.showMessageDialog(frmArchiveTickets, "File not found. \n Please verify file has been uploaded by hitting the update button.");
-				}
-				else
-				{
-					String source = fileListModel.getElementAt(JList_FileList.getSelectedIndex()).getFile();
-					String filePath = directory + TicketNum + "_" + source;
-					try {						
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", filePath});
-					} catch (IOException e) {
-						e.printStackTrace();
-						JOptionPane.showMessageDialog(frmArchiveTickets, "Could not find file.");
-					}
-				}
-			}
-			
-		});
-		btn_OpenFile.setBounds(358, 237, 105, 23);
-		panel_Internal.add(btn_OpenFile);
-		
-		btn_DeleteFile = new JButton("Delete File");
-		btn_DeleteFile.setEnabled(false);
-		btn_DeleteFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (JList_FileList.getSelectedIndex() == -1)
-				{
-					JOptionPane.showMessageDialog(frmArchiveTickets, "No file was selected.");
-				}
-				else if(JList_FileList.getSelectedIndex() > (numFiles-1))
-				{
-					
-				}
-				else
-				{
-					int index = JList_FileList.getSelectedIndex();
-					String source = fileListModel.getElementAt(index).getFile();
-					String filePath = directory + TicketNum + "_" + source;
-					int reply = JOptionPane.showConfirmDialog(frmArchiveTickets, "Are you sure you wish to delete " + source + "?" , "Delete File", JOptionPane.YES_NO_OPTION);
-			        if (reply == JOptionPane.YES_OPTION)
-			        {
-			        	String commandText = "DELETE FROM Files WHERE Filename = '" + source + "'";
-			        	c_Query.ExecuteQuery(commandText);
-				        fileListModel.remove(index);
-				        File file = new File(filePath);
-				        if(file.delete()){
-				        	JOptionPane.showMessageDialog(frmArchiveTickets, source + " has been deleted.");
-			    		}else{
-			    			JOptionPane.showMessageDialog(frmArchiveTickets, "Error deleting file from hard drive");
-			    		}
-
-				        JList_FileList.removeAll();
-				        JList_FileList.setModel(fileListModel);
-				        JList_FileList.revalidate();
-				        JList_FileList.repaint();
-			        }
-			        else
-			        {
-			        	JOptionPane.showMessageDialog(frmArchiveTickets, "Whew! That was close.");
-			        }
-				}
-				
-			}
-		});
-		btn_DeleteFile.setBounds(358, 271, 105, 23);
-		panel_Internal.add(btn_DeleteFile);
-		
 		scrollPane_2 = new JScrollPane();
 		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane_2.setBounds(0, 27, 648, 176);
+		scrollPane_2.setBounds(0, 27, 648, 355);
 		panel_Internal.add(scrollPane_2);
 		
-		txt_Internal = new JTextArea();
+		txt_Internal = new JEditorPane();
+		txt_Internal.setContentType("text/html");
+		txt_Internal.setEditable(false);
+		txt_Internal.setFont(new Font("Rockwell", Font.BOLD, 20));
 		scrollPane_2.setViewportView(txt_Internal);
-		txt_Internal.setLineWrap(true);
-		txt_Internal.setWrapStyleWord(true);
 		
-		lblLastUpdatedByStr = new JLabel("Assigned To:");
-		lblLastUpdatedByStr.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		lblLastUpdatedByStr.setBounds(499, 275, 134, 20);
-		panel_Internal.add(lblLastUpdatedByStr);
-		
-		JLabel lblLastUpdatedBy = new JLabel("Last Updated By");
-		lblLastUpdatedBy.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		lblLastUpdatedBy.setBounds(499, 239, 134, 20);
-		panel_Internal.add(lblLastUpdatedBy);
-		btnFileUpload.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
-				
-		        int returnValue = fileChooser.showOpenDialog(null);
-		        if (returnValue == JFileChooser.APPROVE_OPTION) {
-		          File selectedFile = fileChooser.getSelectedFile();  
-				File inputFile = new File(
-						selectedFile.getAbsoluteFile().getPath().toString());				
-					AddFilesToList(selectedFile.getName(),inputFile);
-				}
-		        
-			}
-		});
 		
 		panel_Update = new JPanel();
-		panel_Update.setBounds(10, 322, 648, 324);
+		panel_Update.setBounds(10, 310, 648, 336);
 		panel_1.add(panel_Update);
 		panel_Update.setLayout(null);
 		
 		lbl_Update = new JLabel("Update");
 		lbl_Update.setBounds(0, 0, 220, 20);
 		panel_Update.add(lbl_Update);
-		lbl_Update.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		
-		lblHours = new JLabel("Time Spent");
-		lblHours.setBounds(0, 259, 156, 20);
-		panel_Update.add(lblHours);
-		lblHours.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		
-		txt_TimeSpent = new JLabel();
-		txt_TimeSpent.setFont(new Font("Plantagenet Cherokee", Font.PLAIN, 14));
-		txt_TimeSpent.setBounds(10, 283, 33, 25);
-		panel_Update.add(txt_TimeSpent);
-		txt_TimeSpent.setText("0.5");
-		txt_TimeSpent.setToolTipText("Time Spent in Hours");
-		
-		lblDateLastUpdated = new JLabel("Last Updated:");
-		lblDateLastUpdated.setBounds(474, 255, 164, 20);
-		panel_Update.add(lblDateLastUpdated);
-		lblDateLastUpdated.setFont(new Font("Times New Roman", Font.BOLD, 16));
-		
-		lbl_UpdateDate = new JLabel("Date");
-		lbl_UpdateDate.setBounds(474, 284, 164, 20);
-		panel_Update.add(lbl_UpdateDate);
-		lbl_UpdateDate.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lbl_Update.setFont(new Font("Rockwell", Font.BOLD, 16));
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(0, 28, 648, 216);
+		scrollPane.setBounds(0, 28, 648, 354);
 		panel_Update.add(scrollPane);
 		
-		txt_Update = new JTextArea();
+		txt_Update = new JEditorPane();
+		txt_Update.setContentType("text/html");
+		txt_Update.setEditable(false);
+		txt_Update.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		scrollPane.setViewportView(txt_Update);
-		//txt_Update.setAutoscrolls(false);
-		txt_Update.setLineWrap(true);
-		txt_Update.setWrapStyleWord(true);
 		
 		
 		btn_Internal = new JButton("Internal");
@@ -351,50 +261,19 @@ public class g_ArchiveTickets {
 		btn_Internal.setBounds(559, 0, 89, 23);
 		panel_Update.add(btn_Internal);
 		
-		JLabel lblhours = new JLabel("Hours");
-		lblhours.setFont(new Font("Plantagenet Cherokee", Font.PLAIN, 14));
-		lblhours.setBounds(40, 283, 58, 20);
-		panel_Update.add(lblhours);
-		
-		JLabel lblEnteredDate = new JLabel("Entered Date:");
-		lblEnteredDate.setBounds(215, 259, 114, 20);
-		panel_Update.add(lblEnteredDate);
-		lblEnteredDate.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		
-		txtEnteredDate = new JLabel("");
-		txtEnteredDate.setBounds(215, 284, 185, 20);
-		panel_Update.add(txtEnteredDate);
-		txtEnteredDate.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		
-		JButton btn_SiteData = new JButton("Site Data");
-		btn_SiteData.setEnabled(false);
-		btn_SiteData.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//ViewSiteData();
-				g_ViewSiteData.run(siteID);
-			}
-		});
-		btn_SiteData.setBounds(10, 43, 105, 23);
-		panel_1.add(btn_SiteData);
-		
-		lblAssignedTo = new JLabel("Assigned To:");
-		lblAssignedTo.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		lblAssignedTo.setBounds(21, 717, 114, 20);
-		panel_1.add(lblAssignedTo);
-		
 		scrollPane_3 = new JScrollPane();
 		scrollPane_3.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane_3.setBounds(10, 99, 648, 212);
+		scrollPane_3.setBounds(10, 99, 648, 200);
 		panel_1.add(scrollPane_3);
 		
-		txt_Issue = new JTextArea();		
-		txt_Issue.setLineWrap(true);
-		txt_Issue.setWrapStyleWord(true);
+		txt_Issue = new JEditorPane();		
+		txt_Issue.setContentType("text/html");
+		txt_Issue.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		scrollPane_3.setViewportView(txt_Issue);
 		txt_Issue.setEditable(false);
 		
 		btnSearch = new JButton("");
-		btnSearch.setBounds(487, 727, 32, 32);
+		btnSearch.setBounds(626, 11, 32, 32);
 		panel_1.add(btnSearch);
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -405,64 +284,72 @@ public class g_ArchiveTickets {
 		btnSearch.setIcon(new ImageIcon(g_ArchiveTickets.class.getResource("/file.png")));
 		btnSearch.setToolTipText("Reactivate Ticket");
 		
-		JLabel lblTicketLookup = new JLabel("Reactivate");
-		lblTicketLookup.setBounds(476, 758, 74, 14);
-		panel_1.add(lblTicketLookup);
+		JLabel lblLastUpdatedBy = new JLabel("Last Updated By");
+		lblLastUpdatedBy.setBounds(511, 717, 134, 20);
+		panel_1.add(lblLastUpdatedBy);
+		lblLastUpdatedBy.setFont(new Font("Rockwell", Font.BOLD, 16));
 		
-		JButton button = new JButton("");
-		button.setBounds(582, 727, 32, 32);
-		panel_1.add(button);
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {				
-				if (client.compareTo("Kinder Morgan") == 0 || client.compareTo("Phillips 66") == 0 ||
-					client.compareTo("Motiva") == 0 || client.compareTo("Chevron") == 0 ||
-					client.compareTo("Shell") == 0 ||
-					client.compareTo("Sinclair") == 0 || client.compareTo("Cummins") == 0)
-				{
-
-					int reply = JOptionPane.showConfirmDialog(frmArchiveTickets, "Phone #713-989-4409 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
-			        if (reply == JOptionPane.YES_OPTION)
-			        {
-			        	try {
-
-							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894409"});
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-			        }
-			        
-				}
-				else
-				{
-					int reply = JOptionPane.showConfirmDialog(frmArchiveTickets, "Phone #713-989-4408 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
-			        if (reply == JOptionPane.YES_OPTION)
-			        {
-			        	try {
-
-							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894408"});
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-			        }
-				}												
-			}
-		});
-		button.setIcon(new ImageIcon(g_ArchiveTickets.class.getResource("/telephone.png")));
-		button.setToolTipText("Call CC");
+		lblLastUpdatedByStr = new JLabel("Assigned To:");
+		lblLastUpdatedByStr.setBounds(511, 742, 134, 20);
+		panel_1.add(lblLastUpdatedByStr);
+		lblLastUpdatedByStr.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		
-		JLabel lblControlCenter = new JLabel("Control Center");
-		lblControlCenter.setBounds(560, 758, 98, 14);
-		panel_1.add(lblControlCenter);
+		JLabel lblEnteredDate = new JLabel("Entered Date:");
+		lblEnteredDate.setBounds(10, 717, 114, 20);
+		panel_1.add(lblEnteredDate);
+		lblEnteredDate.setFont(new Font("Rockwell", Font.BOLD, 16));
+		
+		txtEnteredDate = new JLabel("Entered Date");
+		txtEnteredDate.setBounds(10, 742, 185, 20);
+		panel_1.add(txtEnteredDate);
+		txtEnteredDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		
+		lblDateLastUpdated = new JLabel("Last Updated:");
+		lblDateLastUpdated.setBounds(274, 717, 164, 20);
+		panel_1.add(lblDateLastUpdated);
+		lblDateLastUpdated.setFont(new Font("Rockwell", Font.BOLD, 16));
+		
+		lbl_UpdateDate = new JLabel("Last Update Date");
+		lbl_UpdateDate.setBounds(274, 742, 164, 20);
+		panel_1.add(lbl_UpdateDate);
+		lbl_UpdateDate.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		
+		lblHours = new JLabel("Time Spent");
+		lblHours.setBounds(502, 659, 156, 20);
+		panel_1.add(lblHours);
+		lblHours.setFont(new Font("Rockwell", Font.BOLD, 16));
+		
+		JLabel lblhours = new JLabel("Hours");
+		lblhours.setBounds(542, 681, 58, 20);
+		panel_1.add(lblhours);
+		lblhours.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		
+		txt_TimeSpent = new JLabel();
+		txt_TimeSpent.setBounds(512, 681, 33, 20);
+		panel_1.add(txt_TimeSpent);
+		txt_TimeSpent.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		txt_TimeSpent.setText("0.5");
+		txt_TimeSpent.setToolTipText("Time Spent in Hours");
 		
 		lblTicketStatus = new JLabel("Ticket Status:");
-		lblTicketStatus.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		lblTicketStatus.setBounds(248, 717, 114, 20);
+		lblTicketStatus.setBounds(274, 659, 114, 20);
 		panel_1.add(lblTicketStatus);
+		lblTicketStatus.setFont(new Font("Rockwell", Font.BOLD, 16));
 		
-		txtStatus = new JLabel("");
-		txtStatus.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		txtStatus.setBounds(248, 739, 178, 20);
+		txtStatus = new JLabel("Ticket Status");
+		txtStatus.setBounds(274, 681, 164, 20);
 		panel_1.add(txtStatus);
+		txtStatus.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		
+		lblAssignedTo = new JLabel("Assigned To:");
+		lblAssignedTo.setBounds(10, 659, 114, 20);
+		panel_1.add(lblAssignedTo);
+		lblAssignedTo.setFont(new Font("Rockwell", Font.BOLD, 16));
+		
+		lbl_Assigned = new JLabel("Assigned");
+		lbl_Assigned.setBounds(10, 681, 134, 20);
+		panel_1.add(lbl_Assigned);
+		lbl_Assigned.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -470,324 +357,613 @@ public class g_ArchiveTickets {
 				frmArchiveTickets.dispose();
 			}
 		});
-		btnBack.setBounds(10, 822, 89, 23);
+		btnBack.setBounds(10, 858, 89, 23);
 		frmArchiveTickets.getContentPane().add(btnBack);
 		
-		JButton btnRefresh = new JButton("");
-		btnRefresh.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				PopulateActiveWindow();
-				PopulateActiveTickets();				
-			}
-		});
-		btnRefresh.setBounds(203, 803, 50, 42);
-		frmArchiveTickets.getContentPane().add(btnRefresh);
-		btnRefresh.setIcon(new ImageIcon(g_ArchiveTickets.class.getResource("/reload.png")));
-		btnRefresh.setToolTipText("Refresh");
-		
 		panel = new JPanel();
-		panel.setBounds(10, 32, 248, 767);
+		panel.setBackground(Color.WHITE);
+		panel.setBounds(10, 11, 273, 788);
 		frmArchiveTickets.getContentPane().add(panel);
-		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel.setBorder(null);
 				panel.setLayout(null);
-		
-				scrollPane_5 = new JScrollPane();
-				scrollPane_5.setBounds(0, 0, 248, 767);
-				panel.add(scrollPane_5);
-				
-				tree_active = new JTree();
-				scrollPane_5.setViewportView(tree_active);
-				//tree_active.getCheckingModel().setCheckingMode(TreeCheckingModel.CheckingMode.PROPAGATE_PRESERVING_CHECK);
-				tree_active.setBackground(Color.WHITE);
-				tree_active.setBorder(UIManager.getBorder("DesktopIcon.border"));
-				
-				scrollPane_4 = new JScrollPane();
-				scrollPane_4.setBounds(0, 0, 248, 666);
-				panel.add(scrollPane_4);
-				
-			
-				//scrollPane_4.setViewportView(searchList);				
-				
-				
-				JPanel panel_4 = new JPanel();
-				panel_4.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-				panel_4.setBackground(Color.WHITE);
-				panel_4.setBounds(10, 11, 248, 23);
-				frmArchiveTickets.getContentPane().add(panel_4);
-				panel_4.setLayout(null);
-				
-				rdbtnCategory = new JRadioButton("Category");
-				rdbtnCategory.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						AdjustWindowSize();
-						PopulateActiveTickets();
-					}
-				});
-				buttonGroup.add(rdbtnCategory);
-				rdbtnCategory.setBackground(Color.WHITE);
-				rdbtnCategory.setBounds(17, 2, 71, 18);
-				panel_4.add(rdbtnCategory);
-				
-				rdbtnSite = new JRadioButton("Site");
-				rdbtnSite.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						AdjustWindowSize();
-						PopulateActiveTickets();
-					}
-				});
-				buttonGroup.add(rdbtnSite);
-				rdbtnSite.setBackground(Color.WHITE);
-				rdbtnSite.setBounds(93, 2, 58, 18);
-				panel_4.add(rdbtnSite);
-				
-				
-				rdbtnSearch = new JRadioButton("Search");
-				rdbtnSearch.setSelected(true);
-				rdbtnSearch.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						AdjustWindowSize();											
-					}
-				});
-				rdbtnSearch.setBackground(Color.WHITE);
-				rdbtnSearch.setBounds(153, 2, 67, 18);
-				buttonGroup.add(rdbtnSearch);
-				panel_4.add(rdbtnSearch);
-				
-				panel_3 = new JPanel();
-				panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-				panel_3.setBackground(Color.WHITE);
-				panel_3.setBounds(10, 32, 248, 100);
-				frmArchiveTickets.getContentPane().add(panel_3);
-				panel_3.setLayout(null);
-				panel_3.setVisible(false);
-				
-				txtSearch = new JTextField();
-				txtSearch.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						Search();
-					}
-				});
-				txtSearch.setBounds(10, 65, 182, 28);
-				panel_3.add(txtSearch);
-				txtSearch.setColumns(10);
-				
-				JButton btnSearch1 = new JButton("");
-				btnSearch1.setBackground(Color.WHITE);
-				btnSearch1.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						Search();
-					}
-				});
-				btnSearch1.setIcon(new ImageIcon(g_ArchiveTickets.class.getResource("/Search-32.png")));
-				btnSearch1.setBounds(202, 63, 30, 30);
-				panel_3.add(btnSearch1);
-				
-				chckbxTicket = new JCheckBox("Ticket");
-				chckbxTicket.setBackground(Color.WHITE);
-				chckbxTicket.setBounds(6, 2, 60, 23);
-				panel_3.add(chckbxTicket);
-				
-				chckbxIssue = new JCheckBox("Issue");
-				chckbxIssue.setBackground(Color.WHITE);
-				chckbxIssue.setBounds(75, 2, 60, 23);
-				panel_3.add(chckbxIssue);
-				
-				chckbxAssignedTo = new JCheckBox("Assigned To");
-				chckbxAssignedTo.setBackground(Color.WHITE);
-				chckbxAssignedTo.setBounds(147, 2, 95, 23);
-				panel_3.add(chckbxAssignedTo);
 				
 				chckbxInternal = new JCheckBox("Internal");
 				chckbxInternal.setBackground(Color.WHITE);
-				chckbxInternal.setBounds(42, 29, 73, 23);
-				panel_3.add(chckbxInternal);
+				chckbxInternal.setBounds(54, 2, 73, 23);				
 				
-				chckbxResolution = new JCheckBox("Resolution");
-				chckbxResolution.setBackground(Color.WHITE);
-				chckbxResolution.setBounds(111, 29, 106, 23);
-				panel_3.add(chckbxResolution);
+				panel_4 = new JPanel();
+				panel_4.setLayout(null);
+				panel_4.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+				panel_4.setBackground(new Color(255, 245, 238));
+				panel_4.setBounds(0, 37, 273, 751);
+				panel.add(panel_4);
+				panel_4.setVisible(false);
 				
+				txtKeywords = new JTextArea();
+				txtKeywords.setLineWrap(true);
+				txtKeywords.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				txtKeywords.setColumns(10);
+				txtKeywords.setBounds(10, 247, 253, 75);
+				panel_4.add(txtKeywords);
 				
-				searchList.addListSelectionListener(new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent arg0) {
-						try{
-							if(!arg0.getValueIsAdjusting())
-							{
-								
-								lbl_ClientSite.setText(archiveListarr.get(searchList.getSelectedIndex()).getClient() + " " + archiveListarr.get(searchList.getSelectedIndex()).getSite());
-								lbl_Ticket.setText("(#" + archiveListarr.get(searchList.getSelectedIndex()).getTicket() + ")");
-								lbl_Assigned.setText(archiveListarr.get(searchList.getSelectedIndex()).getAssigned());
-								txt_Issue.setText(archiveListarr.get(searchList.getSelectedIndex()).getDescription());
-								txt_Update.setText(archiveListarr.get(searchList.getSelectedIndex()).getResolution());
-								txt_Internal.setText(archiveListarr.get(searchList.getSelectedIndex()).getInternal());
-								txt_TimeSpent.setText(archiveListarr.get(searchList.getSelectedIndex()).getTimeSpent());
-								lbl_UpdateDate.setText(archiveListarr.get(searchList.getSelectedIndex()).getUpdateDate());
-								lblLastUpdatedByStr.setText(archiveListarr.get(searchList.getSelectedIndex()).getLastUpdatedBy());
-								txtEnteredDate.setText(archiveListarr.get(searchList.getSelectedIndex()).getEnteredDate());
-								txtStatus.setText(archiveListarr.get(searchList.getSelectedIndex()).getStatus());
-																
-								fileListModel = new DefaultListModel<c_Files>();
-								String commandText = "SELECT Filename FROM Files WHERE TicketNum = '" + archiveListarr.get(searchList.getSelectedIndex()).getTicket() + "'";		
-								
-								ResultSet rs = c_Query.ExecuteResultSet(commandText);
-								
-								try
-								{
-									fileListModel.clear();
-									while((rs!=null) && (rs.next()))
-									{
-										c_Files fileName = new c_Files(rs.getString("Filename"));
-										fileListModel.addElement(fileName);
-										
-									}
-								}
-								catch(Exception e)
-								{
-									//do nothing
-								}
-								
-								numFiles = fileListModel.getSize();
-								JList_FileList.setModel(fileListModel);
-							}
-						}
-						catch(Exception e)
+				txtTicketNumber = new JTextField();
+				txtTicketNumber.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent e) {
+						if(e.getKeyCode() == KeyEvent.VK_ENTER){
+						    e.consume();
+						    Search();
+						    }
+					}
+				});
+				txtTicketNumber.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				txtTicketNumber.setColumns(10);
+				txtTicketNumber.setBounds(10, 182, 253, 31);
+				panel_4.add(txtTicketNumber);
+				
+				cb_Client = new JComboBox<String>();
+				cb_Client.setBackground(Color.LIGHT_GRAY);
+				cb_Client.addItemListener(new ItemListener() {
+					public void itemStateChanged(ItemEvent e) {				
+						PopulateSiteList(cb_Client.getSelectedItem().toString());
+					}
+				});
+				cb_Client.setFont(new Font("Rockwell", Font.PLAIN, 12));
+				cb_Client.setBounds(10, 11, 253, 28);
+				panel_4.add(cb_Client);
+				
+				cb_Site = new JComboBox<String>();
+				cb_Site.setBackground(Color.LIGHT_GRAY);
+				cb_Site.setEnabled(false);
+				cb_Site.setFont(new Font("Rockwell", Font.PLAIN, 12));
+				cb_Site.setBounds(10, 50, 253, 28);
+				panel_4.add(cb_Site);
+				
+				lblIssue = new JLabel("<html><center>Keywords: (separated by commas) </center></html>");
+				lblIssue.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				lblIssue.setBounds(10, 229, 253, 14);
+				panel_4.add(lblIssue);
+				
+				lblTicket = new JLabel("Ticket #:");
+				lblTicket.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				lblTicket.setBounds(10, 168, 65, 14);
+				panel_4.add(lblTicket);
+				
+				cb_Assigned = new JComboBox<String>();
+				cb_Assigned.setBackground(Color.LIGHT_GRAY);
+				cb_Assigned.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				cb_Assigned.setBounds(10, 129, 253, 28);
+				panel_4.add(cb_Assigned);
+				
+				UtilDateModel model = new UtilDateModel();
+				Properties p = new Properties();
+				p.put("text.today", "Today");
+				p.put("text.month", "Month");
+				p.put("text.year", "Year");
+				datePanel = new JDatePanelImpl(model,p);
+				Border empty = BorderFactory.createEmptyBorder(0, 0, 0, 0);
+				Border dashed = BorderFactory.createDashedBorder(null, 5, 5);
+				Border compound = new CompoundBorder(empty, dashed);
+				panel_5 = new JPanel();
+				panel_5.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+				//panel_5.setBorder(compound);
+				panel_5.setBounds(10, 356, 251, 384);
+				panel_4.add(panel_5);
+				panel_5.setLayout(null);
+				panel_5.setVisible(false);
+				//panel_5.setBackground(new Color(255, 245, 238));
+				
+				UtilDateModel model2 = new UtilDateModel();
+				Properties p2 = new Properties();
+				p2.put("text.today", "Today");
+				p2.put("text.month", "Month");
+				p2.put("text.year", "Year");
+				datePanel = new JDatePanelImpl(model,p);
+				
+				datePanel2 = new JDatePanelImpl(model2,p2);
+				
+				lblorderBy = new JLabel("<html><center>Order Results:</center></html>");
+				lblorderBy.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				lblorderBy.setBounds(5, 185, 191, 18);
+				panel_5.add(lblorderBy);
+				
+				panel_6 = new JPanel();
+				panel_6.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+				panel_6.setBounds(5, 25, 240, 157);
+				panel_5.add(panel_6);
+				panel_6.setLayout(null);
+				//panel_6.setBackground(new Color(255, 245, 238));
+				datePicker2 = new JDatePickerImpl(datePanel2, new c_DateLabelFormatter());
+				datePicker2.setBounds(5, 119, 193, 28);
+				panel_6.add(datePicker2);
+				datePicker2.getJFormattedTextField().setFont(new Font("Rockwell", Font.PLAIN, 11));
+				datePicker2.getJFormattedTextField().setBackground(Color.WHITE);
+				
+				lblendDate = new JLabel("<html><center>End Date:</center></html>");
+				lblendDate.setBounds(5, 100, 65, 18);
+				panel_6.add(lblendDate);
+				lblendDate.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				
+				datePicker = new JDatePickerImpl(datePanel, new c_DateLabelFormatter());
+				datePicker.setBounds(5, 66, 193, 28);
+				panel_6.add(datePicker);
+				datePicker.getJFormattedTextField().setFont(new Font("Rockwell", Font.PLAIN, 11));
+				datePicker.getJFormattedTextField().setBackground(Color.WHITE);
+				
+				lblstartDate = new JLabel("<html><center>Start Date:</center></html>");
+				lblstartDate.setBounds(5, 45, 65, 18);
+				panel_6.add(lblstartDate);
+				lblstartDate.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				
+				datePicker.setVisible(false);							
+				datePicker2.setVisible(false);
+				lblendDate.setVisible(false);
+				lblstartDate.setVisible(false);
+				
+				cb_DateRange = new JComboBox<String>();
+				cb_DateRange.setBounds(3, 3, 231, 28);
+				panel_6.add(cb_DateRange);
+				cb_DateRange.setModel(new DefaultComboBoxModel<String>(new String[] {"All", "Entered Date", "Last Updated Date", "Entered & Last Updated Date"}));
+				cb_DateRange.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				cb_DateRange.setBackground(Color.LIGHT_GRAY);
+				cb_DateRange.addItemListener(new ItemListener() {
+					public void itemStateChanged(ItemEvent e) {				
+						if(cb_DateRange.getSelectedIndex() == 0)
 						{
+							
+							datePicker.setVisible(false);							
+							datePicker2.setVisible(false);
+							lblendDate.setVisible(false);
+							lblstartDate.setVisible(false);
+						}
+						else
+						{
+							
+							datePicker.setVisible(true);
+							datePicker2.setVisible(true);
+							lblendDate.setVisible(true);
+							lblstartDate.setVisible(true);
 							
 						}
 					}
 				});
 				
-				if(txt_Internal.getText().compareTo("") != 0)
-				{
-					btn_Internal.setText("* Internal *");
-					btn_Internal.setBackground(Color.orange);
-				}
-				else
-				{
-					btn_Internal.setText("Internal");
-					btn_Internal.setBackground(Color.getColor("240,240,240"));
-					
-				}
+				lbldateRange_1 = new JLabel("<html><center>Date Range: </center></html>");
+				lbldateRange_1.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				lbldateRange_1.setBounds(10, 6, 231, 14);
+				panel_5.add(lbldateRange_1);
+				
+				panel_7 = new JPanel();
+				panel_7.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+				
+				//panel_7.setBorder(compound);
+				panel_7.setBounds(5, 205, 238, 157);
+				panel_5.add(panel_7);
+				panel_7.setLayout(null);
+				//panel_7.setBackground(new Color(255, 245, 238));
+				
+				cb_OrderByType3 = new JComboBox<String>();
+				cb_OrderByType3.setBounds(160, 120, 65, 28);
+				panel_7.add(cb_OrderByType3);
+				cb_OrderByType3.setModel(new DefaultComboBoxModel(new String[] {"", "ASC", "DESC"}));
+				cb_OrderByType3.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				cb_OrderByType3.setBackground(Color.LIGHT_GRAY);
+				
+				cb_OrderBy3 = new JComboBox<String>();
+				cb_OrderBy3.setBounds(10, 120, 125, 28);
+				panel_7.add(cb_OrderBy3);
+				cb_OrderBy3.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				cb_OrderBy3.setBackground(Color.LIGHT_GRAY);
+				
+				cb_OrderByType2 = new JComboBox<String>();
+				cb_OrderByType2.setBounds(160, 65, 65, 28);
+				panel_7.add(cb_OrderByType2);
+				cb_OrderByType2.setModel(new DefaultComboBoxModel(new String[] {"", "ASC", "DESC"}));
+				cb_OrderByType2.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				cb_OrderByType2.setBackground(Color.LIGHT_GRAY);
+				
+				cb_OrderBy2 = new JComboBox<String>();
+				cb_OrderBy2.setBounds(10, 65, 125, 28);
+				panel_7.add(cb_OrderBy2);
+				cb_OrderBy2.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				cb_OrderBy2.setBackground(Color.LIGHT_GRAY);
+				
+				lblandThenBy = new JLabel("<html><center>And Then By</center></html>");
+				lblandThenBy.setBounds(10, 45, 118, 18);
+				panel_7.add(lblandThenBy);
+				lblandThenBy.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				
+				label = new JLabel("<html><center>And Then By</center></html>");
+				label.setBounds(10, 101, 118, 18);
+				panel_7.add(label);
+				label.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				
+				cb_OrderByType1 = new JComboBox<String>();
+				cb_OrderByType1.setBounds(160, 6, 65, 28);
+				panel_7.add(cb_OrderByType1);
+				cb_OrderByType1.setModel(new DefaultComboBoxModel(new String[] {"", "ASC", "DESC"}));
+				cb_OrderByType1.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				cb_OrderByType1.setBackground(Color.LIGHT_GRAY);
+				
+				cb_OrderBy1 = new JComboBox<String>();
+				cb_OrderBy1.setBounds(10, 6, 125, 28);
+				panel_7.add(cb_OrderBy1);
+				cb_OrderBy1.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				cb_OrderBy1.setBackground(Color.LIGHT_GRAY);
+				
+				//datePicker.getModel().setSelected(true);
+				datePicker2.getModel().setSelected(true);
+				
+				lbldateRange = new JCheckBox("<html><center>Advanced: </center></html>");
+				lbldateRange.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(lbldateRange.isSelected())
+						{
+							panel_5.setVisible(true);
+						}
+						else
+						{
+							panel_5.setVisible(false);
+						}
+					}
+				});
+				lbldateRange.setBackground(new Color(255, 245, 238));
+				lbldateRange.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				lbldateRange.setBounds(10, 335, 109, 14);
+				panel_4.add(lbldateRange);
+				
+				cb_Category = new JComboBox<String>();
+				cb_Category.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				cb_Category.setBackground(Color.LIGHT_GRAY);
+				cb_Category.setBounds(10, 90, 253, 28);
+				panel_4.add(cb_Category);
+				
+				panel_2 = new JPanel();
+				panel_2.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+				panel_2.setBackground(Color.WHITE);
+				panel_2.setBounds(0, 37, 273, 751);
+				panel.add(panel_2);
+				panel_2.setLayout(null);
+				
+				scrollPane_4 = new JScrollPane();
+				scrollPane_4.setBounds(0, 0, 273, 751);
+				panel_2.add(scrollPane_4);
+				
+				panel_3 = new JPanel();
+				panel_3.setBounds(0, 0, 273, 38);
+				panel.add(panel_3);
+				panel_3.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+				panel_3.setBackground(Color.WHITE);
+				panel_3.setLayout(null);
+				
+				btnFilter = new JButton("Filter");				
+				btnFilter.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				btnFilter.setBackground(Color.LIGHT_GRAY);
+				btnFilter.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						if(Filter_FirstRun)
+						{
+							Filter_FirstRun = false;
+							PopulateClientCB();
+						}
+						
+						if(panel_4.isVisible())
+						{
+							btnFilter.setText("Filter");
+							panel_4.setVisible(false);		
+							panel_2.setVisible(true);
+							btnFilter.setBackground(Color.WHITE);
+						}
+						else
+						{							
+							btnFilter.setText("Hide");
+							btnFilter.setBackground(Color.LIGHT_GRAY);
+							panel_4.setVisible(true);
+							panel_2.setVisible(false);
+						}
+					}
+				});
+				btnFilter.setIcon(new ImageIcon(g_ArchiveTickets.class.getResource("/filter.png")));
+				btnFilter.setBounds(5, 5, 90, 30);
+				panel_3.add(btnFilter);
+				
+				btnSearch_1 = new JButton("Search");
+				btnSearch_1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Search();
+					}
+				});
+				btnSearch_1.setIcon(new ImageIcon(g_ArchiveTickets.class.getResource("/magnifier.png")));
+				btnSearch_1.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				btnSearch_1.setBackground(Color.LIGHT_GRAY);
+				btnSearch_1.setBounds(171, 4, 95, 30);
+				panel_3.add(btnSearch_1);
+				
+				JButton btnResetFilters = new JButton("");
+				btnResetFilters.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						ClearFilters();
+					}
+				});
+				btnResetFilters.setToolTipText("<html><center>Reset Filters </center></html>");
+				btnResetFilters.setVerticalAlignment(SwingConstants.TOP);
+				btnResetFilters.setBounds(241, 805, 42, 34);
+				frmArchiveTickets.getContentPane().add(btnResetFilters);
+				btnResetFilters.setIcon(new ImageIcon(g_ArchiveTickets.class.getResource("/settings.png")));
+				btnResetFilters.setFont(new Font("Rockwell", Font.PLAIN, 11));
+				btnResetFilters.setBackground(Color.LIGHT_GRAY);
+				
+				lblResults = new JLabel("<html><center>Search Results Found:</center></html>");
+				lblResults.setFont(new Font("Rockwell", Font.PLAIN, 16));
+				lblResults.setBounds(10, 805, 221, 20);
+				frmArchiveTickets.getContentPane().add(lblResults);
+				
+				lblqueryExecutedIn = new JLabel("<html><center><i>Query Executed In:</i></center></html>");
+				lblqueryExecutedIn.setFont(new Font("Rockwell", Font.PLAIN, 14));
+				lblqueryExecutedIn.setBounds(10, 826, 221, 20);
+				frmArchiveTickets.getContentPane().add(lblqueryExecutedIn);
+				scrollPane_4.getViewport().setBackground(Color.WHITE);
+				scrollPane_4.getViewport().setBorder(null);
+				
+			
+				
+				searchList.addListSelectionListener(new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent arg0) {
+						try{
+							if(!arg0.getValueIsAdjusting())
+							{			
+								String html1 = "<html><div style='line-height:200%'> ";
+								String html2 = "</div></html>";
+								lbl_ClientSite.setText(archiveListarr.get(searchList.getSelectedIndex()).getClient() + " " + archiveListarr.get(searchList.getSelectedIndex()).getSite() + " (" + archiveListarr.get(searchList.getSelectedIndex()).getCategory() + ")" );
+								lbl_Ticket.setText("(#" + archiveListarr.get(searchList.getSelectedIndex()).getTicket() + ")");
+								lbl_Assigned.setText(archiveListarr.get(searchList.getSelectedIndex()).getAssigned());
+								txt_Issue.setText(html1 + archiveListarr.get(searchList.getSelectedIndex()).getDescription() + html2);							
+								txt_Update.setText(html1 + archiveListarr.get(searchList.getSelectedIndex()).getResolution() + html2);
+								txt_Internal.setText(html1 + archiveListarr.get(searchList.getSelectedIndex()).getInternal() + html2);
+								txt_TimeSpent.setText(archiveListarr.get(searchList.getSelectedIndex()).getTimeSpent());
+								lbl_UpdateDate.setText(archiveListarr.get(searchList.getSelectedIndex()).getUpdateDate());								
+								lblLastUpdatedByStr.setText(archiveListarr.get(searchList.getSelectedIndex()).getLastUpdatedBy());
+								txtEnteredDate.setText(archiveListarr.get(searchList.getSelectedIndex()).getEnteredDate());
+								txtStatus.setText(archiveListarr.get(searchList.getSelectedIndex()).getStatus());	
+								
+								if( archiveListarr.get(searchList.getSelectedIndex()).getInternal().compareTo("") != 0)
+								{
+									btn_Internal.setText("* Internal *");
+									btn_Internal.setBackground(Color.orange);
+								}
+								else
+								{
+									btn_Internal.setText("Internal");
+									btn_Internal.setBackground(Color.getColor("240,240,240"));
+									
+								}
+							}
+						}
+						catch(Exception e)
+						{
+								
+						}
+					}
+				});
 				
 				listModel.removeAllElements();
 				searchList.setModel(listModel);
-				
-											
-		tree_active.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
-				PopulateActiveWindow();
-			}
-		});
 	}
 	
-	int tmp2[];
-	private JLabel lblAssignedTo;
-	private JButton btn_DeleteFile;
-	private JScrollPane scrollPane_2;
-	private JScrollPane scrollPane_3;
-	private JPanel panel;
-	private JButton btnSearch;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private JRadioButton rdbtnSearch;
-	private JTextField txtSearch;
-	private JLabel lblTicketStatus;
-	private void AdjustWindowSize()
-	{
-		if(rdbtnSearch.isSelected())
-		{
-			panel.setBounds(10, 133, 248, 666);
-			panel_3.setVisible(true);
-			scrollPane_5.setVisible(false);
-			searchList.setVisible(true);
-			scrollPane_4.setVisible(true);
-			
-		}
-		else
-		{
-			panel.setBounds(10, 32, 248, 767);
-			panel_3.setVisible(false);
-			scrollPane_5.setVisible(true);
-			searchList.setVisible(false);
-			scrollPane_4.setVisible(false);
-		}
-		
-	}
 	
 	private void Search()
 	{
-
+		long startTime = System.currentTimeMillis();
+		panel_4.setVisible(false);
+		panel_2.setVisible(true);
+		btnFilter.setText("Filter");
 		listModel.clear();
 		listModel.removeAllElements();		
 		archiveListarr.removeAll(archiveListarr);
 		
-		String filters = "";
-		String searchTerm = txtSearch.getText().toUpperCase();
-		
-		if(chckbxTicket.isSelected())
+		String filters = "";		
+		String client = cb_Client.getSelectedItem().toString();
+		String site = "";
+		String assigned = cb_Assigned.getSelectedItem().toString();
+		String category = cb_Category.getSelectedItem().toString();
+		String order = "";
+		if(client.compareTo("All Clients") != 0)
 		{
-			filters = filters + " TICKET LIKE '%" + searchTerm + "%'";
+			filters = filters + " CLIENT LIKE '%" + cb_Client.getSelectedItem().toString() + "%'";	
 		}
 		
-		if(chckbxIssue.isSelected())
+		if(cb_Site.isEnabled())
+		{
+										
+			site = cb_Site.getSelectedItem().toString();
+			if(site.compareTo("All " + client + " Sites") != 0)
+			{
+				if(filters.compareTo("") != 0)
+				{
+					filters = filters + " AND";
+				}	
+				filters = filters + " SITE LIKE '%" + site + "%'";
+			}	
+		}
+		
+		if(category.compareTo("All Categories") != 0)
 		{
 			if(filters.compareTo("") != 0)
 			{
-				filters = filters + "OR";
+				filters = filters + " AND";
+			}		
+			
+			filters = filters + " Category LIKE " + "'%" + category + "%'";			
+		}
+		
+		if(assigned.compareTo("All Employees") != 0)
+		{
+			if(filters.compareTo("") != 0)
+			{
+				filters = filters + " AND";
+			}		
+			
+			filters = filters + " ( Assigned LIKE " + "'%" + assigned + "%' OR LastUpdatedBy LIKE '%" + assigned + "%')";			
+		}
+		
+		String tmpKeywords = txtKeywords.getText();
+		tmpKeywords = tmpKeywords.trim();
+		if(tmpKeywords.compareTo("") != 0)
+		{
+			if(filters.compareTo("") != 0)
+			{
+				filters = filters + " AND";
+			}							
+			String split[] = tmpKeywords.split(",");
+			String tmpFilter  = " Resolution LIKE '%" + split[0].toString() + "%' OR Description LIKE '%" + split[0].toString() + "%' OR Internal LIKE '%" + split[0].toString() + "%'";
+			for(int i = 1; i < split.length; i++)
+			{				
+				tmpFilter = tmpFilter + " OR Resolution LIKE '%" + split[i].toString() + "%' OR Description LIKE '%" + split[i].toString() + "%' OR Internal LIKE '%" + split[i].toString() + "%'";
+			}
+			
+			tmpFilter = "(" + tmpFilter + ")";
+			filters = "(" + filters + tmpFilter + ")";
+			
+		}
+		
+		if(txtTicketNumber.getText().compareTo("") != 0)
+		{
+			if(filters.compareTo("") != 0)
+			{
+				filters = filters + " AND";
+			}		
+			
+			filters = filters + " Ticket LIKE '%" + txtTicketNumber.getText() + "%'";			
+		}
+		
+		if(lbldateRange.isSelected())
+		{
+			if(cb_DateRange.getSelectedIndex() !=0)
+			{
+				String dateRange = cb_DateRange.getSelectedItem().toString();
+				int dateIndex = cb_DateRange.getSelectedIndex();
+				int testMonth = datePicker.getModel().getMonth();
+				testMonth++;
+				int testDay = datePicker.getModel().getDay();			
+				int testYear = datePicker.getModel().getYear();
+				
+				int testMonth2 = datePicker2.getModel().getMonth();
+				testMonth2++;
+				int testDay2 = datePicker2.getModel().getDay();			
+				int testYear2 = datePicker2.getModel().getYear();
+				
+				String startDate = testYear + "-" + testMonth + "-" + testDay;
+				String endDate = testYear2 + "-" + testMonth2 + "-" + testDay2;
+				
+				
+				
+				if(filters.compareTo("") != 0)
+				{
+					filters = filters + " AND";
+				}	
+								
+				//Entered Date
+				if(dateIndex == 0)
+				{
+					filters = filters + " EnteredDate >= '" + startDate + "' AND EnteredDate <= '" + endDate + "'";
+				}
+				//Update Date
+				else if(dateIndex == 1)
+				{
+					filters = filters + " UpdateDate >= '" + startDate + "' AND UpdateDate <= '" + endDate + "'";
+				}
+				//Both
+				else
+				{
+					filters = filters + " ((UpdateDate >= '" + startDate + "' AND UpdateDate <= '" + endDate + "') OR (EnteredDate >= '" + startDate + "' AND EnteredDate <= '" + endDate + "'))";
+					
+				}
+			}
+				
+			if(cb_OrderBy1.getSelectedIndex() != 0)
+			{
+				String order1 = cb_OrderBy1.getSelectedItem().toString();
+				String order1Type = "";
+				if(cb_OrderByType1.getSelectedIndex() == 2)
+				{
+					order1Type = "DESC";
+				}
+				else
+				{
+					order1Type = "ASC";
+				}
+				
+				order = order1 + " " + order1Type;
+				if(cb_OrderBy2.getSelectedIndex() != 0)
+				{
+					String order2 = cb_OrderBy2.getSelectedItem().toString();
+					String order2Type = "";
+					if(cb_OrderByType2.getSelectedIndex() == 2)
+					{
+						order2Type = "DESC";
+					}
+					else
+					{
+						order2Type = "ASC";
+					}					
+					order = order + ", " + order2 + " " + order2Type;
+					
+					if(cb_OrderBy3.getSelectedIndex() != 0)
+					{
+						String order3 = cb_OrderBy3.getSelectedItem().toString();
+						String order3Type = "";
+						if(cb_OrderByType2.getSelectedIndex() == 2)
+						{
+							order3Type = "DESC";
+						}
+						else
+						{
+							order3Type = "ASC";
+						}
+						
+						order = order + ", " + order3 + " " + order3Type;
+					}
+				}												
 			}						
-				filters = filters + " UPPER(Description) LIKE " + "'%" + searchTerm + "%'";			
 		}
 		
-		if(chckbxAssignedTo.isSelected())
+		
+		if(filters.compareTo("") != 0)
 		{
-			if(filters.compareTo("") != 0)
-			{
-				filters = filters + "OR";
-			}
-			filters = filters + " UPPER(Assigned) LIKE '%" + searchTerm + "%'";
+			filters = "and " + filters;
 		}
 		
-		if(chckbxInternal.isSelected())
+		if(order.compareTo("") == 0)
 		{
-			if(filters.compareTo("") != 0)
-			{
-				filters = filters + "OR";
-			}
-			filters = filters + " UPPER(Internal) LIKE " + "'%" + searchTerm + "%'";		
+			order = "Client asc, Site asc, EnteredDate desc";
 		}
 		
-		if(chckbxResolution.isSelected())
-		{
-			if(filters.compareTo("") != 0)
-			{
-				filters = filters + "OR";
-			}
-			filters = filters + " UPPER(Resolution) LIKE " + "'%" + searchTerm + "%'";
-		}
+				
 		
-		if(filters.compareTo("") == 0)			
-		{			
-			JOptionPane.showMessageDialog(frmArchiveTickets, "Please select a search criteria.");
-		}
-		else
-		{
-			String commandText = "SELECT Client, Site, Category, Ticket, CONVERT(varchar(17), EnteredDate, 113) as EnteredDate, Description, Assigned, Status, Resolution, Internal, Active, EmailSent, CONVERT(varchar(17), UpdateDate, 113) as UpdateDate,TimeSpent,CCNotified,LastUpdatedBy "
-					+ "FROM SupportTickets WHERE" + filters + " ORDER BY Client asc, Site asc, EnteredDate desc";
+			String commandText = "SELECT Client, Site, Category, Ticket, CONVERT(varchar(17), EnteredDate, 113) as EnteredDateFormatted, Description, Assigned, Status, Resolution, Internal, Active, EmailSent, CONVERT(varchar(17), UpdateDate, 113) as UpdateDate,TimeSpent,CCNotified,LastUpdatedBy "
+					+ "FROM SupportTickets WHERE Active = 0 " + filters + " ORDER BY " + order;
 			
 			ResultSet rs = c_Query.ExecuteResultSet(commandText);
+			//System.out.println(commandText);
+			
 			try {
 				while ((rs!=null) && (rs.next()))
 				{				
 					  c_Archive arch = new c_Archive();
 					  arch.setClient(rs.getString("Client"));
-					  arch.setSite(rs.getString("Site"));
+					  arch.setSite(rs.getString("Site"));					  
 					  arch.setCategory(rs.getString("Category"));
 					  arch.setTicket(rs.getString("Ticket"));
-					  arch.setEnteredDate(rs.getString("EnteredDate"));
+					  arch.setEnteredDate(rs.getString("EnteredDateFormatted"));
 					  arch.setDescription(rs.getString("Description"));
 					  arch.setAssigned(rs.getString("Assigned"));
 					  arch.setStatus(rs.getString("Status"));
-					  arch.setResolution(rs.getString("Resolution"));
+					  arch.setResolution(rs.getString("Resolution"));					  
 					  arch.setInternal(rs.getString("Internal"));
+					  if(rs.wasNull())
+					  {
+						  arch.setInternal("");
+					  }
 					  arch.setActive(rs.getString("Active"));
 					  arch.setEmailSent(rs.getString("EmailSent"));
 					  arch.setUpdateDate(rs.getString("UpdateDate"));
@@ -796,25 +972,15 @@ public class g_ArchiveTickets {
 					  arch.setLastUpdatedBy(rs.getString("LastUpdatedBy"));
 					  archiveListarr.add(arch);
 					  listModel.addElement(arch.getClient() + " " + arch.getSite() + " (" + arch.getTicket() + ")");	
-				}
-				
-				if(txt_Internal.getText().compareTo("") != 0)
-				{
-					btn_Internal.setText("* Internal *");
-					btn_Internal.setBackground(Color.orange);
-				}
-				else
-				{
-					btn_Internal.setText("Internal");
-					btn_Internal.setBackground(Color.getColor("240,240,240"));
-					
-				}
+				}			
 				
 				scrollPane_4.setViewportView(searchList);
 	
 				searchList.setModel(listModel);
 				
 				searchList.setSelectedIndex(0);
+				
+				lblResults.setText("<html><center>Search Results Found: " + Integer.toString(listModel.getSize()) + " </center></html>");
 			
 			}	
 			
@@ -823,13 +989,17 @@ public class g_ArchiveTickets {
 				
 			}	
 			
-			
-		}
+
+			long stopTime = System.currentTimeMillis();
+
+			lblqueryExecutedIn.setText("<html><center><i>Query Executed In:  " + (stopTime - startTime) + " ms. </i></center></html>");
+		
 		
 	}
 	
 	private void ReactivateTicket()
 	{			 
+				TicketNum = archiveListarr.get(searchList.getSelectedIndex()).getTicket();
 			    String TicketUpdate = "UPDATE SupportTickets SET Active = 1, EmailSent = 0, Status = 'Investigating' WHERE Ticket =  '" + TicketNum + "'";
 			    try
 			    {
@@ -840,228 +1010,117 @@ public class g_ArchiveTickets {
 			    	System.out.println(e.toString());
 			    }			   
 				    JOptionPane.showMessageDialog(frmArchiveTickets, "Ticket #" + TicketNum + " has been reactivated.");
-				    PopulateActiveWindow();
-					PopulateActiveTickets();					
+				    Search();								
 	}
 	
 	public void RefreshAll()
 	{
-		PopulateActiveWindow();
-		PopulateActiveTickets();
-		
+		//PopulateActiveWindow();		
+		Search();
 	}
 	
-
-	private void PopulateActiveWindow()
-	{		
-		
-		lbl_Assigned.setVisible(true);					
-		String commandText = "";
-		if(rdbtnCategory.isSelected())
-		{
-			try{
-				String tmp = tree_active.getSelectionPath().getLastPathComponent().toString();									
-				TicketNum = tmp.split("[\\(\\)]")[1];		
-				}
-				catch (Exception e)
-				{
-					//do nothing
-				}			
+	
+	private void PopulateSiteList(String site){
+		cb_Site.removeAllItems();
+		if((site.compareTo("") == 0) || (site.compareTo("All Clients") == 0)) {
+			cb_Site.setEnabled(false);
 		}
-		else if(rdbtnSite.isSelected())
+		else
 		{
-			try{
-				String tmp = tree_active.getSelectionPath().getLastPathComponent().toString();									
-				TicketNum = tmp;
-				}
-				catch (Exception e)
-				{
-					//do nothing
-				}							
-
+			cb_Site.setEnabled(true);
+			cb_Site.addItem("All " + site +" Sites");
 		}
 		
-		commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Status, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.EnteredDate, 113) as EnteredDate, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, b.CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
-				+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
-		
+		String commandText = "SELECT Site from Sites WHERE Client = '" + site + "' ORDER BY Site ASC";
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
-		
-		try
-		{
+		try {
 			while((rs!=null) && (rs.next()))
-			{
-				client = rs.getString("Client");
-				site = rs.getString("Site");
-				siteid = rs.getInt("SiteID");
-				lbl_ClientSite.setText(client + " " + site + " (" + siteid + ")");
-				siteID = rs.getString("SiteID");
-				rs.getInt("ViewIP");
-				rs.getInt("SQLIP");
-				rs.getInt("DevIP");
-				rs.getInt("iDracIP");
-				rs.getInt("HostIP");
-				rs.getBoolean("HighPerformance");				
-				lbl_Ticket.setText("(#" + rs.getString("Ticket") + ")");
-				lbl_Assigned.setText(rs.getString("Assigned"));				
-				txt_Issue.setText(rs.getString("Description"));
-				txt_Update.setText(rs.getString("Resolution"));
-				txt_Internal.setText(rs.getString("Internal"));
-				txt_TimeSpent.setText(rs.getString("TimeSpent"));
-				lbl_UpdateDate.setText(rs.getString("UpdateDate"));
-				lblLastUpdatedByStr.setText(rs.getString("LastUpdatedBy"));		
-				txtEnteredDate.setText(rs.getString("EnteredDate"));
-				txtStatus.setText(rs.getString("Status"));
-				
-				rs.getInt("rowID");
-				
+			{								
+				cb_Site.addItem(rs.getString("Site"));	
 			}
+		} catch (SQLException e) {
 		}
-		catch(Exception e)
-		{
-			System.out.println(e.toString());
+        try {
+			rs.close();
+		} catch (SQLException e) {
 		}
-		
-		if(txt_Internal.getText().compareTo("") != 0)
-		{
-			btn_Internal.setText("* Internal *");
-			btn_Internal.setBackground(Color.orange);
-		}
-		else
-		{
-			btn_Internal.setText("Internal");
-			btn_Internal.setBackground(Color.getColor("240,240,240"));
-			
-		}
-		
-		fileListModel = new DefaultListModel<c_Files>();
-		
-		commandText = "SELECT Filename FROM Files WHERE TicketNum = '" + TicketNum + "'";		
-		
-		rs = c_Query.ExecuteResultSet(commandText);
-		
-		
-		try
-		{
-
-			fileListModel.clear();
-		while((rs!=null) && (rs.next()))
-		{
-			c_Files fileName = new c_Files(rs.getString("Filename"));
-			fileListModel.addElement(fileName);
-			
-		}
-		}
-		catch(Exception e)
-		{
-			//do nothing
-		}
-		
-		numFiles = fileListModel.getSize();
-		JList_FileList.setModel(fileListModel);
 	}
 	
-	private void PopulateActiveTickets()
+	private void PopulateClientCB()
 	{
-		if(rdbtnSite.isSelected())
-		{
-			try {				
-				tree_active.setModel(new DefaultTreeModel(
-						new DefaultMutableTreeNode("Sites") {
-							private static final long serialVersionUID = 1L;
-							{
-								DefaultMutableTreeNode node_category;
-								DefaultMutableTreeNode node_client;
-								DefaultMutableTreeNode node_ticket;
-								
-								String commandText = "SELECT DISTINCT Client from SupportTickets WHERE Status = 'Complete' ORDER BY Client ASC";
-								ResultSet rs = c_Query.ExecuteResultSet(commandText);
-								
-								while((rs!=null) && (rs.next()))
-								{									
-									String tmpClient = rs.getString("Client");
-									node_category = new DefaultMutableTreeNode(tmpClient);
-									String commandText3 = "SELECT DISTINCT Site from SupportTickets WHERE Client = '" + tmpClient +"'";
-									ResultSet rs3 = c_Query.ExecuteResultSet(commandText3);
-									while((rs3!=null) && (rs3.next()))
-									{									
-										String tmpSite = rs3.getString("Site");
-										node_client = new DefaultMutableTreeNode(tmpSite);
-										node_category.add(node_client);
-																				
-										String commandText2 = "SELECT Ticket from SupportTickets WHERE Active = 0 and Site ='" + tmpSite + "' and Client = '" + tmpClient + "' ORDER BY Site asc, Ticket";										
-										ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);										
-										while((rs2!=null) && (rs2.next()))
-										{											
-												node_ticket = new DefaultMutableTreeNode(rs2.getString("Ticket"));																
-												node_client.add(node_ticket);										
-										}							
-									add(node_category);
-										
-									}
-
-								}
-							}
-						}
-					));
+			cb_Client.addItem("All Clients");
+		 	String commandText = "SELECT DISTINCT Client FROM Sites ORDER BY Client Asc";        
+	        ResultSet rs = c_Query.ExecuteResultSet(commandText);
+	        	     
+	        try {
+				while((rs!=null) && (rs.next()))
+				{							
+					cb_Client.addItem(rs.getString("Client"));	
+				}
 			} catch (SQLException e) {
-				
-				e.printStackTrace();
-			}	
+			}
+	        
+	        commandText = "SELECT DISTINCT Name FROM EN_Employees ORDER BY Name Asc";        
+	        rs = c_Query.ExecuteResultSet(commandText);
+	        cb_Assigned.addItem("All Employees");
+	        try {
+				while((rs!=null) && (rs.next()))
+				{				
+					cb_Assigned.addItem(rs.getString("Name"));	
+				}
+			} catch (SQLException e) {
+			}
+	        
+	        commandText = "SELECT DISTINCT Category FROM SupportTickets ORDER BY Category Asc";        
+	        rs = c_Query.ExecuteResultSet(commandText);
+	        cb_Category.addItem("All Categories");
+	        try {
+				while((rs!=null) && (rs.next()))
+				{				
+					cb_Category.addItem(rs.getString("Category"));	
+				}
+			} catch (SQLException e) {
+			}
+	        
+	        commandText = "Select TOP(1) * FROM SupportTickets";
+	        rs = c_Query.ExecuteResultSet(commandText);
+	        cb_OrderBy1.addItem("");
+   		 	cb_OrderBy2.addItem("");
+   		 	cb_OrderBy3.addItem(""); 
+	        try {
+	        	ResultSetMetaData rsmd = rs.getMetaData();	     
+	        	 for (int i = 2; i <= rsmd.getColumnCount(); i++)
+	        	 {	        		 
+	        		 cb_OrderBy1.addItem(rsmd.getColumnName(i));
+	        		 cb_OrderBy2.addItem(rsmd.getColumnName(i));
+	        		 cb_OrderBy3.addItem(rsmd.getColumnName(i));
+	        	 }
+			} catch (SQLException e) {
+			}
+	       
+	       
+	        try {
+				rs.close();
+			} catch (SQLException e) {
 			
-		}
-		else
-		{
-			try {				
-				tree_active.setModel(new DefaultTreeModel(
-						new DefaultMutableTreeNode("Category") {
-							private static final long serialVersionUID = 1L;
-							{
-								DefaultMutableTreeNode node_category;
-								DefaultMutableTreeNode node_client;
-								DefaultMutableTreeNode node_ticket;
-								
-								String commandText = "SELECT DISTINCT Category from SupportTickets WHERE Status = 'Complete' ORDER BY Category ASC";
-								ResultSet rs = c_Query.ExecuteResultSet(commandText);
-								
-								while((rs!=null) && (rs.next()))
-								{									
-									String category = rs.getString("Category");
-									node_category = new DefaultMutableTreeNode(category);
-									String commandText3 = "SELECT DISTINCT Client from SupportTickets WHERE Category = '" + category +"'";
-									ResultSet rs3 = c_Query.ExecuteResultSet(commandText3);
-									while((rs3!=null) && (rs3.next()))
-									{									
-										String tmpclient = rs3.getString("Client");
-										node_client = new DefaultMutableTreeNode(tmpclient);
-										node_category.add(node_client);																				
-										String commandText2 = "SELECT Site, Ticket  from SupportTickets WHERE Active = 0 and Category ='" + category + "' and Client = '" + tmpclient + "' ORDER BY Site asc, Ticket asc";										
-										ResultSet rs2 = c_Query.ExecuteResultSet(commandText2);										
-										while((rs2!=null) && (rs2.next()))
-										{											
-												node_ticket = new DefaultMutableTreeNode(rs2.getString("Site") + " ("  + rs2.getString("Ticket") +  ")");																
-												node_client.add(node_ticket);										
-										}							
-									add(node_category);
-										
-									}
-									
-										
-										
-								}
-							}
-						}
-					));
-			} catch (SQLException e) {
-				
-				e.printStackTrace();
-			}	
-		}
+			}	       
 	}
 	
-	 private void AddFilesToList(String filename, File source)
-	 {		 
-		 c_Files addFile = new c_Files(filename,source);
-		 ExistingfileListModel.addElement(addFile);
-		 fileListModel.addElement(addFile);
-	 }
+	private void ClearFilters()
+	{		
+		cb_Category.setSelectedIndex(0);
+		cb_Client.setSelectedIndex(0);				
+		cb_OrderBy1.setSelectedIndex(0);
+		cb_OrderByType1.setSelectedIndex(0);
+		cb_OrderBy2.setSelectedIndex(0);
+		cb_OrderByType2.setSelectedIndex(0);
+		cb_OrderBy3.setSelectedIndex(0);
+		cb_OrderByType3.setSelectedIndex(0);
+		txtTicketNumber.setText("");
+		txtKeywords.setText("");
+		//lbldateRange.setSelected(false);
+		cb_DateRange.setSelectedIndex(0);
+		
+	}
 }
+

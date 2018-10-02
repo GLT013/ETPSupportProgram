@@ -52,12 +52,13 @@ public class g_ViewEmployees {
 	 * Launch the application.
 	 */
 	
-			public static void run() {
+			public static void run(JFrame frame) {
 				try {
 					@SuppressWarnings("unused")
 					g_ViewEmployees window = new g_ViewEmployees();
 					g_ViewEmployees.frmViewEmployees.setVisible(true);
-					g_ViewEmployees.frmViewEmployees.setLocationRelativeTo( g_MainMenu.frmMainMenu );
+					g_ViewEmployees.frmViewEmployees.setLocationRelativeTo(frame);
+					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -236,8 +237,7 @@ public class g_ViewEmployees {
 		btnNewEmployee.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-					g_NewEmployee.run();
-					frmViewEmployees.dispose();
+					g_NewEmployee.run(frmViewEmployees);
 				}
 			
 		});
@@ -400,8 +400,7 @@ public class g_ViewEmployees {
 				g_MainMenu.checkVersion();
 				if(c_CheckOpenTickets.CheckTickets())
 				{							
-					g_TicketEntry.run();
-					frmViewEmployees.dispose();
+					g_TicketEntry.run(frmViewEmployees);
 				}
 				else
 				{
@@ -415,8 +414,7 @@ public class g_ViewEmployees {
 		JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 		mntmCurrentTickets.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_CurrentTickets.run();
-				frmViewEmployees.dispose();
+				g_CurrentTickets.run(frmViewEmployees);
 			}
 		});
 		mnSupport.add(mntmCurrentTickets);
@@ -424,8 +422,7 @@ public class g_ViewEmployees {
 		JMenuItem mntmArchive = new JMenuItem("Archive");
 		mntmArchive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ArchiveTickets.run();
-				frmViewEmployees.dispose();
+				g_ArchiveTickets.run(frmViewEmployees);
 			}
 		});
 		mnSupport.add(mntmArchive);
@@ -436,8 +433,7 @@ public class g_ViewEmployees {
 		JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 		mntmButaneSites.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSites.run();
-				frmViewEmployees.dispose();
+				g_ViewSites.run(frmViewEmployees);
 			}
 		});
 		mnSites.add(mntmButaneSites);
@@ -445,8 +441,7 @@ public class g_ViewEmployees {
 		JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 		mntmSiteChanges.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_SiteChanges.run();
-				frmViewEmployees.dispose();
+				g_SiteChanges.run(frmViewEmployees);
 			}
 		});
 		mnSites.add(mntmSiteChanges);
@@ -454,23 +449,29 @@ public class g_ViewEmployees {
 		JMenu mnContacts = new JMenu("Contacts");
 		menuBar.add(mnContacts);
 		
-		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
-		mntmENEmployees.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				g_ViewEmployees.run();
-				frmViewEmployees.dispose();
-			}
-		});
+		JMenuItem mntmENEmployees = new JMenuItem("EN Employees");		
 		mnContacts.add(mntmENEmployees);
+		mntmENEmployees.setEnabled(false);
 		
 		JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 		mntmEtpContacts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_ViewSunoco.run();
-				frmViewEmployees.dispose();
+				g_ViewSunoco.run(frmViewEmployees);
 			}
 		});
 		mnContacts.add(mntmEtpContacts);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmCreateChecklist = new JMenuItem("Create Checklist");
+		mntmCreateChecklist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_CreateChecklist.run(frmViewEmployees);
+			}
+		});		
+		mnTools.add(mntmCreateChecklist);
+
 	}
 	
 	private void CancelEdits()

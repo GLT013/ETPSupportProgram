@@ -3,6 +3,7 @@ public class c_Archive {
 	
 	private String client;
 	private String site;
+	private String siteID;
 	private String category;
 	private String ticket;
 	private String entereddate;
@@ -22,6 +23,7 @@ public class c_Archive {
 	//Get functions
 	public String getClient() { return client; }
 	public String getSite() { return site; }
+	public String getSiteID() { return siteID; }
 	public String getCategory() { return category;}
 	public String getTicket(){ return this.ticket;}	
 	public String getEnteredDate(){ return entereddate;}
@@ -41,6 +43,7 @@ public class c_Archive {
 	//Set functions		
 	public void setClient(String _client) { client = _client; }
 	public void setSite(String _site) { site = _site; }
+	public void setSiteID(String _siteID) { siteID = _siteID; }
 	public void setCategory(String _category) { category = _category;}
 	public void setTicket(String _ticket){ ticket = _ticket;}
 	public void setEnteredDate(String _entereddate){ entereddate = _entereddate;}
@@ -58,10 +61,11 @@ public class c_Archive {
 	
 	
 	
-	public void setArchive(String _client, String _site,String _category, String _ticket, String _entereddate,String _description,String _assigned,String _status,String _resolution,String _internal,String _active,String _emailsent,String _updatedate,String _timespent, String _ccnotified,String _lastupdatedby)
+	public void setArchive(String _client, String _site,String _siteID, String _category, String _ticket, String _entereddate,String _description,String _assigned,String _status,String _resolution,String _internal,String _active,String _emailsent,String _updatedate,String _timespent, String _ccnotified,String _lastupdatedby)
 	{
 		client = _client;
 		site = _site;
+		siteID = _siteID;
 		category = _category;
 		ticket = _ticket;
 		entereddate = _entereddate;
