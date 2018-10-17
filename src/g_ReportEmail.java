@@ -36,6 +36,7 @@ public class g_ReportEmail {
 	public static DefaultListModel<c_EmailRecipients> EmailListModel2;
 	private static JScrollPane scrollPane_1;
 	private static JScrollPane scrollPane_2;
+	private static int DistList = 0;
 
 	/**
 	 * Launch the application.
@@ -72,7 +73,7 @@ public class g_ReportEmail {
 		frmReportEmail.setBounds(100, 100, 800, 900);
 		frmReportEmail.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmReportEmail.getContentPane().setLayout(null);
-		frmReportEmail.setTitle("Automated Support Program v." + g_MainMenu.version);
+		frmReportEmail.setTitle(g_MainMenu.TitleOnline);
 						
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 38, 764, 469);
@@ -256,7 +257,9 @@ public class g_ReportEmail {
 		JButton button_1 = new JButton("Day Shift");
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				PopulateSummerDayEmails();
+				DistList = 3;
+				PopulateEmailList();
+
 			}
 		});
 		button_1.setBounds(10, 22, 77, 23);
@@ -265,7 +268,9 @@ public class g_ReportEmail {
 		JButton btnFieldResourcesNeeded = new JButton("Field Resources Needed");
 		btnFieldResourcesNeeded.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PopulateSummerFieldResources();
+				DistList = 5;
+				PopulateEmailList();
+
 			}
 		});
 		btnFieldResourcesNeeded.setBounds(10, 60, 173, 23);
@@ -280,7 +285,8 @@ public class g_ReportEmail {
 		JButton btnOffHours_1 = new JButton("Off Hours");
 		btnOffHours_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				PopulateSummerOffHourEmails();
+				DistList = 4;
+				PopulateEmailList();
 			}
 		});
 		btnOffHours_1.setBounds(96, 22, 87, 23);
@@ -292,12 +298,15 @@ public class g_ReportEmail {
 		frmReportEmail.getContentPane().add(lblEmailDistributions);
 		btnOffHours.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PopulateOffHourEmails();
+				DistList = 2;
+				PopulateEmailList();
 			}
 		});
 		btnDayShift.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				PopulateDayShiftEmails();
+				DistList = 1;
+				PopulateEmailList();
+
 			}
 		});
 	}
@@ -318,6 +327,7 @@ public class g_ReportEmail {
 	
 	private void PopulateOffHourEmails()
 	{
+		/*
 		String name = "";
 		for(int i=0; i < EmailList.getModel().getSize(); i++)
 		{
@@ -331,78 +341,40 @@ public class g_ReportEmail {
 		    	addRecipients(i);
 		    	i--;
 		    }
+		}*/
+		try {
+			EmailListModel.removeAllElements();
+			EmailListModel2.removeAllElements();
 		}
-	}
-	
-	private void PopulateSummerOffHourEmails()
-	{
-		String name = "";
-		for(int i=0; i < EmailList.getModel().getSize(); i++)
+		catch(Exception e)
 		{
-			name = EmailList.getModel().getElementAt(i).getName().toString();
-		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
-		       name.compareTo("Joe Klems") == 0 ||     name.compareTo("Chris Sheedy") == 0 || 
-		       name.compareTo("Jim Robbins") == 0 ||   name.compareTo("James McClintock") == 0
-		       )
-		    {
-		    	addRecipients(i);
-		    	i--;
-		    }
+			
 		}
-	}
-	
-	private void PopulateSummerDayEmails()
-	{
-		String name = "";
-		for(int i=0; i < EmailList.getModel().getSize(); i++)
+		PopulateEmployees();
+		PopulateDefaultEmails();		
+		String commandText = "SELECT a.Name, a.Email FROM Sunoco_Contacts a, Email_Distribution b WHERE a.rowid = b.NameID AND b.DistributionList = 2 Order by Name asc";		
+		ResultSet rs = c_Query.ExecuteResultSet(commandText);
+		try{		
+			String name = "";
+			while ((rs!=null) && (rs.next()))
+			{
+				name = rs.getString("Name");
+				for(int i=0; i < EmailList.getModel().getSize(); i++)
+				{					
+				    if(name.compareTo(EmailList.getModel().getElementAt(i).getName()) == 0)   
+				    {
+				    	addRecipients(i);
+				    	i--;
+				    }
+				}
+			}
+		}
+		catch(Exception e)
 		{
-			name = EmailList.getModel().getElementAt(i).getName().toString();
-		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
-		       name.compareTo("Joe Klems") == 0 	|| name.compareTo("James McClintock") == 0 || 
-		       name.compareTo("Jim Robbins") == 0   || name.compareTo("Chris Sheedy") == 0)
-		    {
-		    	addRecipients(i);
-		    	i--;
-		    }
+			
 		}
 	}
 	
-	
-	private void PopulateSummerFieldResources()
-	{
-		String name = "";
-		for(int i=0; i < EmailList.getModel().getSize(); i++)
-		{
-			name = EmailList.getModel().getElementAt(i).getName().toString();
-		    if(name.compareTo("Bill Tirri") == 0	||   name.compareTo("Bob Crowley") == 0 || 
-		       name.compareTo("Joe Klems") == 0 	||   name.compareTo("James McClintock") == 0 ||
-		       name.compareTo("Jim Robbins") == 0)
-		      
-		    {
-		    	addRecipients(i);
-		    	i--;
-		    }
-		}
-	}
-	
-	
-	
-	
-	private void PopulateDayShiftEmails()
-	{
-		String name = "";
-		for(int i=0; i < EmailList.getModel().getSize(); i++)
-		{
-			name = EmailList.getModel().getElementAt(i).getName().toString();
-		    if(name.compareTo("Bill Tirri") == 0	|| name.compareTo("Bob Crowley") == 0 || 
-		       name.compareTo("Joe Klems") == 0 ||  name.compareTo("Chris Sheedy") == 0 || 
-		       name.compareTo("James McClintock") == 0)
-		    {
-		    	addRecipients(i);
-		    	i--;
-		    }
-		}
-	}
 	
 	private void PopulateEmployees()
 	{	
@@ -419,7 +391,7 @@ public class g_ReportEmail {
 
 			while ((rs!=null) && (rs.next()))
 			{
-				 emailRecipients = new c_EmailRecipients(rs.getString(1),rs.getString(2));
+				 emailRecipients = new c_EmailRecipients(rs.getString("Name"),rs.getString("Email"));
 				 EmailListModel.addElement(emailRecipients);
 			}
 		}
@@ -460,6 +432,41 @@ public class g_ReportEmail {
 		EmailList.setModel(EmailListModel);
 		EmailList2.setModel(EmailListModel2);		
 	}	
+	
+	private void PopulateEmailList()
+	{
+		try {
+			EmailListModel.removeAllElements();
+			EmailListModel2.removeAllElements();
+		}
+		catch(Exception e)
+		{
+			
+		}
+		PopulateEmployees();
+		PopulateDefaultEmails();		
+		String commandText = "SELECT a.Name, a.Email FROM Sunoco_Contacts a, Email_Distribution b WHERE a.rowid = b.NameID AND b.DistributionList = " + DistList + " Order by Name asc";		
+		ResultSet rs = c_Query.ExecuteResultSet(commandText);
+		try{		
+			String name = "";
+			while ((rs!=null) && (rs.next()))
+			{
+				name = rs.getString("Name");
+				for(int i=0; i < EmailList.getModel().getSize(); i++)
+				{					
+				    if(name.compareTo(EmailList.getModel().getElementAt(i).getName()) == 0)   
+				    {
+				    	addRecipients(i);
+				    	i--;
+				    }
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			
+		}
+	}
 
 	@SuppressWarnings("deprecation")
 	public static void GenerateEmailReport(List<String> TicketList )

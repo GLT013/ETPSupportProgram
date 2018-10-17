@@ -114,7 +114,7 @@ public class g_SiteChanges {
 	private void initialize() {
 		frmSiteChanges = new JFrame();
 		frmSiteChanges.setResizable(false);
-		frmSiteChanges.setBounds(100, 100, 858, 678);
+		frmSiteChanges.setBounds(100, 100, 858, 699);
 		frmSiteChanges.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSiteChanges.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSites.class.getResource("/icon.png")));
 		frmSiteChanges.getContentPane().setLayout(null);
@@ -343,9 +343,9 @@ public class g_SiteChanges {
 		});
 		btn_AddChange.setIcon(new ImageIcon(g_SiteChanges.class.getResource("/document.png")));
 		btn_AddChange.setSelectedIcon(new ImageIcon(g_SiteChanges.class.getResource("/document.png")));
-		btn_AddChange.setToolTipText("Add Change");
+		btn_AddChange.setToolTipText("Add Single Site Change");
 		btn_AddChange.setBackground(Color.LIGHT_GRAY);
-		btn_AddChange.setBounds(141, 564, 50, 42);
+		btn_AddChange.setBounds(20, 564, 36, 36);
 		frmSiteChanges.getContentPane().add(btn_AddChange);
 		
 		JButton btnNewButton = new JButton("New button");
@@ -476,8 +476,20 @@ public class g_SiteChanges {
 				}
 			}
 		});
-		button.setBounds(10, 583, 89, 23);
+		button.setBounds(10, 616, 89, 23);
 		frmSiteChanges.getContentPane().add(button);
+		
+		JButton button_1 = new JButton("");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_SiteChangesMulti.run(frmSiteChanges);
+			}
+		});
+		button_1.setIcon(new ImageIcon(g_SiteChanges.class.getResource("/multi-site.png")));
+		button_1.setToolTipText("Add Multi Site Change");
+		button_1.setBackground(Color.LIGHT_GRAY);
+		button_1.setBounds(141, 564, 36, 36);
+		frmSiteChanges.getContentPane().add(button_1);
 		
 		//Menubar
 		JMenuBar menuBar = new JMenuBar();

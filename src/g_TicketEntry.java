@@ -14,6 +14,8 @@ import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.swing.JTextField;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -43,7 +45,6 @@ public class g_TicketEntry {
 
 			public static void run(JFrame frame) {			
 				try {	
-					//new g_TicketEntry(); Not sure what this was doing...
 					g_TicketEntry window = new g_TicketEntry();
 					g_TicketEntry.frmTicketEntry.setVisible(true);
 					g_TicketEntry.frmTicketEntry.setLocationRelativeTo(frame);
@@ -356,14 +357,10 @@ public class g_TicketEntry {
 		String Client = cb_Client.getSelectedItem().toString();
 		String Site = cb_Site.getSelectedItem().toString();
 		String Category = cb_Category.getSelectedItem().toString();
-
-		int testMonth = datePicker.getModel().getMonth();
-		testMonth++;
-		int testDay = datePicker.getModel().getDay();			
-		int testYear = datePicker.getModel().getYear();
 		
-
-		String strDate = testYear + "-" + testMonth + "-" + testDay + " " + LocalTime.now().toString();
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+		String strDate = datePicker.getJFormattedTextField().getText() + " " + LocalTime.now().format(dtf);
+	
 		String TicketNum = "";
 		if(chkbx_NoTicketNum.isSelected())
 		{

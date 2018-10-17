@@ -55,68 +55,74 @@ public class g_NewEmployee {
 		frmNewEmployee = new JFrame();
 		frmNewEmployee.setResizable(false);
 		frmNewEmployee.setIconImage(Toolkit.getDefaultToolkit().getImage(g_NewEmployee.class.getResource("/icon.png")));
-		frmNewEmployee.setBounds(100, 100, 626, 507);
+		frmNewEmployee.setBounds(100, 100, 545, 507);
 		frmNewEmployee.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmNewEmployee.getContentPane().setLayout(null);		
 		frmNewEmployee.setTitle("Automated Support Program v." + g_MainMenu.version);
 				
 		JLabel lblAddNewEmployee = new JLabel("Add New Employee");
 		lblAddNewEmployee.setBounds(214, 11, 189, 19);
-		lblAddNewEmployee.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 18));
+		lblAddNewEmployee.setFont(new Font("Rockwell", Font.BOLD, 18));
 		frmNewEmployee.getContentPane().add(lblAddNewEmployee);
 		
 		JLabel lblNamefirst = new JLabel("Name (First & Last)");
-		lblNamefirst.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
+		lblNamefirst.setFont(new Font("Rockwell", Font.BOLD, 14));
 		lblNamefirst.setBounds(10, 67, 179, 14);
 		frmNewEmployee.getContentPane().add(lblNamefirst);
 		
 		txt_Name = new JTextField();
+		txt_Name.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		txt_Name.setBounds(199, 58, 242, 35);
 		frmNewEmployee.getContentPane().add(txt_Name);
 		txt_Name.setColumns(10);
 		
 		JLabel lblTitle = new JLabel("Title");
-		lblTitle.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
+		lblTitle.setFont(new Font("Rockwell", Font.BOLD, 14));
 		lblTitle.setBounds(10, 117, 179, 14);
 		frmNewEmployee.getContentPane().add(lblTitle);
 		
 		JLabel lblEmailAddress = new JLabel("Email Address");
-		lblEmailAddress.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
+		lblEmailAddress.setFont(new Font("Rockwell", Font.BOLD, 14));
 		lblEmailAddress.setBounds(10, 177, 179, 14);
 		frmNewEmployee.getContentPane().add(lblEmailAddress);
 		
 		txt_Email = new JTextField();
+		txt_Email.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		txt_Email.setColumns(10);
 		txt_Email.setBounds(199, 168, 242, 35);
 		frmNewEmployee.getContentPane().add(txt_Email);
 		
 		JLabel lblOfficePhone = new JLabel("Office Phone");
-		lblOfficePhone.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
+		lblOfficePhone.setFont(new Font("Rockwell", Font.BOLD, 14));
 		lblOfficePhone.setBounds(10, 234, 179, 14);
 		frmNewEmployee.getContentPane().add(lblOfficePhone);
 		
 		txt_Phone = new JTextField();
+		txt_Phone.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		txt_Phone.setColumns(10);
 		txt_Phone.setBounds(199, 225, 242, 35);
 		frmNewEmployee.getContentPane().add(txt_Phone);
 		
 		JLabel lblMobilePhone = new JLabel("Mobile Phone");
-		lblMobilePhone.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 14));
+		lblMobilePhone.setFont(new Font("Rockwell", Font.BOLD, 14));
 		lblMobilePhone.setBounds(10, 294, 179, 14);
 		frmNewEmployee.getContentPane().add(lblMobilePhone);
 		
 		txt_Mobile = new JTextField();
+		txt_Mobile.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		txt_Mobile.setColumns(10);
 		txt_Mobile.setBounds(199, 285, 242, 35);
 		frmNewEmployee.getContentPane().add(txt_Mobile);
 		
 		cb_Title = new JComboBox<String>();
+		cb_Title.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		cb_Title.setModel(new DefaultComboBoxModel<String>(new String[] {"Design Engineer", "Design Specialist", "Sr. Design Engineer", "Sr. Design Specialist", "Project Engineer", "Project Specialist", "Sr. Project Engineer", "Sr. Project Specialist", "Project Manager", "Sr. Project Manager"}));
 		cb_Title.setBounds(199, 108, 242, 35);
 		frmNewEmployee.getContentPane().add(cb_Title);
 		cb_Title.setSelectedIndex(-1);
 		
 		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				InsertEmployee();
@@ -126,6 +132,7 @@ public class g_NewEmployee {
 		frmNewEmployee.getContentPane().add(btnSubmit);
 		
 		JButton btnBack = new JButton("Back");
+		btnBack.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				g_ViewEmployees.run(frmNewEmployee);

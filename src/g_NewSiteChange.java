@@ -26,8 +26,11 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 
 public class g_NewSiteChange {
@@ -350,30 +353,30 @@ public class g_NewSiteChange {
 		DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm");		 		 
 		Date date = new Date();
 		dateEntered = dateFormat.format(date);
-		
-		
-		int testMonth = datePicker.getModel().getMonth();
-		testMonth++;
-		int testDay = datePicker.getModel().getDay();			
-		int testYear = datePicker.getModel().getYear();	
-		String strDate = testYear + "-" + testMonth + "-" + testDay + " " + LocalTime.now().toString();
-		
+						
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+		String strDate = datePicker.getJFormattedTextField().getText() + " " + LocalTime.now().format(dtf);
+
 		String commandText = "INSERT INTO Sitechanges(SiteID,MOC,Change,ChangedBy,RequestedBy,DateEntered,DateChanged,Injection,HMI,PGM,Reporting,Safety,Sampling,Supply,System,Other) "
 				+ "VALUES('" + site.getSiteID() + "','" + txt_MOC.getText() + "','" + txt_Change.getText() + "','" + g_MainMenu.CurrentUser + "','" + txt_RequestedBy.getText() + "','"
 				+ dateEntered + "','" + strDate + "','" + chckbxInj.isSelected() + "','" + chckbxPgm.isSelected() + "','" + chckbxHmi.isSelected() + "','" + chckbxReporting.isSelected()
 				+ "','" + chckbxSafety.isSelected() + "','" + chckbxSampling.isSelected() + "','" + chckbxSupply.isSelected() + "','" + chckbxSystem.isSelected() + "','" + chckbxOther.isSelected() +"')";
+		
 		
 		try{
 			c_Query.ExecuteQuery(commandText);
 			JOptionPane.showMessageDialog(frm_NewSiteChange, "Site change entered successfully.");
 			flag = true;
 			g_SiteChanges.run(frm_NewSiteChange);
+			
 		}
 		catch(Exception e)
 		{
-			JOptionPane.showMessageDialog(frm_NewSiteChange, "Error inserting change." + e.toString());
+			JOptionPane.showMessageDialog(frm_NewSiteChange, "Error inserting change." + e.toString());			
+			return;
 			
 		}
+		
 		
 		 
 	}

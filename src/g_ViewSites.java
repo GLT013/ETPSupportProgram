@@ -81,10 +81,15 @@ public class g_ViewSites {
 	private JTextArea txt_ServerDesc;
 	private JPanel panel_4;
 	private JPanel panel_5;
-	private JLabel lbl_CentralSQL;
-	private JLabel lbl_CentralView;
+	private JButton lbl_CentralSQL;
+	private JButton lbl_CentralView;
 	private JTextField txtStateAbbrv;
 	private String sharepointURL;
+	private JButton lbl_View;
+	private JButton lbl_SQL;
+	private JButton lbl_Dev;
+	private JButton lbl_Host;
+	private JButton lbl_iDrac;
 	
 
 	/**
@@ -162,7 +167,7 @@ public class g_ViewSites {
 					txtState.setEditable(true);
 					txtStateAbbrv.setEditable(true);
 					txtHost.setEditable(true);
-					txtView.setEditable(true);
+					txtView.setEditable(true);								
 					txtSQL.setEditable(true);
 					txtDev.setEditable(true);
 					txtGeneration.setEditable(true);					
@@ -174,16 +179,30 @@ public class g_ViewSites {
 					chk_HighPerformance.setEnabled(true);
 					chk_Twic.setEnabled(true);
 					chk_SQL.setEnabled(true);
-					chk_View.setEnabled(true);									
+					chk_View.setEnabled(true);		
+					lbl_View.setVisible(false);
+					lbl_SQL.setVisible(false);
+					lbl_Dev.setVisible(false);
+					lbl_Host.setVisible(false);
+					lbl_iDrac.setVisible(false);
+					if(!chk_SQL.isSelected())
+					{
+						txtSQL.setVisible(true);	
+					}
+					if(!chk_View.isSelected())
+					{
+						txtView.setVisible(true);							
+					}
+					txtDev.setVisible(true);		
+					txtiDrac.setVisible(true);		
+					txtHost.setVisible(true);		
 				}
 				else
 				{
 					txt_ServerName.setEditable(true);
 					txt_ServerIP.setEditable(true);
-					txt_ServerDesc.setEditable(true);
-					
-				}
-				
+					txt_ServerDesc.setEditable(true);					
+				}				
 				btnEdit.setEnabled(false);
 				btnEdit.setVisible(false);
 				btnCancel.setVisible(true);
@@ -193,81 +212,7 @@ public class g_ViewSites {
 			}
 		});     
 		
-		/*
-		JScrollPane scrollPane_Tree = new JScrollPane();
-		scrollPane_Tree.setEnabled(false);
-		scrollPane_Tree.setBounds(36, 47, 263, 568);
-		frmButaneSites.getContentPane().add(scrollPane_Tree);
 		
-		tree_sites = new JTree();
-		tree_sites.setBorder(UIManager.getBorder("DesktopIcon.border"));
-		tree_sites.setBackground(Color.WHITE);
-		scrollPane_Tree.setViewportView(tree_sites);
-		btnEdit.setIcon(new ImageIcon(g_ViewSites.class.getResource("/edit.png")));
-	
-		tree_sites.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
-				System.out.println("TEsting");
-				try{
-					
-						//CancelEdits();
-						//Object tmp = tree_sites.getLastSelectedPathComponent();			
-						DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode)tree_sites.getLastSelectedPathComponent();
-						if(currentNode != null){         
-					        Object nodeInfo = currentNode.getUserObject();
-						 c_ButaneSites test = (c_ButaneSites) nodeInfo;						
-						txtClient.setText(test.getAddress());
-						System.out.println("WTFFFFFFF" + test.getAddress());
-						}
-						//txtClient.setText(result.get(tree_sites.getSelectionPath().getLastPathComponent().toString().getSelectedIndex()).getClient());
-						/*
-						txtSite.setText(result.get(list.getSelectedIndex()).getSite());
-						txtSiteID.setText(String.valueOf(result.get(list.getSelectedIndex()).getSiteID()));
-						txtState.setText(result.get(list.getSelectedIndex()).getState());
-						txtClientAbbrv.setText(result.get(list.getSelectedIndex()).getClientAbbrv());
-						txtSiteAbbrv.setText(result.get(list.getSelectedIndex()).getSiteAbbrv());
-						txtiDrac.setText(String.valueOf(result.get(list.getSelectedIndex()).getiDrac()));
-						txtHost.setText(String.valueOf(result.get(list.getSelectedIndex()).getHost()));
-						txtView.setText(String.valueOf(result.get(list.getSelectedIndex()).getView()));
-						txtSQL.setText(String.valueOf(result.get(list.getSelectedIndex()).getSQL()));
-						txtDev.setText(String.valueOf(result.get(list.getSelectedIndex()).getDev()));
-						txtGeneration.setText(String.valueOf(result.get(list.getSelectedIndex()).getGeneration()));
-						txtHMI.setText(result.get(list.getSelectedIndex()).getHMI());
-						txtAddress.setText(result.get(list.getSelectedIndex()).getAddress());
-						txtPhone.setText(result.get(list.getSelectedIndex()).getPhone());
-						txtFieldTech.setText(result.get(list.getSelectedIndex()).getFieldTech());
-						txtFieldSupervisor.setText(result.get(list.getSelectedIndex()).getFieldSupervisor());
-						txtTimezone.setText(result.get(list.getSelectedIndex()).getTimezone());
-						
-						if(result.get(list.getSelectedIndex()).getTwic())
-						{
-							chk_Twic.setSelected(true);
-						}
-						else
-						{
-							chk_Twic.setSelected(false);
-						}
-						
-						if(result.get(list.getSelectedIndex()).getHighPerformance())
-						{
-							chk_HighPerformance.setSelected(true);
-						}
-						else
-						{
-							chk_HighPerformance.setSelected(false);
-						}
-						
-					}
-				
-				
-				catch(Exception e1)
-				{
-					System.out.println(e1.toString());
-				}
-			}
-
-		});
-	*/	
 		frmButaneSites.getContentPane().add(btnEdit);
 		btnAccept.setBounds(786, 11, 34, 34);
 		btnAccept.addActionListener(new ActionListener() {
@@ -310,6 +255,7 @@ public class g_ViewSites {
 		btnAddSite.setToolTipText("New Site");
 		
 		frmButaneSites.getContentPane().add(btnAddSite);
+		list_ButaneSites.setFont(new Font("Rockwell", Font.PLAIN, 13));
 		list_ButaneSites.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		
@@ -337,7 +283,12 @@ public class g_ViewSites {
 						txtFieldTech.setText(result.get(list_ButaneSites.getSelectedIndex()).getFieldTech());
 						txtFieldSupervisor.setText(result.get(list_ButaneSites.getSelectedIndex()).getFieldSupervisor());
 						txtTimezone.setText(result.get(list_ButaneSites.getSelectedIndex()).getTimezone());
-						sharepointURL = result.get(list_ButaneSites.getSelectedIndex()).getSharepoint();
+						sharepointURL = result.get(list_ButaneSites.getSelectedIndex()).getSharepoint();						
+						
+						txtDev.setVisible(false);
+						txtiDrac.setVisible(false);
+						txtHost.setVisible(false);
+						
 						if(result.get(list_ButaneSites.getSelectedIndex()).getTwic())
 						{
 							chk_Twic.setSelected(true);
@@ -360,26 +311,30 @@ public class g_ViewSites {
 						{
 							chk_SQL.setSelected(true);
 							txtSQL.setVisible(false);
+							lbl_SQL.setVisible(false);
 							lbl_CentralSQL.setVisible(true);
 						}
 						else
 						{
 							chk_SQL.setSelected(false);
-							txtSQL.setVisible(true);
-							lbl_CentralSQL.setVisible(false);
-							
+							txtSQL.setVisible(false);
+							lbl_SQL.setVisible(true);
+							lbl_CentralSQL.setVisible(false);							
 						}
 						
 						if(result.get(list_ButaneSites.getSelectedIndex()).getCentralView())
 						{
 							chk_View.setSelected(true);							
 							txtView.setVisible(false);
+							lbl_View.setVisible(false);
+							
 							lbl_CentralView.setVisible(true);
 						}
 						else
 						{
 							chk_View.setSelected(false);
-							txtView.setVisible(true);
+							txtView.setVisible(false);
+							lbl_View.setVisible(true);
 							lbl_CentralView.setVisible(false);
 						}
 					}
@@ -409,36 +364,13 @@ public class g_ViewSites {
 		frmButaneSites.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		txtiDrac = new JTextField("");
-		txtiDrac.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg5) {
-				if(!txtiDrac.isEditable())
-				{
-					if(arg5.getButton() == MouseEvent.BUTTON1)
-					{
-						String ipAddress = "10.219." + txtSiteID.getText() + "." + txtiDrac.getText(); 
-						try {
-							Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress);
-						} catch (IOException e2) {
-						}
-					}
-					else if(arg5.getButton() == MouseEvent.BUTTON3)
-					{					
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txtiDrac.getText()+""});												
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		});
+		txtiDrac = new JTextField("");		
 		txtiDrac.setBounds(136, 95, 40, 30);
 		txtiDrac.setColumns(1);
 		panel.add(txtiDrac);
 		txtiDrac.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtiDrac.setEditable(false);
+		txtiDrac.setVisible(false);
 		
 		JLabel lbliDrac = new JLabel("iDrac");
 		lbliDrac.setBounds(136, 130, 45, 14);
@@ -451,28 +383,12 @@ public class g_ViewSites {
 		lblServer.setBounds(0, 10, 240, 14);
 		panel.add(lblServer);
 		
-		txtHost = new JTextField("");
-		txtHost.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg4) {
-				if(!txtHost.isEditable())
-				{
-					if(arg4.getButton() == MouseEvent.BUTTON3)
-					{					
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txtHost.getText()+""});												
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		});
+		txtHost = new JTextField("");		
 		txtHost.setBounds(48, 95, 45, 30);
 		panel.add(txtHost);
 		txtHost.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		txtHost.setEditable(false);
-		
+		txtHost.setVisible(false);
 		
 		JLabel lblHost = new JLabel("Host");
 		lblHost.setBounds(48, 130, 45, 14);
@@ -480,9 +396,59 @@ public class g_ViewSites {
 		lblHost.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		
 		txtView = new JTextField("");
-		txtView.addMouseListener(new MouseAdapter() {
+		txtView.setVisible(false);
+		
+		
+		txtView.setBounds(28, 35, 45, 30);
+		panel.add(txtView);
+		txtView.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		txtView.setEditable(false);
+		txtView.setVisible(false);
+		JLabel lblView = new JLabel("View");
+		lblView.setBounds(28, 70, 45, 14);
+		panel.add(lblView);
+		lblView.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		
+		txtSQL = new JTextField("");		
+		txtSQL.setBounds(88, 35, 45, 30);
+		panel.add(txtSQL);
+		txtSQL.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		txtSQL.setEditable(false);
+		txtSQL.setVisible(false);
+		
+		JLabel lblSQL = new JLabel("SQL");
+		lblSQL.setBounds(88, 70, 45, 14);
+		panel.add(lblSQL);
+		lblSQL.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		
+		txtDev = new JTextField("");
+		
+		txtDev.setBounds(148, 35, 45, 30);
+		panel.add(txtDev);
+		txtDev.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		txtDev.setEditable(false);
+		
+		JLabel lblDev = new JLabel("Dev");
+		lblDev.setBounds(148, 70, 45, 14);
+		panel.add(lblDev);
+		lblDev.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		
+		lbl_CentralView = new JButton("");
+		lbl_CentralView.setIcon(new ImageIcon(g_ViewSites.class.getResource("/view.png")));
+		lbl_CentralView.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		lbl_CentralView.setBounds(28, 35, 32, 32);
+		panel.add(lbl_CentralView);
+		
+		lbl_CentralSQL = new JButton("");
+		lbl_CentralSQL.setIcon(new ImageIcon(g_ViewSites.class.getResource("/sql.png")));
+		lbl_CentralSQL.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		lbl_CentralSQL.setBounds(87, 35, 32, 32);
+		panel.add(lbl_CentralSQL);
+		
+		lbl_View = new JButton("");
+		lbl_View.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {													
+			public void mouseClicked(MouseEvent arg0) {
 				if(!txtView.isEditable())
 				{
 					String ipAddress = "";
@@ -509,9 +475,7 @@ public class g_ViewSites {
 							width = "1920";
 							height = "1080";
 						}
-						
-						
-						
+																		
 						try {
 							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
 						} catch (IOException e) {
@@ -538,20 +502,116 @@ public class g_ViewSites {
 			}
 		});
 		
-		txtView.setBounds(28, 35, 45, 30);
-		panel.add(txtView);
-		txtView.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		txtView.setEditable(false);
+		lbl_View.setIcon(new ImageIcon(g_ViewSites.class.getResource("/view.png")));
+		lbl_View.setBounds(27, 35, 32, 32);
+		lbl_View.setBorderPainted(false); 
+		//lbl_View.setContentAreaFilled(false); 
+		//lbl_View.setFocusPainted(false); 
+		lbl_View.setOpaque(false);
+		panel.add(lbl_View);
 		
-		JLabel lblView = new JLabel("View");
-		lblView.setBounds(28, 70, 45, 14);
-		panel.add(lblView);
-		lblView.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		
-		txtSQL = new JTextField("");
-		txtSQL.addMouseListener(new MouseAdapter() {
+		lbl_Host = new JButton("");
+		lbl_Host.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg2) {				
+			public void mouseClicked(MouseEvent arg4) {
+				if(!txtHost.isEditable())
+				{
+					if(arg4.getButton() == MouseEvent.BUTTON1)
+					{
+						String ipAddress = "10.219." + txtSiteID.getText() + "." + txtHost.getText() + "/ui"; 
+						try {
+							Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress);
+						} catch (IOException e2) {
+						}
+					}					
+					else if(arg4.getButton() == MouseEvent.BUTTON3)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txtHost.getText()+""});												
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		});
+		lbl_Host.setIcon(new ImageIcon(g_ViewSites.class.getResource("/host.png")));
+		lbl_Host.setBounds(48, 93, 32, 32);
+		panel.add(lbl_Host);
+		
+		lbl_iDrac = new JButton("");
+		lbl_iDrac.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg5) {
+				if(!txtiDrac.isEditable())
+				{
+					if(arg5.getButton() == MouseEvent.BUTTON1)
+					{
+						String ipAddress = "10.219." + txtSiteID.getText() + "." + txtiDrac.getText(); 
+						try {
+							Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress);
+						} catch (IOException e2) {
+						}
+					}
+					else if(arg5.getButton() == MouseEvent.BUTTON3)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txtiDrac.getText()+""});												
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		});
+		lbl_iDrac.setIcon(new ImageIcon(g_ViewSites.class.getResource("/idrac.png")));
+		lbl_iDrac.setBounds(136, 93, 32, 32);
+		panel.add(lbl_iDrac);
+		
+		lbl_Dev = new JButton("");
+		lbl_Dev.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg1) {
+				if(!txtDev.isEditable())
+				{					
+					if(arg1.getButton() == MouseEvent.BUTTON1)
+					{
+						String width = "1920";
+						String height = "1080";			
+						String ipAddress = "10.219." + txtSiteID.getText() + "." + txtDev.getText(); 
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+						} catch (IOException e2) {
+							e2.printStackTrace();
+						}
+					}
+					else if(arg1.getButton() == MouseEvent.BUTTON2)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\10.219."+txtSiteID.getText()+"."+txtDev.getText()+"\\c$"});
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+					else if(arg1.getButton() == MouseEvent.BUTTON3)
+					{					
+						try {
+							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txtDev.getText()+""});												
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		});
+		lbl_Dev.setIcon(new ImageIcon(g_ViewSites.class.getResource("/dev.png")));
+		lbl_Dev.setBounds(144, 35, 32, 32);
+		panel.add(lbl_Dev);
+		
+		lbl_SQL = new JButton("");
+		lbl_SQL.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg2) {
 				if(!txtSQL.isEditable())
 				{
 					String ipAddress = ""; 
@@ -593,160 +653,11 @@ public class g_ViewSites {
 					}
 				}
 			}
-			
 		});
-		txtSQL.setBounds(88, 35, 45, 30);
-		panel.add(txtSQL);
-		txtSQL.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		txtSQL.setEditable(false);
-		
-		JLabel lblSQL = new JLabel("SQL");
-		lblSQL.setBounds(88, 70, 45, 14);
-		panel.add(lblSQL);
-		lblSQL.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		
-		txtDev = new JTextField("");
-		txtDev.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg1) {				
-				if(!txtDev.isEditable())
-				{					
-					if(arg1.getButton() == MouseEvent.BUTTON1)
-					{
-						String width = "1920";
-						String height = "1080";			
-						String ipAddress = "10.219." + txtSiteID.getText() + "." + txtDev.getText(); 
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
-						} catch (IOException e2) {
-							e2.printStackTrace();
-						}
-					}
-					else if(arg1.getButton() == MouseEvent.BUTTON2)
-					{					
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\10.219."+txtSiteID.getText()+"."+txtDev.getText()+"\\c$"});
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-					else if(arg1.getButton() == MouseEvent.BUTTON3)
-					{					
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping 10.219."+txtSiteID.getText()+"."+txtDev.getText()+""});												
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		});
-		txtDev.setBounds(148, 35, 45, 30);
-		panel.add(txtDev);
-		txtDev.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		txtDev.setEditable(false);
-		
-		JLabel lblDev = new JLabel("Dev");
-		lblDev.setBounds(148, 70, 45, 14);
-		panel.add(lblDev);
-		lblDev.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		
-		lbl_CentralView = new JLabel("");
-		lbl_CentralView.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if(!txtView.isEditable())
-				{
-					String ipAddress = "192.168.32.74";										
-					if(arg0.getButton() == MouseEvent.BUTTON1)
-					{			
-						String width;
-						String height;
-						if(!chk_HighPerformance.isSelected())
-						{
-							width = "1280";
-							height = "1024";
-						}
-						else
-						{
-							width = "1920";
-							height = "1080";
-						}
-																		
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}				
-					else if(arg0.getButton() == MouseEvent.BUTTON2)
-					{					
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-					else if(arg0.getButton() == MouseEvent.BUTTON3)
-					{					
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		});
-		lbl_CentralView.setIcon(new ImageIcon(g_ViewSites.class.getResource("/view.png")));
-		lbl_CentralView.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		lbl_CentralView.setBounds(28, 35, 32, 32);
-		panel.add(lbl_CentralView);
-		lbl_CentralView.setVisible(false);
-		
-		lbl_CentralSQL = new JLabel("");
-		lbl_CentralSQL.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg2) {
-				if(!txtSQL.isEditable())
-				{					 					
-					String ipAddress = "192.168.32.75";					
-					if(arg2.getButton() == MouseEvent.BUTTON1)
-					{
-						String width = "1920";
-						String height = "1080";			
-						
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
-						} catch (IOException e2) {
-							e2.printStackTrace();
-						}
-					}
-				
-					else if(arg2.getButton() == MouseEvent.BUTTON2)
-					{					
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});							
-						} catch (IOException e1) {
-							e1.printStackTrace();
-						}
-					}
-					else if(arg2.getButton() == MouseEvent.BUTTON3)
-					{					
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		});
-		lbl_CentralSQL.setIcon(new ImageIcon(g_ViewSites.class.getResource("/sql.png")));
-		lbl_CentralSQL.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		lbl_CentralSQL.setBounds(87, 33, 32, 32);
-		panel.add(lbl_CentralSQL);
-		lbl_CentralSQL.setVisible(false);
+		lbl_SQL.setIcon(new ImageIcon(g_ViewSites.class.getResource("/sql.png")));
+		lbl_SQL.setBounds(87, 35, 32, 32);
+		panel.add(lbl_SQL);
+		txtView.setVisible(false);
 		
 		final JPanel panel_1 = new JPanel();
 		panel_1.setBounds(323, 47, 310, 161);
@@ -901,18 +812,7 @@ public class g_ViewSites {
 		panel_2.add(txtStateAbbrv);
 		txtStateAbbrv.setEditable(false);
 		
-		JLabel lblMapIcon = new JLabel("");
-		lblMapIcon.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				try {					
-					Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + "https://google.com/maps/search/" + txtAddress.getText() );
-				} catch (IOException e2) {
-					// TODO Auto-generated catch block
-					System.out.println(e2.toString());
-				}
-			}
-		});
+		JButton lblMapIcon = new JButton("");
 		lblMapIcon.setIcon(new ImageIcon(g_ViewSites.class.getResource("/google.png")));
 		lblMapIcon.setBounds(488, 32, 28, 28);
 		panel_2.add(lblMapIcon);
@@ -987,19 +887,7 @@ public class g_ViewSites {
 		chk_View.setBounds(431, 52, 26, 23);
 		panel_3.add(chk_View);
 		
-		JLabel lblSharePoint = new JLabel("");
-		lblSharePoint.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				try {					
-					Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + sharepointURL );
-				} catch (IOException e2) {
-					// TODO Auto-generated catch block
-					System.out.println(e2.toString());
-				}
-			}
-			
-		});
+		JButton lblSharePoint = new JButton("");
 		lblSharePoint.setToolTipText("Sharepoint");
 		lblSharePoint.setBounds(499, 47, 32, 30);
 		panel_3.add(lblSharePoint);
@@ -1085,40 +973,44 @@ public class g_ViewSites {
 		lblDescription.setBounds(41, 79, 115, 28);
 		panel_4.add(lblDescription);
 		
-		JLabel lblNewLabel_1 = new JLabel("");
+		JButton lblNewLabel_1 = new JButton("");
 		lblNewLabel_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg3) {
-				
 				if(arg3.getButton() == MouseEvent.BUTTON1)
-					{
-					String width;
-					String height;				
-					width = "1920";
-					height = "1080";
-					
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+txt_ServerIP.getText() + " /w:" + width + " /h:" + height});
-					} catch (IOException e) {
-						e.printStackTrace();						
-						}
-					}				
-				else if(arg3.getButton() == MouseEvent.BUTTON2)
-				{					
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+txt_ServerIP.getText()+"\\c$"});
-					} catch (IOException e1) {
-						e1.printStackTrace();
+				{
+				String width;
+				String height;				
+				width = "1920";
+				height = "1080";
+				
+				try {
+					Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+txt_ServerIP.getText() + " /w:" + width + " /h:" + height});
+				} catch (IOException e) {
+					e.printStackTrace();						
 					}
+				}				
+			else if(arg3.getButton() == MouseEvent.BUTTON2)
+			{					
+				try {
+					Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+txt_ServerIP.getText()+"\\c$"});
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
-				else if(arg3.getButton() == MouseEvent.BUTTON3)
-				{					
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+txt_ServerIP.getText()+""});												
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+			}
+			else if(arg3.getButton() == MouseEvent.BUTTON3)
+			{					
+				try {
+					Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+txt_ServerIP.getText()+""});												
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+			}
+		
+			}
+		});
+		lblNewLabel_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 			}
 		});
 		lblNewLabel_1.setToolTipText("RDP");
@@ -1139,6 +1031,8 @@ public class g_ViewSites {
 		scrollPane_ServersInt.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		
 		list_ServersInt = new JList<String>();
+		list_ServersInt.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		list_ServersInt.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list_ServersInt.setSelectedIndex(0);
 		scrollPane_ServersInt.setViewportView(list_ServersInt);
 		
@@ -1165,6 +1059,8 @@ public class g_ViewSites {
 				}
 			}
 		});
+		list_ServersExt.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		list_ServersExt.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		
 		scrollPane_ServersExt.setViewportView(list_ServersExt);
@@ -1309,6 +1205,17 @@ public class g_ViewSites {
 			chk_Twic.setEnabled(false);
 			chk_SQL.setEnabled(false);
 			chk_View.setEnabled(false);
+			
+			lbl_View.setVisible(true);
+			lbl_SQL.setVisible(true);
+			lbl_Dev.setVisible(true);
+			lbl_iDrac.setVisible(true);
+			lbl_Host.setVisible(true);
+			txtView.setVisible(false);
+			txtSQL.setVisible(false);
+			txtDev.setVisible(false);
+			txtiDrac.setVisible(false);
+			txtHost.setVisible(false);
 		}
 		else
 		{

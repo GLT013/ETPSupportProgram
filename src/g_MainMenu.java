@@ -2,19 +2,14 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Locale;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.JMenuBar;
@@ -25,13 +20,11 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
-
-import com.sun.corba.se.impl.javax.rmi.CORBA.Util;
 //icons https://icons8.com/web-app/for/all/return
 //flaticon.com
 public class g_MainMenu {
 	public static JFrame frmMainMenu;
-	public static double version = 3.14;
+	public static double version = 3.15;
 	public static int ticketMax;
 	public static boolean firstrun = true;
 	public static String TitleOnline = "EN Automation Support Program v" + version + "";	
@@ -67,7 +60,9 @@ public class g_MainMenu {
 			@Override
 			public void run() 
 			{
+				
 				if(c_ConnectToDatabase.Connect() == false)
+					
 				{
 					JOptionPane.showMessageDialog(frmMainMenu, "Cannot connect to database. Please verify internet connection and try again.");					
 			        	return;
@@ -97,8 +92,7 @@ public class g_MainMenu {
 					        JOptionPane.ERROR_MESSAGE);
 					JOptionPane.showMessageDialog(frmMainMenu, "It's a simple question of weight ratios! A five ounce bird could not carry a one pound coconut. \n \n Well, it doesn't matter. Will you go and tell your master that Arthur \n from the Court of Camelot is here?", "It's not a question of where he grips it! ",							
 					        JOptionPane.ERROR_MESSAGE);
-					return;
-					
+					return;					
 				}
 								
 				if(!checkVersion())
@@ -123,16 +117,19 @@ public class g_MainMenu {
 					panel.setLayout(null);
 					
 					btnNewTicket = new JButton("New Ticket");
+					btnNewTicket.setFont(new Font("Rockwell", Font.PLAIN, 15));
 					btnNewTicket.setBounds(10, 43, 187, 54);
 					panel.add(btnNewTicket);
 					
 					JButton btnCurrentTickets = new JButton("Current Tickets");
+					btnCurrentTickets.setFont(new Font("Rockwell", Font.PLAIN, 15));
 					btnCurrentTickets.setBounds(10, 122, 187, 54);
 					panel.add(btnCurrentTickets);
 					
 					
 					//Quick Lookup Button
 					btnSupportArchive = new JButton("Support Archive");
+					btnSupportArchive.setFont(new Font("Rockwell", Font.PLAIN, 15));
 					btnSupportArchive.setBounds(10, 204, 187, 54);
 					panel.add(btnSupportArchive);
 					
@@ -140,7 +137,7 @@ public class g_MainMenu {
 					lblSupport.setBounds(0, 5, 215, 25);
 					panel.add(lblSupport);
 					lblSupport.setHorizontalAlignment(SwingConstants.CENTER);
-					lblSupport.setFont(new Font("Tahoma", Font.BOLD, 14));
+					lblSupport.setFont(new Font("Rockwell", Font.BOLD, 17));
 					
 					JPanel panel_1 = new JPanel();
 					panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -149,16 +146,18 @@ public class g_MainMenu {
 					panel_1.setLayout(null);
 					
 					JButton btnViewEmployees = new JButton("EN Employees");
+					btnViewEmployees.setFont(new Font("Rockwell", Font.PLAIN, 14));
 					btnViewEmployees.setBounds(10, 37, 187, 54);
 					panel_1.add(btnViewEmployees);
 					
 					JButton btnSunocoContacts = new JButton("ETP Contacts");
+					btnSunocoContacts.setFont(new Font("Rockwell", Font.PLAIN, 14));
 					btnSunocoContacts.setBounds(10, 115, 187, 54);
 					panel_1.add(btnSunocoContacts);
 					
 					JLabel lblContacts = new JLabel("Contacts");
 					lblContacts.setHorizontalAlignment(SwingConstants.CENTER);
-					lblContacts.setFont(new Font("Tahoma", Font.BOLD, 14));
+					lblContacts.setFont(new Font("Rockwell", Font.BOLD, 17));
 					lblContacts.setBounds(0, 5, 215, 25);
 					panel_1.add(lblContacts);
 					
@@ -169,16 +168,18 @@ public class g_MainMenu {
 					panel_2.setLayout(null);
 					
 					JButton btnSites = new JButton("Butane Sites");
+					btnSites.setFont(new Font("Rockwell", Font.PLAIN, 14));
 					btnSites.setBounds(10, 37, 187, 54);
 					panel_2.add(btnSites);
 					
 					JButton btnSiteChanges = new JButton("Site Changes");
+					btnSiteChanges.setFont(new Font("Rockwell", Font.PLAIN, 14));
 					btnSiteChanges.setBounds(10, 115, 187, 54);
 					panel_2.add(btnSiteChanges);
 					
 					JLabel lblSites = new JLabel("Sites");
 					lblSites.setHorizontalAlignment(SwingConstants.CENTER);
-					lblSites.setFont(new Font("Tahoma", Font.BOLD, 14));
+					lblSites.setFont(new Font("Rockwell", Font.BOLD, 17));
 					lblSites.setBounds(0, 5, 215, 25);
 					panel_2.add(lblSites);
 					btnSiteChanges.addActionListener(new ActionListener() {
@@ -213,9 +214,8 @@ public class g_MainMenu {
 						}
 					});
 					btnNewTicket.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							
-							checkVersion();
+						public void actionPerformed(ActionEvent e) {							
+							//checkVersion();
 							if(c_CheckOpenTickets.CheckTickets())
 							{
 								CurrentTicketsNav = false;
@@ -239,6 +239,14 @@ public class g_MainMenu {
 							}
 						});
 						mnAdmin.add(mntmTicketCleanup);													
+						
+						JMenuItem mntmDistList = new JMenuItem("Email Distribution");
+						mntmDistList.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent arg0) {
+								g_EmailDistributionList.run(frmMainMenu);
+							}
+						});
+						mnAdmin.add(mntmDistList);
 					}
 					else
 					{
@@ -328,6 +336,7 @@ public class g_MainMenu {
 	
 		//Version Number
 		JLabel lblV = new JLabel("");
+		lblV.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		lblV.setText("v " + version);
 		lblV.setHorizontalAlignment(SwingConstants.CENTER);
 		lblV.setBounds(462, 585, 54, 14);
@@ -335,13 +344,13 @@ public class g_MainMenu {
 		
 		lblHello = new JLabel("Hello Travis Johnston!");
 		lblHello.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHello.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblHello.setFont(new Font("Rockwell", Font.BOLD, 15));
 		lblHello.setBounds(10, 11, 498, 25);
 		frmMainMenu.getContentPane().add(lblHello);
 		
 		lbl_Title = new JLabel("");
 		lbl_Title.setHorizontalAlignment(SwingConstants.CENTER);
-		lbl_Title.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lbl_Title.setFont(new Font("Rockwell", Font.PLAIN, 13));
 		lbl_Title.setBounds(10, 28, 498, 25);
 		frmMainMenu.getContentPane().add(lbl_Title);
 	

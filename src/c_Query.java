@@ -21,7 +21,7 @@ public static Statement stmt_sqlite;
 				}
 				catch(Exception e)
 				{
-					System.out.println(e.toString());
+					JOptionPane.showMessageDialog(null, e.toString() + " " + JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}
@@ -65,8 +65,8 @@ public static Statement stmt_sqlite;
 						c_ConnectToDatabase.Connect();
 					}
 					catch(Exception e)
-					{
-						System.out.println(e.toString());
+					{						
+						JOptionPane.showMessageDialog(null, e.toString() + " " + JOptionPane.ERROR_MESSAGE);
 					}
 					
 				}
@@ -84,6 +84,8 @@ public static Statement stmt_sqlite;
 			} catch (SQLException e) {
 			
 				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, e.toString() + " " + JOptionPane.ERROR_MESSAGE);
+				return;
 			}
 			
 			
@@ -116,6 +118,7 @@ public static Statement stmt_sqlite;
 					
 				}catch (SQLException e) {
 					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, e.toString() + " " + JOptionPane.ERROR_MESSAGE);
 				}
 				
 				
@@ -133,7 +136,7 @@ public static Statement stmt_sqlite;
 					}
 					catch(Exception e)
 					{
-						System.out.println(e.toString());
+						JOptionPane.showMessageDialog(null, e.toString() + " " + JOptionPane.ERROR_MESSAGE);
 					}
 					
 				}
@@ -175,7 +178,7 @@ public static Statement stmt_sqlite;
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				System.out.println(e.toString());
+				JOptionPane.showMessageDialog(null, e.toString() + " " + JOptionPane.ERROR_MESSAGE);
 			}
 			
 		}

@@ -6,6 +6,10 @@ import java.awt.Color;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 import com.sun.glass.ui.Clipboard;
 
 import javax.swing.border.BevelBorder;
@@ -28,7 +32,13 @@ import javax.swing.JLabel;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
@@ -36,24 +46,38 @@ import javax.swing.JCheckBox;
 import javax.swing.JTabbedPane;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import javax.swing.JTextField;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
-public class g_Tools_CreateChecklist {
+public class g_SiteChangesMulti {
 
-	private static JFrame frm_CreateChecklist;
+	private static JFrame frm_MultiSiteChange;
 	public static JList<c_ButaneSites> List_ChecklistSites;
+	private JDatePanelImpl datePanel; 
 	public static JList<c_ButaneSites> List_AllSites;
 	public static DefaultListModel<c_ButaneSites> List_AllSitesModel;
 	public static DefaultListModel<c_ButaneSites> List_ChecklistSitesModel;
+	private static JDatePickerImpl datePicker;
 	private JScrollPane scrollPane;
 	private static JLabel lblAllSites;
 	private static JLabel lblGeneratedSites;
 	private static int siteNum;
 	private static int checkNum;
-	private static JTextArea textArea;
-	JPanel adv_panel;
-	private static JCheckBox chckbxAdvanced;
 	private static JButton btnBack;
-	private static JButton btnGenerate;
+	private JTextField txtMOC;
+	private JTextField txtRequestedBy;
+	private JCheckBox chk_Other;
+	private JCheckBox chk_System;
+	private JCheckBox chk_Supply;
+	private JCheckBox chk_Sampling;
+	private JCheckBox chk_Safety;
+	private JCheckBox chk_Reporting;
+	private JCheckBox chk_HMI;
+	private JCheckBox chk_PGM;
+	private JCheckBox chk_Injection;
+	private JTextArea txtChange;
 
 	/**
 	 * Launch the application.
@@ -61,9 +85,9 @@ public class g_Tools_CreateChecklist {
 	
 			public static void run(JFrame frame) {
 				try {
-					g_Tools_CreateChecklist window = new g_Tools_CreateChecklist();
-					g_Tools_CreateChecklist.frm_CreateChecklist.setVisible(true);
-					g_Tools_CreateChecklist.frm_CreateChecklist.setLocationRelativeTo(frame);
+					g_SiteChangesMulti window = new g_SiteChangesMulti();
+					g_SiteChangesMulti.frm_MultiSiteChange.setVisible(true);
+					g_SiteChangesMulti.frm_MultiSiteChange.setLocationRelativeTo(frame);
 					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -74,7 +98,7 @@ public class g_Tools_CreateChecklist {
 	/**
 	 * Create the application.
 	 */
-	public g_Tools_CreateChecklist() {
+	public g_SiteChangesMulti() {
 		initialize();
 		PopulateSites();
 	}
@@ -83,14 +107,14 @@ public class g_Tools_CreateChecklist {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frm_CreateChecklist = new JFrame();
-		frm_CreateChecklist.setResizable(false);
-		frm_CreateChecklist.setTitle(g_MainMenu.TitleOnline);
-		frm_CreateChecklist.setIconImage(Toolkit.getDefaultToolkit().getImage(g_Tools_CreateChecklist.class.getResource("/icon.png")));
-		frm_CreateChecklist.setFont(new Font("Rockwell", Font.PLAIN, 13));
-		frm_CreateChecklist.setBounds(100, 100, 758, 731);
-		frm_CreateChecklist.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frm_CreateChecklist.getContentPane().setLayout(null);
+		frm_MultiSiteChange = new JFrame();
+		frm_MultiSiteChange.setResizable(false);
+		frm_MultiSiteChange.setTitle(g_MainMenu.TitleOnline);
+		frm_MultiSiteChange.setIconImage(Toolkit.getDefaultToolkit().getImage(g_SiteChangesMulti.class.getResource("/icon.png")));
+		frm_MultiSiteChange.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		frm_MultiSiteChange.setBounds(100, 100, 756, 894);
+		frm_MultiSiteChange.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frm_MultiSiteChange.getContentPane().setLayout(null);
 		
 		JButton btnAllSites = new JButton("All Sites");
 		btnAllSites.addActionListener(new ActionListener() {
@@ -99,13 +123,13 @@ public class g_Tools_CreateChecklist {
 			}
 		});
 		btnAllSites.setFont(new Font("Rockwell", Font.PLAIN, 13));
-		btnAllSites.setBounds(20, 597, 89, 23);
-		frm_CreateChecklist.getContentPane().add(btnAllSites);
+		btnAllSites.setBounds(10, 520, 89, 23);
+		frm_MultiSiteChange.getContentPane().add(btnAllSites);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		scrollPane.setBounds(10, 117, 275, 469);
-		frm_CreateChecklist.getContentPane().add(scrollPane);
+		scrollPane.setBounds(10, 117, 275, 392);
+		frm_MultiSiteChange.getContentPane().add(scrollPane);
 		
 		JButton button = new JButton(">>");
 		button.addActionListener(new ActionListener() {
@@ -115,7 +139,7 @@ public class g_Tools_CreateChecklist {
 		});
 		button.setFont(new Font("Rockwell", Font.PLAIN, 13));
 		button.setBounds(307, 270, 89, 23);
-		frm_CreateChecklist.getContentPane().add(button);
+		frm_MultiSiteChange.getContentPane().add(button);
 		
 		JButton button_1 = new JButton("<<");
 		button_1.addActionListener(new ActionListener() {
@@ -125,12 +149,12 @@ public class g_Tools_CreateChecklist {
 		});
 		button_1.setFont(new Font("Rockwell", Font.PLAIN, 13));
 		button_1.setBounds(307, 332, 89, 23);
-		frm_CreateChecklist.getContentPane().add(button_1);
+		frm_MultiSiteChange.getContentPane().add(button_1);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		scrollPane_1.setBounds(436, 117, 275, 469);
-		frm_CreateChecklist.getContentPane().add(scrollPane_1);
+		scrollPane_1.setBounds(436, 117, 275, 392);
+		frm_MultiSiteChange.getContentPane().add(scrollPane_1);
 		
 		List_ChecklistSites = new JList<c_ButaneSites>();
 		List_ChecklistSites.setFont(new Font("Rockwell", Font.PLAIN, 13));
@@ -145,23 +169,23 @@ public class g_Tools_CreateChecklist {
 		lblAllSites = new JLabel("Available Sites (" + siteNum + ")");
 		lblAllSites.setFont(new Font("Rockwell", Font.BOLD, 14));
 		lblAllSites.setBounds(10, 101, 275, 17);
-		frm_CreateChecklist.getContentPane().add(lblAllSites);
+		frm_MultiSiteChange.getContentPane().add(lblAllSites);
 		
 		lblGeneratedSites = new JLabel("Checklist Sites (" + checkNum + ")");
 		lblGeneratedSites.setFont(new Font("Rockwell", Font.BOLD, 14));
 		lblGeneratedSites.setBounds(436, 101, 275, 17);
-		frm_CreateChecklist.getContentPane().add(lblGeneratedSites);
+		frm_MultiSiteChange.getContentPane().add(lblGeneratedSites);
 		
 		btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				g_MainMenu.run(frm_CreateChecklist);
-				frm_CreateChecklist.dispose();
+				g_MainMenu.run(frm_MultiSiteChange);
+				frm_MultiSiteChange.dispose();
 			}
 		});
 		btnBack.setFont(new Font("Rockwell", Font.PLAIN, 13));
-		btnBack.setBounds(10, 645, 89, 23);
-		frm_CreateChecklist.getContentPane().add(btnBack);
+		btnBack.setBounds(10, 811, 89, 23);
+		frm_MultiSiteChange.getContentPane().add(btnBack);
 		
 		JButton btnClear = new JButton("Clear");
 		btnClear.addActionListener(new ActionListener() {
@@ -170,77 +194,18 @@ public class g_Tools_CreateChecklist {
 			}
 		});
 		btnClear.setFont(new Font("Rockwell", Font.PLAIN, 13));
-		btnClear.setBounds(446, 597, 89, 23);
-		frm_CreateChecklist.getContentPane().add(btnClear);
-		
-		adv_panel = new JPanel();		
+		btnClear.setBounds(446, 520, 89, 23);
+		frm_MultiSiteChange.getContentPane().add(btnClear);
 		Border empty = BorderFactory.createEmptyBorder(0, 0, 0, 0);
 		Border dashed = BorderFactory.createDashedBorder(null, 5, 5);
 		Border compound = new CompoundBorder(empty, dashed);
-		adv_panel.setBorder(compound);
-		adv_panel.setBounds(10, 671, 722, 97);
-		frm_CreateChecklist.getContentPane().add(adv_panel);
-		adv_panel.setLayout(null);
-		adv_panel.setVisible(false);
-		
-		textArea = new JTextArea();
-		textArea.setEnabled(false);
-		textArea.setLineWrap(true);
-		textArea.setBounds(10, 60, 702, 26);
-		adv_panel.add(textArea);
-		
-		JLabel lblCreateACustom = new JLabel("Create a custom format using variables and text. Example: $Client - $Site ($SiteID)");
-		lblCreateACustom.setFont(new Font("Rockwell", Font.PLAIN, 13));
-		lblCreateACustom.setBounds(10, 0, 597, 23);
-		adv_panel.add(lblCreateACustom);
-		
-		JLabel lblAvailableVariablesclient = new JLabel("Available variables: $Client, $Site, $ClientAbbrv, $SiteAbbrv, $SiteID, $ViewIP, $SQLIP, $DevIP, $Generation");
-		lblAvailableVariablesclient.setFont(new Font("Rockwell", Font.PLAIN, 13));
-		lblAvailableVariablesclient.setBounds(10, 23, 702, 23);
-		adv_panel.add(lblAvailableVariablesclient);
-		
-		btnGenerate = new JButton("Copy");
-		btnGenerate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Generate();
-			}
-		});
-		btnGenerate.setBounds(643, 645, 89, 23);
-		frm_CreateChecklist.getContentPane().add(btnGenerate);
-		btnGenerate.setFont(new Font("Rockwell", Font.PLAIN, 13));
-		
-				
-		chckbxAdvanced = new JCheckBox("Advanced");
-		chckbxAdvanced.setBounds(105, 646, 97, 23);
-		frm_CreateChecklist.getContentPane().add(chckbxAdvanced);
-		chckbxAdvanced.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(chckbxAdvanced.isSelected())
-				{
-					frm_CreateChecklist.setSize(758, 865);
-					btnBack.setBounds(10, 779, 89, 23);
-					btnGenerate.setBounds(643, 779, 89, 23);
-					textArea.setEnabled(true);
-					adv_panel.setVisible(true); 
-				}
-				else
-				{
-					frm_CreateChecklist.setSize(758, 730);
-					btnGenerate.setBounds(643, 645, 89, 23);
-					btnBack.setBounds(10, 645, 89, 23);
-					textArea.setEnabled(false);
-					adv_panel.setVisible(false); 					
-				}
-			}
-		});
-		chckbxAdvanced.setFont(new Font("Rockwell", Font.PLAIN, 11));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBorder(null);
 		tabbedPane.setFont(new Font("Rockwell", Font.PLAIN, 11));
 		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabbedPane.setBounds(10, 0, 732, 92);
-		frm_CreateChecklist.getContentPane().add(tabbedPane);
+		frm_MultiSiteChange.getContentPane().add(tabbedPane);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Client", null, panel_1, null);
@@ -655,12 +620,138 @@ public class g_Tools_CreateChecklist {
 		btnWa.setBounds(616, 38, 55, 20);
 		panel_State.add(btnWa);
 		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		panel_2.setBounds(10, 562, 701, 238);
+		frm_MultiSiteChange.getContentPane().add(panel_2);
+		panel_2.setLayout(null);
+		
+		JLabel label = new JLabel("MOC #:");
+		label.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		label.setBounds(10, 10, 149, 14);
+		panel_2.add(label);
+		
+		txtMOC = new JTextField();
+		txtMOC.setFont(new Font("Rockwell", Font.PLAIN, 12));
+		txtMOC.setColumns(10);
+		txtMOC.setBounds(10, 25, 149, 27);
+		panel_2.add(txtMOC);
+		
+		JLabel label_1 = new JLabel("Requested By:");
+		label_1.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		label_1.setBounds(267, 10, 149, 14);
+		panel_2.add(label_1);
+		
+		txtRequestedBy = new JTextField();
+		txtRequestedBy.setFont(new Font("Rockwell", Font.PLAIN, 12));
+		txtRequestedBy.setColumns(10);
+		txtRequestedBy.setBounds(267, 25, 149, 28);
+		panel_2.add(txtRequestedBy);
+		
+		
+		UtilDateModel model = new UtilDateModel();
+		Properties p = new Properties();
+		p.put("text.today", "Today");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+		datePanel = new JDatePanelImpl(model,p);
+		datePicker = new JDatePickerImpl(datePanel, new c_DateLabelFormatter());
+		datePicker.getJFormattedTextField().setFont(new Font("Rockwell", Font.PLAIN, 12));
+		datePicker.getJFormattedTextField().setBackground(Color.WHITE);
+		datePicker.setBounds(508, 24, 165, 28);
+		//frm_MultiSiteChange.getContentPane().add(datePicker);
+		panel_2.add(datePicker);
+		
+		JLabel label_2 = new JLabel("Date:");
+		label_2.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		label_2.setBounds(508, 9, 149, 14);
+		panel_2.add(label_2);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(10, 81, 467, 129);
+		panel_2.add(scrollPane_2);
+		
+		txtChange = new JTextArea();
+		txtChange.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		scrollPane_2.setViewportView(txtChange);
+		
+		JLabel lblChange = new JLabel("Change:");
+		lblChange.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		lblChange.setBounds(10, 63, 149, 14);
+		panel_2.add(lblChange);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBorder(null);
+		panel_3.setBounds(508, 78, 183, 134);
+		panel_2.add(panel_3);
+		panel_3.setLayout(null);
+		
+		chk_Injection = new JCheckBox("Injection");
+		chk_Injection.setFont(new Font("Rockwell", Font.PLAIN, 11));
+		chk_Injection.setBounds(0, 0, 75, 23);
+		panel_3.add(chk_Injection);
+		
+		chk_PGM = new JCheckBox("PGM");
+		chk_PGM.setFont(new Font("Rockwell", Font.PLAIN, 11));
+		chk_PGM.setBounds(0, 28, 75, 23);
+		panel_3.add(chk_PGM);
+		
+		chk_HMI = new JCheckBox("HMI");
+		chk_HMI.setFont(new Font("Rockwell", Font.PLAIN, 11));
+		chk_HMI.setBounds(0, 56, 75, 23);
+		panel_3.add(chk_HMI);
+		
+		chk_Reporting = new JCheckBox("Reporting");
+		chk_Reporting.setFont(new Font("Rockwell", Font.PLAIN, 11));
+		chk_Reporting.setBounds(0, 84, 75, 23);
+		panel_3.add(chk_Reporting);
+		
+		chk_Safety = new JCheckBox("Safety");
+		chk_Safety.setFont(new Font("Rockwell", Font.PLAIN, 11));
+		chk_Safety.setBounds(0, 112, 75, 23);
+		panel_3.add(chk_Safety);
+		
+		chk_Sampling = new JCheckBox("Sampling");
+		chk_Sampling.setFont(new Font("Rockwell", Font.PLAIN, 11));
+		chk_Sampling.setBounds(96, 0, 75, 23);
+		panel_3.add(chk_Sampling);
+		
+		chk_Supply = new JCheckBox("Supply");
+		chk_Supply.setFont(new Font("Rockwell", Font.PLAIN, 11));
+		chk_Supply.setBounds(96, 28, 75, 23);
+		panel_3.add(chk_Supply);
+		
+		chk_System = new JCheckBox("System");
+		chk_System.setFont(new Font("Rockwell", Font.PLAIN, 11));
+		chk_System.setBounds(96, 56, 75, 23);
+		panel_3.add(chk_System);
+		
+		chk_Other = new JCheckBox("Other");
+		chk_Other.setFont(new Font("Rockwell", Font.PLAIN, 11));
+		chk_Other.setBounds(96, 84, 75, 23);
+		panel_3.add(chk_Other);
+		
+		JLabel lblAffectedAreas = new JLabel("Affected Components:");
+		lblAffectedAreas.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		lblAffectedAreas.setBounds(508, 63, 149, 14);
+		panel_2.add(lblAffectedAreas);
+		
+		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SubmitChange();
+			}
+		});
+		btnSubmit.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		btnSubmit.setBounds(622, 812, 89, 23);
+		frm_MultiSiteChange.getContentPane().add(btnSubmit);
+		
 		List_AllSitesModel = new DefaultListModel<c_ButaneSites>();
 		List_ChecklistSitesModel = new DefaultListModel<c_ButaneSites>();		
 		
 		//Menubar
 				JMenuBar menuBar = new JMenuBar();
-				frm_CreateChecklist.setJMenuBar(menuBar);
+				frm_MultiSiteChange.setJMenuBar(menuBar);
 									
 				JMenu mnSupport = new JMenu("Support");
 				menuBar.add(mnSupport);
@@ -671,11 +762,11 @@ public class g_Tools_CreateChecklist {
 						g_MainMenu.checkVersion();
 						if(c_CheckOpenTickets.CheckTickets())
 						{							
-							g_TicketEntry.run(frm_CreateChecklist);
+							g_TicketEntry.run(frm_MultiSiteChange);
 						}
 						else
 						{
-							JOptionPane.showMessageDialog(frm_CreateChecklist, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
+							JOptionPane.showMessageDialog(frm_MultiSiteChange, "Open Ticket Limit Exceeded. \n Please Close Old Tickets.");
 						}
 						
 					}
@@ -685,7 +776,7 @@ public class g_Tools_CreateChecklist {
 				JMenuItem mntmCurrentTickets = new JMenuItem("Current Tickets");
 				mntmCurrentTickets.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_CurrentTickets.run(frm_CreateChecklist);
+						g_CurrentTickets.run(frm_MultiSiteChange);
 					}
 				});
 				mnSupport.add(mntmCurrentTickets);
@@ -693,7 +784,7 @@ public class g_Tools_CreateChecklist {
 				JMenuItem mntmArchive = new JMenuItem("Archive");
 				mntmArchive.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_ArchiveTickets.run(frm_CreateChecklist);
+						g_ArchiveTickets.run(frm_MultiSiteChange);
 					}
 				});
 				mnSupport.add(mntmArchive);
@@ -704,7 +795,7 @@ public class g_Tools_CreateChecklist {
 				JMenuItem mntmButaneSites = new JMenuItem("Butane Sites");
 				mntmButaneSites.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_ViewSites.run(frm_CreateChecklist);
+						g_ViewSites.run(frm_MultiSiteChange);
 					}
 				});
 				mnSites.add(mntmButaneSites);
@@ -712,7 +803,7 @@ public class g_Tools_CreateChecklist {
 				JMenuItem mntmSiteChanges = new JMenuItem("Site Changes");
 				mntmSiteChanges.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_SiteChanges.run(frm_CreateChecklist);
+						g_SiteChanges.run(frm_MultiSiteChange);
 					}
 				});
 				mnSites.add(mntmSiteChanges);
@@ -723,7 +814,7 @@ public class g_Tools_CreateChecklist {
 				JMenuItem mntmENEmployees = new JMenuItem("EN Employees");
 				mntmENEmployees.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_ViewEmployees.run(frm_CreateChecklist);
+						g_ViewEmployees.run(frm_MultiSiteChange);
 					}
 				});
 				mnContacts.add(mntmENEmployees);
@@ -731,7 +822,7 @@ public class g_Tools_CreateChecklist {
 				JMenuItem mntmEtpContacts = new JMenuItem("ETP Contacts");
 				mntmEtpContacts.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						g_ViewSunoco.run(frm_CreateChecklist);
+						g_ViewSunoco.run(frm_MultiSiteChange);
 					}
 				});
 				mnContacts.add(mntmEtpContacts);
@@ -968,7 +1059,7 @@ public class g_Tools_CreateChecklist {
 	{
 		if(List_AllSites.getSelectedIndex() == -1)
 		{
-			JOptionPane.showMessageDialog(frm_CreateChecklist, "Pick a site dummy!");
+			JOptionPane.showMessageDialog(frm_MultiSiteChange, "Pick a site dummy!");
 		}
 		else
 		{
@@ -1041,45 +1132,56 @@ public class g_Tools_CreateChecklist {
 		lblGeneratedSites.setText("Checklist Sites (" + checkNum + ")");
 	}
 	
-	public static void Generate()
-	{		
-		String tmp = textArea.getText();
+	private void SubmitChange()
+	{
+		String moc = txtMOC.getText();
+		String requested = txtRequestedBy.getText();
+		String change = txtChange.getText();
 		String foo = "";
 		String foo2 = "";
+		
+		String dateEntered = "";
+		DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm");		 		 
+		Date date = new Date();
+		dateEntered = dateFormat.format(date);
+						
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+		String strDate = datePicker.getJFormattedTextField().getText() + " " + LocalTime.now().format(dtf);
+
+		String commandText = "INSERT INTO Sitechanges(SiteID,MOC,Change,ChangedBy,RequestedBy,DateEntered,DateChanged,Injection,HMI,PGM,Reporting,Safety,Sampling,Supply,System,Other) "
+				+ "VALUES('";
+		String commandText2 = "";
+		
 		for(int i = 0; i < List_ChecklistSites.getModel().getSize(); i++)
 		{
-			if(chckbxAdvanced.isSelected())
-			{
-				foo = tmp;	
-				foo = foo.replace("$ClientAbbrv", List_ChecklistSitesModel.getElementAt(i).getClientAbbrv());
-				foo = foo.replace("$SiteAbbrv", List_ChecklistSitesModel.getElementAt(i).getSiteAbbrv());
-				foo = foo.replace("$Generation", Float.toString(List_ChecklistSitesModel.getElementAt(i).getGeneration()));
-				foo = foo.replace("$ViewIP", Integer.toString(List_ChecklistSitesModel.getElementAt(i).getView()));
-				foo = foo.replace("$SQLIP", Integer.toString(List_ChecklistSitesModel.getElementAt(i).getSQL()));
-				foo = foo.replace("$DevIP", Integer.toString(List_ChecklistSitesModel.getElementAt(i).getDev()));			
-				foo = foo.replace("$Client", List_ChecklistSitesModel.getElementAt(i).getClient());
-				foo = foo.replace("$SiteID", Integer.toString(List_ChecklistSitesModel.getElementAt(i).getSiteID()));
-				foo = foo.replace("$Site", List_ChecklistSitesModel.getElementAt(i).getSite());								
-			}
-			else
-			{
-				foo = List_ChecklistSitesModel.getElementAt(i).toString(); 
-			}
-			
 			if(i == 0)
 			{
-				foo2 = foo2 + foo;
+				commandText2 = commandText2 +  List_ChecklistSitesModel.getElementAt(i).getSiteID() + "','" + moc + "','" + change + "','" + g_MainMenu.CurrentUser + "','" + requested + "','"
+					+ dateEntered + "','" + strDate + "','" + chk_Injection.isSelected() + "','" + chk_PGM.isSelected() + "','" + chk_HMI.isSelected() + "','" + chk_Reporting.isSelected()
+					+ "','" + chk_Safety.isSelected() + "','" + chk_Sampling.isSelected() + "','" + chk_Supply.isSelected() + "','" + chk_System.isSelected() + "','" + chk_Other.isSelected() +"')";
 			}
 			else
 			{
-				foo2 = foo2 + "\n" + foo;
-			}	
+				commandText2 = commandText2 + ",('" + List_ChecklistSitesModel.getElementAt(i).getSiteID() + "','" + moc + "','" + change + "','" + g_MainMenu.CurrentUser + "','" + requested + "','"
+						+ dateEntered + "','" + strDate + "','" + chk_Injection.isSelected() + "','" + chk_PGM.isSelected() + "','" + chk_HMI.isSelected() + "','" + chk_Reporting.isSelected()
+						+ "','" + chk_Safety.isSelected() + "','" + chk_Sampling.isSelected() + "','" + chk_Supply.isSelected() + "','" + chk_System.isSelected() + "','" + chk_Other.isSelected() +"')";
+			}													
+		}
+		commandText = commandText + commandText2;
+		
+		try{
+			c_Query.ExecuteQuery(commandText);
+			JOptionPane.showMessageDialog(frm_MultiSiteChange, "Site changes entered successfully.");			
+			g_SiteChanges.run(frm_MultiSiteChange);
+			
+		}
+		catch(Exception e)
+		{
+			JOptionPane.showMessageDialog(frm_MultiSiteChange, "Error inserting change." + e.toString());			
+			return;
+			
 		}
 		
-		StringSelection selection = new StringSelection(foo2);
-		java.awt.datatransfer.Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		clipboard.setContents(selection, selection);
-		JOptionPane.showMessageDialog(frm_CreateChecklist, "Site List copied to clipboard.");
 	}
 }
 

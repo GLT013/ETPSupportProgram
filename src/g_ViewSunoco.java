@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Toolkit;
+import javax.swing.ListSelectionModel;
 
 public class g_ViewSunoco {
 
@@ -76,7 +77,7 @@ public class g_ViewSunoco {
 		frmSunocoContacts = new JFrame();
 		frmSunocoContacts.setResizable(false);
 		frmSunocoContacts.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewSunoco.class.getResource("/icon.png")));
-		frmSunocoContacts.setBounds(100, 100, 909, 461);
+		frmSunocoContacts.setBounds(100, 100, 768, 461);
 		frmSunocoContacts.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frmSunocoContacts.getContentPane().setLayout(null);		
 		frmSunocoContacts.setTitle("Automated Support Program v." + g_MainMenu.version);
@@ -98,48 +99,48 @@ public class g_ViewSunoco {
 		frmSunocoContacts.getContentPane().add(scrollPane);
 		
 		JLabel lblNewLabel = new JLabel("Name:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel.setBounds(309, 44, 113, 14);
+		lblNewLabel.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblNewLabel.setBounds(275, 55, 113, 14);
 		frmSunocoContacts.getContentPane().add(lblNewLabel);
 		
-		JLabel lblTitle2 = new JLabel("Company");
-		lblTitle2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblTitle2.setBounds(309, 104, 113, 25);
+		JLabel lblTitle2 = new JLabel("Company:");
+		lblTitle2.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblTitle2.setBounds(275, 115, 113, 25);
 		frmSunocoContacts.getContentPane().add(lblTitle2);
 		
 		JLabel lblEmail2 = new JLabel("Email:");
-		lblEmail2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblEmail2.setBounds(309, 163, 113, 14);
+		lblEmail2.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblEmail2.setBounds(275, 174, 113, 14);
 		frmSunocoContacts.getContentPane().add(lblEmail2);
 		
 		JLabel lblMobilePhone2 = new JLabel("Mobile Phone:");
-		lblMobilePhone2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblMobilePhone2.setBounds(309, 222, 113, 14);
+		lblMobilePhone2.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblMobilePhone2.setBounds(275, 233, 125, 14);
 		frmSunocoContacts.getContentPane().add(lblMobilePhone2);
 		lblCompany.setEditable(false);
 		
 		
-		lblCompany.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		lblCompany.setBounds(442, 99, 310, 30);
+		lblCompany.setFont(new Font("Rockwell", Font.PLAIN, 12));
+		lblCompany.setBounds(410, 110, 275, 30);
 		frmSunocoContacts.getContentPane().add(lblCompany);
 		lblEmail.setEditable(false);
 		
 		
-		lblEmail.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		lblEmail.setBounds(442, 158, 310, 30);
+		lblEmail.setFont(new Font("Rockwell", Font.PLAIN, 12));
+		lblEmail.setBounds(410, 169, 275, 30);
 		frmSunocoContacts.getContentPane().add(lblEmail);
 		
 		lblName = new JTextField();
-		lblName.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		lblName.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		lblName.setBackground(UIManager.getColor("Button.background"));
 		lblName.setEditable(false);
-		lblName.setBounds(442, 40, 310, 31);		
+		lblName.setBounds(410, 51, 275, 31);		
 		frmSunocoContacts.getContentPane().add(lblName);
 		lblName.setColumns(10);
 		lblMobile.setEditable(false);
 		
-		lblMobile.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		lblMobile.setBounds(442, 217, 310, 30);
+		lblMobile.setFont(new Font("Rockwell", Font.PLAIN, 14));
+		lblMobile.setBounds(410, 228, 275, 30);
 		frmSunocoContacts.getContentPane().add(lblMobile);
 		btnEdit.setToolTipText("Edit");	
 		
@@ -162,7 +163,7 @@ public class g_ViewSunoco {
 		});   
 		
 		btnEdit.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/edit.png")));
-		btnEdit.setBounds(828, 11, 32, 32);
+		btnEdit.setBounds(703, 11, 32, 32);
 		
 		frmSunocoContacts.getContentPane().add(btnEdit);
 		btnAccept.addActionListener(new ActionListener() {
@@ -174,7 +175,7 @@ public class g_ViewSunoco {
 		btnAccept.setEnabled(false);
 		btnAccept.setVisible(false);
 		btnAccept.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/ok-icon.png")));
-		btnAccept.setBounds(786, 11, 34, 34);
+		btnAccept.setBounds(661, 11, 34, 34);
 		
 		frmSunocoContacts.getContentPane().add(btnAccept);
 		btnCancel.addActionListener(new ActionListener() {
@@ -185,13 +186,13 @@ public class g_ViewSunoco {
 		btnCancel.setToolTipText("Cancel Edits");
 		btnCancel.setEnabled(false);
 		btnCancel.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/Actions-window-close-icon.png")));
-		btnCancel.setBounds(828, 11, 32, 32);
+		btnCancel.setBounds(703, 11, 32, 32);
 		
 		frmSunocoContacts.getContentPane().add(btnCancel);
 		
 		JLabel lblSunocoContacts = new JLabel("ETP Contacts");
 		lblSunocoContacts.setForeground(Color.BLUE);
-		lblSunocoContacts.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblSunocoContacts.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		lblSunocoContacts.setBounds(39, 15, 187, 18);
 		frmSunocoContacts.getContentPane().add(lblSunocoContacts);
 		
@@ -234,6 +235,8 @@ public class g_ViewSunoco {
 		btnNewContact.setBounds(36, 292, 32, 32);
 		
 		frmSunocoContacts.getContentPane().add(btnNewContact);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setFont(new Font("Rockwell", Font.PLAIN, 13));
 		
 		
 		list.addListSelectionListener(new ListSelectionListener() {
@@ -257,6 +260,7 @@ public class g_ViewSunoco {
 		
 		listModel.removeAllElements();
 		list.setModel(listModel);
+		btnNewButton.setFont(new Font("Rockwell", Font.PLAIN, 11));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				g_MainMenu.run(frmSunocoContacts);
@@ -287,7 +291,7 @@ public class g_ViewSunoco {
 		});
 		btnMobile.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/telephone.png")));
 		btnMobile.setToolTipText("Mobile Phone");
-		btnMobile.setBounds(762, 215, 36, 36);
+		btnMobile.setBounds(699, 228, 36, 36);
 		frmSunocoContacts.getContentPane().add(btnMobile);
 		btnEmail.setIcon(new ImageIcon(g_ViewSunoco.class.getResource("/email.png")));
 		btnEmail.addActionListener(new ActionListener() {
@@ -303,7 +307,7 @@ public class g_ViewSunoco {
 			}
 		});
 		btnEmail.setToolTipText("Email");
-		btnEmail.setBounds(762, 156, 36, 36);
+		btnEmail.setBounds(699, 169, 36, 36);
 		
 		frmSunocoContacts.getContentPane().add(btnEmail);
 		

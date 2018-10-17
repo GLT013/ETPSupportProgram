@@ -2,6 +2,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.JFrame;
@@ -37,7 +38,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
-
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EtchedBorder;
@@ -136,8 +136,7 @@ public class g_ArchiveTickets {
 	private JLabel lblResults;
 	private JLabel lblqueryExecutedIn;
 
-	
-	
+		
 	public static void run(JFrame frame) {				
 		try {
 			@SuppressWarnings("unused")
@@ -446,12 +445,10 @@ public class g_ArchiveTickets {
 				Border compound = new CompoundBorder(empty, dashed);
 				panel_5 = new JPanel();
 				panel_5.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-				//panel_5.setBorder(compound);
 				panel_5.setBounds(10, 356, 251, 384);
 				panel_4.add(panel_5);
 				panel_5.setLayout(null);
 				panel_5.setVisible(false);
-				//panel_5.setBackground(new Color(255, 245, 238));
 				
 				UtilDateModel model2 = new UtilDateModel();
 				Properties p2 = new Properties();
@@ -472,7 +469,6 @@ public class g_ArchiveTickets {
 				panel_6.setBounds(5, 25, 240, 157);
 				panel_5.add(panel_6);
 				panel_6.setLayout(null);
-				//panel_6.setBackground(new Color(255, 245, 238));
 				datePicker2 = new JDatePickerImpl(datePanel2, new c_DateLabelFormatter());
 				datePicker2.setBounds(5, 119, 193, 28);
 				panel_6.add(datePicker2);
@@ -535,12 +531,9 @@ public class g_ArchiveTickets {
 				
 				panel_7 = new JPanel();
 				panel_7.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-				
-				//panel_7.setBorder(compound);
 				panel_7.setBounds(5, 205, 238, 157);
 				panel_5.add(panel_7);
 				panel_7.setLayout(null);
-				//panel_7.setBackground(new Color(255, 245, 238));
 				
 				cb_OrderByType3 = new JComboBox<String>();
 				cb_OrderByType3.setBounds(160, 120, 65, 28);
@@ -591,7 +584,6 @@ public class g_ArchiveTickets {
 				cb_OrderBy1.setFont(new Font("Rockwell", Font.PLAIN, 11));
 				cb_OrderBy1.setBackground(Color.LIGHT_GRAY);
 				
-				//datePicker.getModel().setSelected(true);
 				datePicker2.getModel().setSelected(true);
 				
 				lbldateRange = new JCheckBox("<html><center>Advanced: </center></html>");
@@ -840,22 +832,12 @@ public class g_ArchiveTickets {
 		{
 			if(cb_DateRange.getSelectedIndex() !=0)
 			{
-				String dateRange = cb_DateRange.getSelectedItem().toString();
-				int dateIndex = cb_DateRange.getSelectedIndex();
-				int testMonth = datePicker.getModel().getMonth();
-				testMonth++;
-				int testDay = datePicker.getModel().getDay();			
-				int testYear = datePicker.getModel().getYear();
 				
-				int testMonth2 = datePicker2.getModel().getMonth();
-				testMonth2++;
-				int testDay2 = datePicker2.getModel().getDay();			
-				int testYear2 = datePicker2.getModel().getYear();
+				int dateIndex = cb_DateRange.getSelectedIndex();				
 				
-				String startDate = testYear + "-" + testMonth + "-" + testDay;
-				String endDate = testYear2 + "-" + testMonth2 + "-" + testDay2;
-				
-				
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+				String startDate = datePicker.getJFormattedTextField().getText() + " " + LocalTime.now().format(dtf);				
+				String endDate = datePicker2.getJFormattedTextField().getText() + " " + LocalTime.now().format(dtf);
 				
 				if(filters.compareTo("") != 0)
 				{

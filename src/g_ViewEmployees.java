@@ -27,6 +27,7 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import javax.swing.ListSelectionModel;
 
 public class g_ViewEmployees {
 
@@ -80,11 +81,11 @@ public class g_ViewEmployees {
 		frmViewEmployees = new JFrame();
 		frmViewEmployees.setResizable(false);
 		frmViewEmployees.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ViewEmployees.class.getResource("/icon.png")));
-		frmViewEmployees.setBounds(100, 100, 909, 460);
+		frmViewEmployees.setBounds(100, 100, 768, 460);
 		frmViewEmployees.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmViewEmployees.getContentPane().setLayout(null);
-		frmViewEmployees.setTitle("Automated Support Program");
-		frmViewEmployees.setTitle("Automated Support Program v." + g_MainMenu.version);
+		frmViewEmployees.setTitle(g_MainMenu.TitleOnline);
+		
 		
 		
 		frmViewEmployees.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -102,59 +103,59 @@ public class g_ViewEmployees {
 		frmViewEmployees.getContentPane().add(scrollPane);
 		
 		JLabel lblNewLabel = new JLabel("Name:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel.setBounds(309, 44, 113, 14);
+		lblNewLabel.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblNewLabel.setBounds(275, 44, 113, 14);
 		frmViewEmployees.getContentPane().add(lblNewLabel);
 		
 		JLabel lblTitle2 = new JLabel("Title:");
-		lblTitle2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblTitle2.setBounds(309, 104, 113, 14);
+		lblTitle2.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblTitle2.setBounds(275, 98, 113, 14);
 		frmViewEmployees.getContentPane().add(lblTitle2);
 		
 		JLabel lblEmail2 = new JLabel("Email:");
-		lblEmail2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblEmail2.setBounds(309, 148, 113, 14);
+		lblEmail2.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblEmail2.setBounds(275, 146, 113, 14);
 		frmViewEmployees.getContentPane().add(lblEmail2);
 		
 		JLabel lblOfficePhone2 = new JLabel("Office Phone:");
-		lblOfficePhone2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblOfficePhone2.setBounds(309, 204, 113, 14);
+		lblOfficePhone2.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblOfficePhone2.setBounds(275, 198, 113, 14);
 		frmViewEmployees.getContentPane().add(lblOfficePhone2);
 		
 		JLabel lblMobilePhone2 = new JLabel("Mobile Phone:");
-		lblMobilePhone2.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblMobilePhone2.setBounds(309, 256, 113, 14);
+		lblMobilePhone2.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblMobilePhone2.setBounds(275, 256, 118, 14);
 		frmViewEmployees.getContentPane().add(lblMobilePhone2);
 		lblTitle.setEditable(false);
 		
 		
-		lblTitle.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		lblTitle.setBounds(442, 99, 310, 30);
+		lblTitle.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		lblTitle.setBounds(410, 93, 220, 30);
 		frmViewEmployees.getContentPane().add(lblTitle);
 		lblEmail.setEditable(false);
 		
 		
-		lblEmail.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		lblEmail.setBounds(442, 143, 310, 30);
+		lblEmail.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		lblEmail.setBounds(410, 141, 220, 30);
 		frmViewEmployees.getContentPane().add(lblEmail);
 		lblOffice.setEditable(false);
 		
 		
-		lblOffice.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		lblOffice.setBounds(442, 199, 310, 30);
+		lblOffice.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		lblOffice.setBounds(410, 193, 220, 30);
 		frmViewEmployees.getContentPane().add(lblOffice);
 		
 		lblName = new JTextField();
-		lblName.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		lblName.setFont(new Font("Rockwell", Font.PLAIN, 13));
 		lblName.setBackground(UIManager.getColor("Button.background"));
 		lblName.setEditable(false);
-		lblName.setBounds(442, 40, 310, 31);		
+		lblName.setBounds(410, 40, 220, 31);		
 		frmViewEmployees.getContentPane().add(lblName);
 		lblName.setColumns(10);
 		lblMobile.setEditable(false);
 		
-		lblMobile.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		lblMobile.setBounds(442, 251, 310, 30);
+		lblMobile.setFont(new Font("Rockwell", Font.PLAIN, 13));
+		lblMobile.setBounds(410, 251, 220, 30);
 		frmViewEmployees.getContentPane().add(lblMobile);
 		btnEdit.setToolTipText("Edit");
 		btnEdit.addActionListener(new ActionListener() {
@@ -175,7 +176,7 @@ public class g_ViewEmployees {
 			}
 		});     
 		btnEdit.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/edit.png")));
-		btnEdit.setBounds(828, 11, 32, 32);
+		btnEdit.setBounds(709, 11, 32, 32);
 		
 		frmViewEmployees.getContentPane().add(btnEdit);
 		btnAccept.addActionListener(new ActionListener() {
@@ -187,7 +188,7 @@ public class g_ViewEmployees {
 		btnAccept.setEnabled(false);
 		btnAccept.setVisible(false);
 		btnAccept.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/ok-icon.png")));
-		btnAccept.setBounds(786, 11, 34, 34);
+		btnAccept.setBounds(667, 11, 34, 34);
 		
 		frmViewEmployees.getContentPane().add(btnAccept);
 		btnCancel.addActionListener(new ActionListener() {
@@ -198,13 +199,13 @@ public class g_ViewEmployees {
 		btnCancel.setToolTipText("Cancel Edits");
 		btnCancel.setEnabled(false);
 		btnCancel.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/Actions-window-close-icon.png")));
-		btnCancel.setBounds(828, 11, 32, 32);
+		btnCancel.setBounds(709, 11, 32, 32);
 		
 		frmViewEmployees.getContentPane().add(btnCancel);
 		
 		JLabel lblEneEmployees = new JLabel("ENE Employees");
 		lblEneEmployees.setForeground(Color.RED);
-		lblEneEmployees.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblEneEmployees.setFont(new Font("Rockwell", Font.PLAIN, 18));
 		lblEneEmployees.setBounds(39, 15, 187, 18);
 		frmViewEmployees.getContentPane().add(lblEneEmployees);
 		
@@ -217,7 +218,7 @@ public class g_ViewEmployees {
 					int reply = JOptionPane.showConfirmDialog(frmViewEmployees, "Really delete " + removalName + "?" , "Remove Employee", JOptionPane.YES_NO_OPTION);
 			        if (reply == JOptionPane.YES_OPTION)
 			        {
-			          String commandText = "DELETE FROM EN_Employees WHERE Name = '" + removalName + "'";
+			          String commandText = "Update EN_Employees SET Active = 0 WHERE Name = '" + removalName + "'";
 			          c_Query.ExecuteQuery(commandText);
 			          result.remove(index);
 			          JOptionPane.showMessageDialog(frmViewEmployees, removalName + " has been deleted. \n You monster.");
@@ -246,6 +247,8 @@ public class g_ViewEmployees {
 		btnNewEmployee.setBounds(36, 292, 32, 32);
 		
 		frmViewEmployees.getContentPane().add(btnNewEmployee);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setFont(new Font("Rockwell", Font.PLAIN, 13));
 		
 		
 		list.addListSelectionListener(new ListSelectionListener() {
@@ -270,6 +273,7 @@ public class g_ViewEmployees {
 		
 		listModel.removeAllElements();
 		list.setModel(listModel);
+		btnNewButton.setFont(new Font("Rockwell", Font.PLAIN, 11));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				g_MainMenu.run(frmViewEmployees);
@@ -300,7 +304,7 @@ public class g_ViewEmployees {
 		});
 		btnMobilePhone.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/telephone.png")));
 		btnMobilePhone.setToolTipText("Mobile Phone");
-		btnMobilePhone.setBounds(765, 247, 36, 36);
+		btnMobilePhone.setBounds(659, 247, 36, 36);
 		frmViewEmployees.getContentPane().add(btnMobilePhone);
 		
 		JButton button_1 = new JButton("");
@@ -324,7 +328,7 @@ public class g_ViewEmployees {
 		});
 		button_1.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/telephone.png")));
 		button_1.setToolTipText("Office Phone");
-		button_1.setBounds(762, 196, 36, 36);
+		button_1.setBounds(659, 187, 36, 36);
 		frmViewEmployees.getContentPane().add(button_1);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -340,7 +344,7 @@ public class g_ViewEmployees {
 		});
 		button.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/email.png")));
 		button.setToolTipText("Email");
-		button.setBounds(762, 141, 36, 36);
+		button.setBounds(659, 135, 36, 36);
 		
 		frmViewEmployees.getContentPane().add(button);
 		
@@ -356,7 +360,7 @@ public class g_ViewEmployees {
 		});
 		button_2.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/support.png")));
 		button_2.setToolTipText("Skype Business Server");
-		button_2.setBounds(828, 348, 41, 40);
+		button_2.setBounds(679, 340, 41, 40);
 		frmViewEmployees.getContentPane().add(button_2);
 		
 		JButton button_3 = new JButton("");
@@ -377,12 +381,12 @@ public class g_ViewEmployees {
 		});
 		button_3.setIcon(new ImageIcon(g_ViewEmployees.class.getResource("/copy.png")));
 		button_3.setToolTipText("Copy to clipboard.");
-		button_3.setBounds(828, 245, 36, 36);
+		button_3.setBounds(705, 247, 36, 36);
 		frmViewEmployees.getContentPane().add(button_3);
 		
 		JLabel lblSkypeBusinessServer = new JLabel("Skype Business Server:");
-		lblSkypeBusinessServer.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblSkypeBusinessServer.setBounds(626, 355, 182, 26);
+		lblSkypeBusinessServer.setFont(new Font("Rockwell", Font.PLAIN, 18));
+		lblSkypeBusinessServer.setBounds(465, 347, 194, 26);
 		frmViewEmployees.getContentPane().add(lblSkypeBusinessServer);
 		
 		//Menubar

@@ -55,6 +55,7 @@ import java.awt.datatransfer.StringSelection;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
+import javax.swing.SwingConstants;
 /* http://stackoverflow.com/questions/16157529/how-do-i-pass-objects-between-classes */
 public class g_CurrentTickets {
 
@@ -80,7 +81,6 @@ public class g_CurrentTickets {
 	public static DefaultListModel<c_Files> fileListModel;
 	public static DefaultListModel<c_Files> ExistingfileListModel;
 	private List<String> ViewSiteData = new ArrayList<String>();
-	private JPanel panel_2;
 	private JPanel panel_Update;
 	private JScrollPane scrollPane;
 	private JPanel panel_Internal;
@@ -113,6 +113,7 @@ public class g_CurrentTickets {
 	private static JRadioButton rdbtnMyTickets;
 	private static JLabel lblLastUpdatedByStr;	
 	private static boolean AssignChange = false;
+	private JComboBox<String> cb_Category;
 
 	
 	public static void run(JFrame frame) {
@@ -150,33 +151,34 @@ public class g_CurrentTickets {
 		frmCurrentTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_CurrentTickets.class.getResource("/icon.png")));				
 		frmCurrentTickets.setTitle("Automated Support Program v." + g_MainMenu.version);	
 		frmCurrentTickets.getContentPane().setBackground(Color.LIGHT_GRAY);
-		frmCurrentTickets.setBounds(100, 100, 964, 917);
+		frmCurrentTickets.setBounds(100, 100, 964, 916);
 		frmCurrentTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmCurrentTickets.getContentPane().setLayout(null);
 	
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
-		panel_1.setBounds(265, 11, 668, 725);
+		panel_1.setBounds(265, 11, 668, 790);
 		frmCurrentTickets.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
 		lbl_ClientSite = new JLabel("Client Site (ID)");
 		lbl_ClientSite.setBounds(10, 11, 493, 20);
-		lbl_ClientSite.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lbl_ClientSite.setFont(new Font("Rockwell", Font.BOLD, 16));
 		panel_1.add(lbl_ClientSite);
 		
 		lbl_Ticket = new JLabel("(Ticket #)");
 		lbl_Ticket.setBounds(544, 11, 114, 20);
-		lbl_Ticket.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lbl_Ticket.setFont(new Font("Rockwell", Font.BOLD, 16));
 		panel_1.add(lbl_Ticket);
 		
 		lbl_Assigned = new JLabel("");
-		lbl_Assigned.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
-		lbl_Assigned.setBounds(25, 687, 231, 20);
+		lbl_Assigned.setFont(new Font("Rockwell", Font.PLAIN, 16));
+		lbl_Assigned.setBounds(25, 694, 231, 20);
 		panel_1.add(lbl_Assigned);
 		
 		btnSave = new JButton("Update");
+		btnSave.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
 				if (cb_Status.getSelectedItem().toString().compareTo("Complete") == 0)
@@ -199,23 +201,24 @@ public class g_CurrentTickets {
 				AssignChange = false;
 			}
 		});
-		btnSave.setBounds(569, 696, 89, 23);
+		btnSave.setBounds(569, 739, 89, 23);
 		panel_1.add(btnSave);
 		
 		cb_Status = new JComboBox<String>();
+		cb_Status.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		cb_Status.setModel(new DefaultComboBoxModel<String>(new String[] {"Investigating", "Ongoing", "Ongoing - Need Field Support", "Ongoing - Need ETP Approval", "Closed by ETP", "Complete"}));
-		cb_Status.setBounds(266, 693, 191, 28);
+		cb_Status.setBounds(245, 694, 191, 28);
 		panel_1.add(cb_Status);
 		
 		ExistingfileListModel = new DefaultListModel<c_Files>();
 		
 		lbl_Problem = new JLabel("Issue");
-		lbl_Problem.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lbl_Problem.setFont(new Font("Rockwell", Font.BOLD, 16));
 		lbl_Problem.setBounds(10, 77, 220, 20);
 		panel_1.add(lbl_Problem);
 		
 		panel_Internal = new JPanel();
-		panel_Internal.setBounds(10, 322, 648, 324);
+		panel_Internal.setBounds(1000, 322, 648, 324);
 		panel_1.add(panel_Internal);
 		panel_Internal.setLayout(null);
 		panel_Internal.setVisible(false);
@@ -365,14 +368,15 @@ public class g_CurrentTickets {
 		lbl_Update = new JLabel("Update");
 		lbl_Update.setBounds(0, 0, 220, 20);
 		panel_Update.add(lbl_Update);
-		lbl_Update.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lbl_Update.setFont(new Font("Rockwell", Font.BOLD, 16));
 		
 		lblHours = new JLabel("Time Spent");
 		lblHours.setBounds(0, 259, 156, 20);
 		panel_Update.add(lblHours);
-		lblHours.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lblHours.setFont(new Font("Rockwell", Font.BOLD, 16));
 		
 		txt_TimeSpent = new JTextField();
+		txt_TimeSpent.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		txt_TimeSpent.setBounds(10, 283, 58, 25);
 		panel_Update.add(txt_TimeSpent);
 		txt_TimeSpent.setText("0.5");
@@ -382,12 +386,12 @@ public class g_CurrentTickets {
 		lblDateLastUpdated = new JLabel("Last Updated:");
 		lblDateLastUpdated.setBounds(474, 255, 164, 20);
 		panel_Update.add(lblDateLastUpdated);
-		lblDateLastUpdated.setFont(new Font("Times New Roman", Font.BOLD, 16));
+		lblDateLastUpdated.setFont(new Font("Rockwell", Font.BOLD, 16));
 		
 		lbl_UpdateDate = new JLabel("Date");
 		lbl_UpdateDate.setBounds(474, 284, 164, 20);
 		panel_Update.add(lbl_UpdateDate);
-		lbl_UpdateDate.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lbl_UpdateDate.setFont(new Font("Rockwell", Font.BOLD, 16));
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -401,6 +405,7 @@ public class g_CurrentTickets {
 		
 		
 		btn_Internal = new JButton("Internal");
+		btn_Internal.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		btn_Internal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panel_Update.setVisible(false);
@@ -412,11 +417,12 @@ public class g_CurrentTickets {
 		panel_Update.add(btn_Internal);
 		
 		JLabel lblhours = new JLabel("Hours");
-		lblhours.setFont(new Font("Plantagenet Cherokee", Font.PLAIN, 14));
+		lblhours.setFont(new Font("Rockwell", Font.PLAIN, 14));
 		lblhours.setBounds(75, 284, 156, 20);
 		panel_Update.add(lblhours);
 		
 		JButton btn_SiteData = new JButton("Site Changes");
+		btn_SiteData.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		btn_SiteData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//ViewSiteData2();
@@ -428,11 +434,12 @@ public class g_CurrentTickets {
 		panel_1.add(btn_SiteData);
 		
 		lblAssignedTo = new JLabel("Assigned To:");
-		lblAssignedTo.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+		lblAssignedTo.setFont(new Font("Rockwell", Font.BOLD, 16));
 		lblAssignedTo.setBounds(25, 665, 134, 20);
 		panel_1.add(lblAssignedTo);
 		
 		cb_Assigned = new JComboBox<String>();
+		cb_Assigned.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		cb_Assigned.setBounds(10, 694, 165, 26);
 		cb_Assigned.setVisible(false);
 		panel_1.add(cb_Assigned);
@@ -444,6 +451,16 @@ public class g_CurrentTickets {
 				ChangeAssignment();
 			}
 		});
+		
+		btnEditCategory = new JButton("");
+		btnEditCategory.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ChangeCategory();
+			}
+		});
+		btnEditCategory.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/edit.png")));
+		btnEditCategory.setBounds(603, 669, 16, 16);
+		panel_1.add(btnEditCategory);
 		btnEdit.setBounds(139, 669, 16, 16);
 		panel_1.add(btnEdit);
 		
@@ -458,308 +475,10 @@ public class g_CurrentTickets {
 		scrollPane_3.setViewportView(txt_Issue);
 		txt_Issue.setEditable(false);
 		
-		chckbxCcNotified = new JCheckBox("CC Notified");
-		chckbxCcNotified.setBounds(466, 696, 97, 23);
+		chckbxCcNotified = new JCheckBox("<html><center>CC Notified</center></html>");
+		chckbxCcNotified.setFont(new Font("Rockwell", Font.PLAIN, 12));
+		chckbxCcNotified.setBounds(478, 739, 79, 32);
 		panel_1.add(chckbxCcNotified);
-						
-		panel_2 = new JPanel();
-		panel_2.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
-		panel_2.setBounds(265, 747, 668, 54);
-		frmCurrentTickets.getContentPane().add(panel_2);
-		panel_2.setLayout(null);
-		
-		JButton btnNewButton = new JButton("Generate Email");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {				
-				GetCheckboxes();
-			}
-		});
-		btnNewButton.setBounds(530, 11, 128, 23);
-		panel_2.add(btnNewButton);
-		
-		JLabel icon_view = new JLabel("<html> View </html>");		
-		icon_view.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				String ipAddress = "";
-				
-				if(!centralView)
-				{
-					ipAddress = "10.219." + siteID + "." + viewIP;
-				}
-				else
-				{
-					ipAddress = "192.168.32.74";
-				}
-				
-				if(arg0.getButton() == MouseEvent.BUTTON1)
-				{
-					String width;
-					String height;
-					if(!highperformance)
-					{
-						width = "1280";
-						height = "1024";
-					}
-					else
-					{
-						width = "1920";
-						height = "1080";
-					}					
-						
-					try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
-					} catch (IOException e) {
-						e.printStackTrace();						
-					}
-				}
-				else if(arg0.getButton() == MouseEvent.BUTTON2)
-				{
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
-					} catch (IOException e) {
-						e.printStackTrace();
-					}					
-				}
-				else if(arg0.getButton() == MouseEvent.BUTTON3)
-				{
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
-					} catch (IOException e) {
-						e.printStackTrace();
-					}					
-				}
-			}
-			
-		});
-		icon_view.setToolTipText("View");
-		icon_view.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/view.png")));
-		icon_view.setBounds(30, 1, 32, 32);
-		panel_2.add(icon_view);
-		
-		JLabel lblNewLabel_1 = new JLabel("View");
-		lblNewLabel_1.setBounds(33, 32, 32, 14);
-		panel_2.add(lblNewLabel_1);
-		
-		JLabel icon_sql = new JLabel("");
-		icon_sql.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String width = "1920";
-				String height = "1080";			
-				String ipAddress = "";
-				
-				if(!centralSQL)
-				{
-					ipAddress = "10.219." + siteID + "." + SQLIP;
-				}
-				else
-				{
-					ipAddress = "192.168.32.75";
-				}
-				
-				if(e.getButton() == MouseEvent.BUTTON1)
-				{
-						try {
-							Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
-						} catch (IOException e2) {
-							e2.printStackTrace();
-						}
-					
-				}
-				else if(e.getButton() == MouseEvent.BUTTON2)
-				{
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}					
-				}
-				else if(e.getButton() == MouseEvent.BUTTON3)
-				{
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}					
-				}
-			}
-			
-		});
-		icon_sql.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/sql.png")));
-		icon_sql.setToolTipText("SQL");
-		icon_sql.setBounds(90, 1, 32, 32);
-		panel_2.add(icon_sql);
-		
-		JLabel icon_dev = new JLabel("");
-		icon_dev.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String width = "1920";
-				String height = "1080";	
-				String ipAddress = "10.219." + siteID + "." + DevIP; 
-				if(e.getButton() == MouseEvent.BUTTON1)
-				{
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
-					} catch (IOException e3) {
-						e3.printStackTrace();
-					}
-				}
-				else if(e.getButton() == MouseEvent.BUTTON2)
-				{
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}		
-				}
-				else if(e.getButton() == MouseEvent.BUTTON3)
-				{
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}					
-				}
-			}
-		});
-		icon_dev.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/dev.png")));
-		icon_dev.setToolTipText("Dev");
-		icon_dev.setBounds(150, 1, 32, 32);
-		panel_2.add(icon_dev);
-		
-		JLabel lblSql = new JLabel("SQL");
-		lblSql.setBounds(96, 32, 32, 14);
-		panel_2.add(lblSql);
-		
-		JLabel lblDev = new JLabel("Dev");
-		lblDev.setBounds(157, 32, 32, 14);
-		panel_2.add(lblDev);
-		
-		JLabel icon_idrac = new JLabel("");
-		icon_idrac.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String ipAddress = "10.219." + siteID + "." + iDracIP; 
-				if(e.getButton() == MouseEvent.BUTTON1)
-				{
-					try {					
-						Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress);
-					} catch (IOException e2) {
-					
-					}
-				}				
-				else if(e.getButton() == MouseEvent.BUTTON3)
-				{
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}					
-				}			
-			}
-		});
-		icon_idrac.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/idrac.png")));
-		icon_idrac.setToolTipText("iDrac");
-		icon_idrac.setBounds(210, 3, 32, 32);
-		panel_2.add(icon_idrac);
-		
-		JLabel icon_host = new JLabel("");
-		icon_host.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {				
-				String ipAddress = "10.219." + siteID + "." + hostIP;
-				if(e.getButton() == MouseEvent.BUTTON1)
-				{
-					try {					
-						Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress + "\\ui");
-					} catch (IOException e2) {
-					}
-				}
-				else if (e.getButton() == MouseEvent.BUTTON3)
-				{
-					try {
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}					
-				}
-				
-			}
-		});
-		icon_host.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/host.png")));
-		icon_host.setToolTipText("Host");
-		icon_host.setBounds(270, 3, 32, 32);
-		panel_2.add(icon_host);
-		
-		JLabel lblIdrac = new JLabel("iDrac");
-		lblIdrac.setBounds(214, 34, 32, 14);
-		panel_2.add(lblIdrac);
-		
-		JLabel lblHost = new JLabel("Host");
-		lblHost.setBounds(275, 34, 32, 14);
-		panel_2.add(lblHost);
-		
-		btnSearch = new JButton("");
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				ReactivateTicket();			    
-			}
-			
-		});
-		btnSearch.setBounds(350, 3, 32, 32);
-		panel_2.add(btnSearch);
-		btnSearch.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/file.png")));
-		btnSearch.setToolTipText("Reactivate Ticket");
-		
-		JLabel lblTicketLookup = new JLabel("Archive Activation");
-		lblTicketLookup.setBounds(325, 34, 98, 14);
-		panel_2.add(lblTicketLookup);
-		
-		JButton button = new JButton("");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {				
-				if (client.compareTo("Kinder Morgan") == 0 || client.compareTo("Phillips 66") == 0 ||
-					client.compareTo("Motiva") == 0 || client.compareTo("Chevron") == 0 ||
-					client.compareTo("Shell") == 0 ||
-					client.compareTo("Sinclair") == 0 || client.compareTo("Cummins") == 0)
-				{
-					int reply = JOptionPane.showConfirmDialog(frmCurrentTickets, "Phone #713-989-4409 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
-			        if (reply == JOptionPane.YES_OPTION)
-			        {
-			        	try {
-
-							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894409"});
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-			        }
-			        
-				}
-				else
-				{
-					int reply = JOptionPane.showConfirmDialog(frmCurrentTickets, "Phone #713-989-4408 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
-			        if (reply == JOptionPane.YES_OPTION)
-			        {
-			        	try {
-
-							Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894408"});
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-			        }
-				}												
-			}
-		});
-		button.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/telephone.png")));
-		button.setToolTipText("Call CC");
-		button.setBounds(447, 3, 32, 32);
-		panel_2.add(button);
-		
-		JLabel lblControlCenter = new JLabel("Control Center");
-		lblControlCenter.setBounds(425, 34, 98, 14);
-		panel_2.add(lblControlCenter);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -773,6 +492,7 @@ public class g_CurrentTickets {
 		
 		
 		tree_closed = new CheckboxTree();
+		tree_closed.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		scrollPane_4.setViewportView(tree_closed);
 		tree_closed.getCheckingModel().setCheckingMode(TreeCheckingModel.CheckingMode.PROPAGATE_PRESERVING_CHECK);
 		tree_closed.setBackground(Color.WHITE);
@@ -784,6 +504,7 @@ public class g_CurrentTickets {
 		});
 		
 		JButton btnBack = new JButton("Back");
+		btnBack.setFont(new Font("Rockwell", Font.PLAIN, 12));
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				g_MainMenu.run(frmCurrentTickets);
@@ -837,6 +558,7 @@ public class g_CurrentTickets {
 				panel.add(scrollPane_5);
 				
 				tree_active = new CheckboxTree();
+				tree_active.setFont(new Font("Rockwell", Font.PLAIN, 12));
 				scrollPane_5.setViewportView(tree_active);
 				tree_active.getCheckingModel().setCheckingMode(TreeCheckingModel.CheckingMode.PROPAGATE_PRESERVING_CHECK);
 				tree_active.setBackground(Color.WHITE);
@@ -850,6 +572,7 @@ public class g_CurrentTickets {
 				panel_4.setLayout(null);
 				
 				rdbtnAllTickets = new JRadioButton("All");
+				rdbtnAllTickets.setFont(new Font("Rockwell", Font.PLAIN, 11));
 				rdbtnAllTickets.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						PopulateActiveTickets();
@@ -862,6 +585,7 @@ public class g_CurrentTickets {
 				panel_4.add(rdbtnAllTickets);
 				
 				rdbtnMyTickets = new JRadioButton("My Tickets");
+				rdbtnMyTickets.setFont(new Font("Rockwell", Font.PLAIN, 11));
 				rdbtnMyTickets.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						PopulateActiveTickets();
@@ -873,6 +597,7 @@ public class g_CurrentTickets {
 				panel_4.add(rdbtnMyTickets);												
 				
 				rdbtnUpdates = new JRadioButton("New Updates");
+				rdbtnUpdates.setFont(new Font("Rockwell", Font.PLAIN, 11));
 				rdbtnUpdates.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						PopulateActiveTickets();
@@ -890,14 +615,359 @@ public class g_CurrentTickets {
 			    SpellChecker.register( txt_Update);
 			    
 			    JLabel lblTicketEntered = new JLabel("Ticket Entered:");
-			    lblTicketEntered.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			    lblTicketEntered.setFont(new Font("Rockwell", Font.BOLD, 16));
 			    lblTicketEntered.setBounds(242, 259, 164, 20);
 			    panel_Update.add(lblTicketEntered);
 			    
 			    lbl_TicketEntered = new JLabel("Date");
-			    lbl_TicketEntered.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
+			    lbl_TicketEntered.setFont(new Font("Rockwell", Font.BOLD, 16));
 			    lbl_TicketEntered.setBounds(242, 288, 164, 20);
 			    panel_Update.add(lbl_TicketEntered);
+			    
+			    btn_AnalyzerGuide = new JButton("");
+			    btn_AnalyzerGuide.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent e) {
+			    		try {
+							Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + "https://drive.google.com/open?id=1azY7gVHoZq14Qe6VpcYUyXWuGEtcuo38");
+						} catch (IOException e2) {
+						}
+					
+			    	}
+			    });
+			    btn_AnalyzerGuide.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/alarmguide.png")));
+			    btn_AnalyzerGuide.setToolTipText("Analyzer Alarms Guide");
+			    btn_AnalyzerGuide.setVisible(false);
+			    btn_AnalyzerGuide.setBounds(125, 43, 24, 24);
+			    panel_1.add(btn_AnalyzerGuide);
+			    
+			    cb_Category = new JComboBox();
+			    cb_Category.setFont(new Font("Rockwell", Font.PLAIN, 12));
+			    cb_Category.setModel(new DefaultComboBoxModel(new String[] {"", "Injection", "HMI", "PGM", "Reporting", "Safety", "Sampling", "Supply", "System", "Other"}));
+			    cb_Category.setBounds(493, 694, 165, 26);
+			    panel_1.add(cb_Category);
+			    
+			    lbl_Category = new JLabel("");
+			    lbl_Category.setBounds(508, 694, 157, 20);
+			    panel_1.add(lbl_Category);
+			    lbl_Category.setFont(new Font("Rockwell", Font.PLAIN, 16));
+			    
+			    lblCategory = new JLabel("Category:");
+			    lblCategory.setFont(new Font("Rockwell", Font.BOLD, 16));
+			    lblCategory.setBounds(508, 665, 97, 20);
+			    panel_1.add(lblCategory);
+			    
+			    JLabel icon_view = new JLabel("<html> View </html>");		
+			    icon_view.setBounds(10, 739, 32, 32);
+			    panel_1.add(icon_view);
+			    icon_view.addMouseListener(new MouseAdapter() {
+			    	@Override
+			    	public void mouseClicked(MouseEvent arg0) {
+			    		String ipAddress = "";
+			    		
+			    		if(!centralView)
+			    		{
+			    			ipAddress = "10.219." + siteID + "." + viewIP;
+			    		}
+			    		else
+			    		{
+			    			ipAddress = "192.168.32.74";
+			    		}
+			    		
+			    		if(arg0.getButton() == MouseEvent.BUTTON1)
+			    		{
+			    			String width;
+			    			String height;
+			    			if(!highperformance)
+			    			{
+			    				width = "1280";
+			    				height = "1024";
+			    			}
+			    			else
+			    			{
+			    				width = "1920";
+			    				height = "1080";
+			    			}					
+			    				
+			    			try {
+			    					Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+			    			} catch (IOException e) {
+			    				e.printStackTrace();						
+			    			}
+			    		}
+			    		else if(arg0.getButton() == MouseEvent.BUTTON2)
+			    		{
+			    			try {
+			    				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
+			    			} catch (IOException e) {
+			    				e.printStackTrace();
+			    			}					
+			    		}
+			    		else if(arg0.getButton() == MouseEvent.BUTTON3)
+			    		{
+			    			try {
+			    				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+			    			} catch (IOException e) {
+			    				e.printStackTrace();
+			    			}					
+			    		}
+			    	}
+			    	
+			    });
+			    icon_view.setToolTipText("View");
+			    icon_view.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/view.png")));
+			    
+			    JLabel lblNewLabel_1 = new JLabel("View");
+			    lblNewLabel_1.setFont(new Font("Rockwell", Font.PLAIN, 11));
+			    lblNewLabel_1.setBounds(13, 770, 32, 14);
+			    panel_1.add(lblNewLabel_1);
+			    
+			    JLabel icon_sql = new JLabel("");
+			    icon_sql.setBounds(70, 739, 32, 32);
+			    panel_1.add(icon_sql);
+			    icon_sql.addMouseListener(new MouseAdapter() {
+			    	@Override
+			    	public void mouseClicked(MouseEvent e) {
+			    		String width = "1920";
+			    		String height = "1080";			
+			    		String ipAddress = "";
+			    		
+			    		if(!centralSQL)
+			    		{
+			    			ipAddress = "10.219." + siteID + "." + SQLIP;
+			    		}
+			    		else
+			    		{
+			    			ipAddress = "192.168.32.75";
+			    		}
+			    		
+			    		if(e.getButton() == MouseEvent.BUTTON1)
+			    		{
+			    				try {
+			    					Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+			    				} catch (IOException e2) {
+			    					e2.printStackTrace();
+			    				}
+			    			
+			    		}
+			    		else if(e.getButton() == MouseEvent.BUTTON2)
+			    		{
+			    			try {
+			    				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
+			    			} catch (IOException e1) {
+			    				e1.printStackTrace();
+			    			}					
+			    		}
+			    		else if(e.getButton() == MouseEvent.BUTTON3)
+			    		{
+			    			try {
+			    				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+			    			} catch (IOException e1) {
+			    				e1.printStackTrace();
+			    			}					
+			    		}
+			    	}
+			    	
+			    });
+			    icon_sql.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/sql.png")));
+			    icon_sql.setToolTipText("SQL");
+			    
+			    JLabel lblSql = new JLabel("SQL");
+			    lblSql.setFont(new Font("Rockwell", Font.PLAIN, 11));
+			    lblSql.setBounds(76, 770, 32, 14);
+			    panel_1.add(lblSql);
+			    
+			    JLabel icon_dev = new JLabel("");
+			    icon_dev.setBounds(130, 739, 32, 32);
+			    panel_1.add(icon_dev);
+			    icon_dev.addMouseListener(new MouseAdapter() {
+			    	@Override
+			    	public void mouseClicked(MouseEvent e) {
+			    		String width = "1920";
+			    		String height = "1080";	
+			    		String ipAddress = "10.219." + siteID + "." + DevIP; 
+			    		if(e.getButton() == MouseEvent.BUTTON1)
+			    		{
+			    			try {
+			    				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "mstsc /v:"+ipAddress + " /w:" + width + " /h:" + height});
+			    			} catch (IOException e3) {
+			    				e3.printStackTrace();
+			    			}
+			    		}
+			    		else if(e.getButton() == MouseEvent.BUTTON2)
+			    		{
+			    			try {
+			    				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", "start \\\\"+ipAddress+"\\c$"});
+			    			} catch (IOException e1) {
+			    				e1.printStackTrace();
+			    			}		
+			    		}
+			    		else if(e.getButton() == MouseEvent.BUTTON3)
+			    		{
+			    			try {
+			    				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+			    			} catch (IOException e1) {
+			    				e1.printStackTrace();
+			    			}					
+			    		}
+			    	}
+			    });
+			    icon_dev.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/dev.png")));
+			    icon_dev.setToolTipText("Dev");
+			    
+			    JLabel lblDev = new JLabel("Dev");
+			    lblDev.setFont(new Font("Rockwell", Font.PLAIN, 11));
+			    lblDev.setBounds(137, 770, 32, 14);
+			    panel_1.add(lblDev);
+			    
+			    JLabel icon_idrac = new JLabel("");
+			    icon_idrac.setBounds(190, 741, 32, 32);
+			    panel_1.add(icon_idrac);
+			    icon_idrac.addMouseListener(new MouseAdapter() {
+			    	@Override
+			    	public void mouseClicked(MouseEvent e) {
+			    		String ipAddress = "10.219." + siteID + "." + iDracIP; 
+			    		if(e.getButton() == MouseEvent.BUTTON1)
+			    		{
+			    			try {					
+			    				Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress);
+			    			} catch (IOException e2) {
+			    			
+			    			}
+			    		}				
+			    		else if(e.getButton() == MouseEvent.BUTTON3)
+			    		{
+			    			try {
+			    				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+			    			} catch (IOException e1) {
+			    				e1.printStackTrace();
+			    			}					
+			    		}			
+			    	}
+			    });
+			    icon_idrac.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/idrac.png")));
+			    icon_idrac.setToolTipText("iDrac");
+			    
+			    JLabel lblIdrac = new JLabel("iDrac");
+			    lblIdrac.setFont(new Font("Rockwell", Font.PLAIN, 11));
+			    lblIdrac.setBounds(194, 772, 32, 14);
+			    panel_1.add(lblIdrac);
+			    
+			    JLabel icon_host = new JLabel("");
+			    icon_host.setBounds(250, 741, 32, 32);
+			    panel_1.add(icon_host);
+			    icon_host.addMouseListener(new MouseAdapter() {
+			    	@Override
+			    	public void mouseClicked(MouseEvent e) {				
+			    		String ipAddress = "10.219." + siteID + "." + hostIP;
+			    		if(e.getButton() == MouseEvent.BUTTON1)
+			    		{
+			    			try {					
+			    				Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe " + ipAddress + "\\ui");
+			    			} catch (IOException e2) {
+			    			}
+			    		}
+			    		else if (e.getButton() == MouseEvent.BUTTON3)
+			    		{
+			    			try {
+			    				Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", "start cmd.exe /K ping "+ipAddress+""});												
+			    			} catch (IOException e1) {
+			    				e1.printStackTrace();
+			    			}					
+			    		}
+			    		
+			    	}
+			    });
+			    icon_host.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/host.png")));
+			    icon_host.setToolTipText("Host");
+			    
+			    JLabel lblHost = new JLabel("Host");
+			    lblHost.setFont(new Font("Rockwell", Font.PLAIN, 11));
+			    lblHost.setBounds(255, 772, 32, 14);
+			    panel_1.add(lblHost);
+			    
+			    btnCancelEdit = new JButton("");
+			    btnCancelEdit.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent e) {
+			    		CancelAssigned();
+			    	}
+			    });
+			    btnCancelEdit.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/Actions-window-close-icon.png")));
+			    btnCancelEdit.setBounds(139, 666, 16, 16);
+			    panel_1.add(btnCancelEdit);
+			    btnCancelEdit.setVisible(false);
+			    
+			    JButton button = new JButton("");
+			    button.setBounds(324, 739, 32, 32);
+			    panel_1.add(button);
+			    button.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent arg0) {				
+			    		if (client.compareTo("Kinder Morgan") == 0 || client.compareTo("Phillips 66") == 0 ||
+			    			client.compareTo("Motiva") == 0 || client.compareTo("Chevron") == 0 ||
+			    			client.compareTo("Shell") == 0 ||
+			    			client.compareTo("Sinclair") == 0 || client.compareTo("Cummins") == 0)
+			    		{
+			    			int reply = JOptionPane.showConfirmDialog(frmCurrentTickets, "Phone #713-989-4409 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
+			    	        if (reply == JOptionPane.YES_OPTION)
+			    	        {
+			    	        	try {
+
+			    					Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894409"});
+			    				} catch (IOException e) {
+			    					e.printStackTrace();
+			    				}
+			    	        }
+			    	        
+			    		}
+			    		else
+			    		{
+			    			int reply = JOptionPane.showConfirmDialog(frmCurrentTickets, "Phone #713-989-4408 \n Call Control Center?" , "Control Center Phone #", JOptionPane.YES_NO_OPTION);
+			    	        if (reply == JOptionPane.YES_OPTION)
+			    	        {
+			    	        	try {
+
+			    					Runtime.getRuntime().exec(new String[] {"C:\\Program Files (x86)\\Microsoft Office\\Office16\\lync.exe", "/C", "Callto:tel:+ 17139894408"});
+			    				} catch (IOException e) {
+			    					e.printStackTrace();
+			    				}
+			    	        }
+			    		}												
+			    	}
+			    });
+			    button.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/telephone.png")));
+			    button.setToolTipText("Call CC");
+			    
+			    JLabel lblControlCenter = new JLabel("Control Center");
+			    lblControlCenter.setFont(new Font("Rockwell", Font.PLAIN, 11));
+			    lblControlCenter.setBounds(302, 770, 98, 14);
+			    panel_1.add(lblControlCenter);
+			    
+			    lblTicketStatus = new JLabel("Ticket Status:");
+			    lblTicketStatus.setHorizontalAlignment(SwingConstants.LEFT);
+			    lblTicketStatus.setFont(new Font("Rockwell", Font.BOLD, 16));
+			    lblTicketStatus.setBounds(254, 665, 141, 20);
+			    panel_1.add(lblTicketStatus);
+			    
+			    btnCancelEditCategory = new JButton("");
+			    btnCancelEditCategory.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent e) {
+			    		CancelCategory();
+			    	}
+			    });
+			    btnCancelEditCategory.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/Actions-window-close-icon.png")));
+			    btnCancelEditCategory.setBounds(603, 666, 16, 16);
+			    panel_1.add(btnCancelEditCategory);
+			    btnCancelEditCategory.setVisible(false);
+			    
+			    JButton btnNewButton = new JButton("Generate Email");
+			    btnNewButton.setFont(new Font("Rockwell", Font.PLAIN, 12));
+			    btnNewButton.setBounds(798, 822, 128, 23);
+			    frmCurrentTickets.getContentPane().add(btnNewButton);
+			    btnNewButton.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent arg0) {				
+			    		GetCheckboxes();
+			    	}
+			    });
+			    cb_Category.setVisible(false);
 				
 		tree_active.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
@@ -994,74 +1064,15 @@ public class g_CurrentTickets {
 	private JScrollPane scrollPane_3;
 	private JPanel panel;
 	private JScrollPane scrollPane_4;
-	private JButton btnSearch;
 	private JButton btnTicketAdd;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-	
-	private void ReactivateTicket()
-	{
-		boolean success = true;
-		JFrame frame = new JFrame("Ticket Reactivation");
-	    String TicketNum = JOptionPane.showInputDialog(
-	        frame, 
-	        "Enter ticket number to be reactivated. (X-XXXXX)", 
-	        "Ticket Reactivation", 
-	        JOptionPane.QUESTION_MESSAGE);			    
-	    if(TicketNum.isEmpty())
-        {
-        	return;
-        }	
-	    else
-	    {
-	    String TicketCheck = "SELECT COUNT(*) as Total FROM SupportTickets WHERE Ticket = '" + TicketNum + "'";
-		 ResultSet rs = c_Query.ExecuteResultSet(TicketCheck);
-		 int count = 0;
-	        try {
-				while((rs!=null) && (rs.next()))
-				{					
-					count = rs.getInt("Total");
-					
-				}
-			} catch (SQLException e) {
-			}
-	        try {
-				rs.close();
-			} catch (SQLException e) {
-			
-			}
-	        		        
-	        if(count <= 0)
-	        {
-	        	JOptionPane.showMessageDialog(frmCurrentTickets, "Ticket Number Not Found.");
-				return;	        	
-	        }
-	        else
-	        {
-			    String TicketUpdate = "UPDATE SupportTickets SET Active = 1, EmailSent = 0, Status = 'Investigating' WHERE Ticket =  '" + TicketNum + "'";
-			    try
-			    {
-			    c_Query.ExecuteQuery(TicketUpdate);			 
-			    }
-			    catch(Exception e)
-			    {
-			    	success = false;
-			    	System.out.println(e.toString());
-			    }
-			    if(success)
-			    {
-				    JOptionPane.showMessageDialog(frmCurrentTickets, "Ticket #" + TicketNum + " has been reactivated.");
-				    PopulateActiveWindow();
-					PopulateActiveTickets();
-					PopulateRecentTickets();
-			    }
-			    else
-			    {
-			    	JOptionPane.showMessageDialog(frmCurrentTickets, "There was an error reactivating ticket..");
-			    }
-	        }
-	    }
-	    
-	}
+	private JButton btn_AnalyzerGuide;
+	private JLabel lbl_Category;
+	private JButton btnEditCategory;
+	private JLabel lblCategory;
+	private JLabel lblTicketStatus;
+	private JButton btnCancelEdit;
+	private JButton btnCancelEditCategory;
 			
 	private void GetCheckboxes()
 	{
@@ -1115,8 +1126,11 @@ public class g_CurrentTickets {
 	private void PopulateActiveWindow()
 	{		
 		cb_Assigned.setVisible(false);
+		cb_Category.setVisible(false);
 		lbl_Assigned.setVisible(true);
+		lbl_Category.setVisible(true);
 		btnEdit.setVisible(true);
+		btnEditCategory.setVisible(true);
 		cb_Status.setEnabled(true);
 		try{
 		String tmp = tree_active.getSelectionPath().getLastPathComponent().toString();	
@@ -1155,6 +1169,16 @@ public class g_CurrentTickets {
 				highperformance = rs.getBoolean("HighPerformance");
 				centralSQL = rs.getBoolean("CentralSQL");
 				centralView = rs.getBoolean("CentralView");
+				String category = rs.getString("Category");
+				lbl_Category.setText(category);
+				if(category.compareTo("Sampling")==0)
+				{
+					btn_AnalyzerGuide.setVisible(true);
+				}
+				else
+				{
+					btn_AnalyzerGuide.setVisible(false);
+				}
 				
 				lbl_Ticket.setText("(#" + rs.getString("Ticket") + ")");
 				lbl_Assigned.setText(rs.getString("Assigned"));
@@ -1251,6 +1275,7 @@ public class g_CurrentTickets {
 	private void ChangeAssignment()
 	{
 		btnEdit.setVisible(false);
+		btnCancelEdit.setVisible(true);
 		lbl_Assigned.setVisible(false);
 		cb_Assigned.setVisible(true);
 		String commandText = "SELECT DISTINCT Name FROM EN_Employees WHERE Active = 1 ORDER BY Name Asc";       
@@ -1272,6 +1297,35 @@ public class g_CurrentTickets {
         AssignChange = true;
         
 	}
+	
+	
+	private void ChangeCategory()
+	{
+		btnEditCategory.setVisible(false);
+		btnCancelEditCategory.setVisible(true);
+		lbl_Category.setVisible(false);
+		cb_Category.setVisible(true);
+		String commandText = "SELECT DISTINCT Category FROM SupportTickets ORDER BY Category Asc";       
+		
+        ResultSet rs = c_Query.ExecuteResultSet(commandText);
+        try {
+			while((rs!=null) && (rs.next()))
+			{					
+				String category = rs.getString(1);				
+				cb_Category.addItem(category);	
+			}
+		} catch (SQLException e) {
+		}
+        try {
+			rs.close();
+		} catch (SQLException e) {
+		
+		}
+        
+        
+        
+	}
+	
 	
 	
 	
@@ -1602,52 +1656,29 @@ public class g_CurrentTickets {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + cb_Category.getSelectedItem().toString() + "', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == true && CCCompilation == false)
 		 {
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + cb_Category.getSelectedItem().toString()  + ",Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == false && CCCompilation == true)
 		 {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
-			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Category ='" + cb_Category.getSelectedItem().toString()  + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else
 		 {
-			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Category = '" + cb_Category.getSelectedItem().toString()  + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 
 			c_Query.UpdateResultSet(commandText);
 
 			commandText = "";
 		 	
-			
-			/* Check if there is any files to upload from the internal window */
-			if (!fileListModel.isEmpty()) {
-				for(int i = 0; i < fileListModel.size(); i++)
-				{
-					File inputFile = new File(
-							fileListModel.get(i).getFileSource());
-					File outputFile = new File( 
-							directory + TicketNum + "_" + fileListModel.get(i).toString());
-										
-					try {
-						copyFileUsingStream(inputFile, outputFile);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				
-				for(int i = 0; i < fileListModel.size(); i++)
-				{
-					commandText = commandText + " INSERT INTO Files (TicketNum, Filename, UploadDate) VALUES ('" + TicketNum + "','" + fileListModel.get(i).getFile() + "','" + testDate +"')";
-				}				
-				c_Query.UpdateResultSet(commandText);
-			}
-			
+	
 			/*Check for Internal Update */
 			if(txt_Internal.getText().compareTo("") != 0)
 			{
@@ -1690,22 +1721,22 @@ public class g_CurrentTickets {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);			 
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + cb_Category.getSelectedItem().toString()  + "', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == true && CCCompilation == false)
 		 {
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + cb_Category.getSelectedItem().toString()  + "', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == false && CCCompilation == true)
 		 {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
-			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Category = '" + cb_Category.getSelectedItem().toString()  + "',  Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else
 		 {
-			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Category = '" + cb_Category.getSelectedItem().toString()  + "',  Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 
 			c_Query.UpdateResultSet(commandText);
@@ -1713,32 +1744,7 @@ public class g_CurrentTickets {
 			commandText = "";
 			
 			
-			/* Check if there is any files to upload from the internal window */			
-			if (!ExistingfileListModel.isEmpty()) {
-				
-				for(int i = 0; i < ExistingfileListModel.size(); i++)
-				{
-					
-					File inputFile = new File(
-							ExistingfileListModel.get(i).getFileSource());
-					File outputFile = new File(
-							directory + TicketNum + "_" + ExistingfileListModel.get(i).toString());
-										
-					try {
-						copyFileUsingStream(inputFile, outputFile);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				
-				for(int i = 0; i < ExistingfileListModel.size(); i++)
-				{
-					commandText = commandText + " INSERT INTO Files (TicketNum, Filename, UploadDate) VALUES ('" + TicketNum + "','" + ExistingfileListModel.get(i).getFile() + "','" + testDate +"')";
-				}				
-				c_Query.UpdateResultSet(commandText);
-				
-				ExistingfileListModel.clear();
-			}
+			
 			
 			/*Check for Internal Update */
 			if(txt_Internal.getText().compareTo("") != 0)
@@ -1754,25 +1760,23 @@ public class g_CurrentTickets {
 			tree_active.scrollPathToVisible(tpath);
 
 			
-			//tree_active.setSelectionPath((TreePath) selectedNode.getUserObject());
 
 		 
 	 }
 	 
-	 private static void copyFileUsingStream(File source, File dest) throws IOException {
-		    InputStream is = null;
-		    OutputStream os = null;
-		    try {
-		        is = new FileInputStream(source);
-		        os = new FileOutputStream(dest);
-		        byte[] buffer = new byte[102400];
-		        int length;
-		        while ((length = is.read(buffer)) > 0) {
-		            os.write(buffer, 0, length);
-		        }
-		    } finally {
-		        is.close();
-		        os.close();
-		    }
-		}
+	 private void CancelAssigned()
+	 {		
+		 btnCancelEdit.setVisible(false);
+		 btnEdit.setVisible(true);
+		 cb_Assigned.setVisible(false);
+		 lbl_Assigned.setVisible(true);
+	 }
+	 
+	 private void CancelCategory()
+	 {		
+		 btnCancelEditCategory.setVisible(false);
+		 btnEditCategory.setVisible(true);
+		 cb_Category.setVisible(false);
+		 lbl_Category.setVisible(true);
+	 }
 }
