@@ -1,15 +1,12 @@
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Enumeration;
 
 public class c_GetMacAddress{
 	
 	public static boolean getMacAddress()
-	{
-		
-	String macAddr = "";
+	{			
 	boolean mac_found = false;
 	String commandText = "";
 	ResultSet rs = null;	

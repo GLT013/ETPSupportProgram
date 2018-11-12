@@ -2,7 +2,6 @@ import it.cnr.imaa.essi.lablib.gui.checkboxtree.CheckboxTree;
 import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingModel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import com.inet.jortho.FileUserDictionary;
 import com.inet.jortho.SpellChecker;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -26,7 +24,6 @@ import javax.swing.JOptionPane;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import java.awt.Color;
-import javax.swing.JFileChooser;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -34,24 +31,16 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
-import javax.swing.ListSelectionModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
-
 import javax.swing.border.EtchedBorder;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
@@ -77,7 +66,6 @@ public class g_CurrentTickets {
 	private JTextField txt_TimeSpent;
 	private JLabel lblDateLastUpdated;
 	private JLabel lbl_UpdateDate;
-	public static JList<c_Files> JList_FileList;
 	public static DefaultListModel<c_Files> fileListModel;
 	public static DefaultListModel<c_Files> ExistingfileListModel;
 	private List<String> ViewSiteData = new ArrayList<String>();
@@ -91,8 +79,7 @@ public class g_CurrentTickets {
 	private String TicketNum;
 	public String siteID;
 	private JComboBox<String> cb_Assigned;
-	private JButton btnEdit;
-	private String directory = "\\\\supportsql\\C$\\SupportProgram\\Files\\";
+	private JButton btnEdit;	
 	private String userDictionaryPath = "\\\\supportsql\\C$\\SupportProgram\\dictionary\\";
 	//private int numFiles; 
 	private int viewIP;
@@ -100,8 +87,9 @@ public class g_CurrentTickets {
 	private int DevIP; 
 	private int iDracIP;
 	private int hostIP; 
-	private String client;
-	private String site;
+	public static String client;
+	public static String site;
+	public static String category;
 	private int siteid;
 	private boolean highperformance;
 	private boolean centralSQL;
@@ -111,9 +99,15 @@ public class g_CurrentTickets {
 	private static JRadioButton rdbtnAllTickets;
 	private static JRadioButton rdbtnUpdates;
 	private static JRadioButton rdbtnMyTickets;
-	private static JLabel lblLastUpdatedByStr;	
-	private static boolean AssignChange = false;
+	private static JLabel lblLastUpdatedByStr;
+	
 	private JComboBox<String> cb_Category;
+	public static boolean SearchArchive = false;
+	private JButton btnFlag;
+	private JButton btnUnFlag;
+	private static boolean emailSentFlag;
+	private JButton btnSaveAssign;
+	private JButton btnCancelAssign;
 
 	
 	public static void run(JFrame frame) {
@@ -148,8 +142,9 @@ public class g_CurrentTickets {
 	 */
 	private void initialize() {
 		frmCurrentTickets = new JFrame();
+		frmCurrentTickets.setResizable(false);
 		frmCurrentTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_CurrentTickets.class.getResource("/icon.png")));				
-		frmCurrentTickets.setTitle("Automated Support Program v." + g_MainMenu.version);	
+		frmCurrentTickets.setTitle(g_MainMenu.TitleOnline);	
 		frmCurrentTickets.getContentPane().setBackground(Color.LIGHT_GRAY);
 		frmCurrentTickets.setBounds(100, 100, 964, 916);
 		frmCurrentTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -194,11 +189,12 @@ public class g_CurrentTickets {
 					UpdateTicket();
 				}	
 				
-				if(AssignChange)
+				/*if(AssignChange)
 				{
 					c_ConnectToDatabase.SendUpdateEmail(cb_Assigned.getSelectedItem().toString(), client, site, TicketNum, txt_Issue.getText());
 				}
 				AssignChange = false;
+				*/
 			}
 		});
 		btnSave.setBounds(569, 739, 89, 23);
@@ -218,14 +214,10 @@ public class g_CurrentTickets {
 		panel_1.add(lbl_Problem);
 		
 		panel_Internal = new JPanel();
-		panel_Internal.setBounds(1000, 322, 648, 324);
+		panel_Internal.setBounds(10, 322, 648, 324);
 		panel_1.add(panel_Internal);
 		panel_Internal.setLayout(null);
 		panel_Internal.setVisible(false);
-		
-		JButton btnFileUpload = new JButton("File Upload..");
-		btnFileUpload.setBounds(0, 205, 105, 23);
-		panel_Internal.add(btnFileUpload);
 		
 		lblInternalUpdate = new JLabel("Internal Update");
 		lblInternalUpdate.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
@@ -242,96 +234,14 @@ public class g_CurrentTickets {
 		btn_External.setBounds(559, 0, 89, 23);
 		panel_Internal.add(btn_External);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(0, 239, 328, 74);
-		panel_Internal.add(scrollPane_1);
 		
-		JList_FileList = new JList<c_Files>();
-		JList_FileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPane_1.setViewportView(JList_FileList);
-		
-		/*
-		JButton btn_OpenFile = new JButton("Open File");
-		btn_OpenFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (JList_FileList.getSelectedIndex() == -1)
-				{
-					JOptionPane.showMessageDialog(frmCurrentTickets, "No file was selected.");
-				}
-				else if(JList_FileList.getSelectedIndex() > (numFiles-1))
-				{
-					JOptionPane.showMessageDialog(frmCurrentTickets, "File not found. \n Please verify file has been uploaded by hitting the update button.");
-				}
-				else
-				{
-					String source = fileListModel.getElementAt(JList_FileList.getSelectedIndex()).getFile();
-					String filePath = directory + TicketNum + "_" + source;
-					try {						
-						Runtime.getRuntime().exec(new String[] {"cmd.exe", "/C", filePath});
-					} catch (IOException e) {
-						e.printStackTrace();
-						JOptionPane.showMessageDialog(frmCurrentTickets, "Could not find file.");
-					}
-				}
-			}
-			
-		});
-		btn_OpenFile.setBounds(358, 237, 105, 23);
-		panel_Internal.add(btn_OpenFile);
-		btn_OpenFile.setEnabled(false);
-		
-		btn_DeleteFile = new JButton("Delete File");
-		btn_DeleteFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (JList_FileList.getSelectedIndex() == -1)
-				{
-					JOptionPane.showMessageDialog(frmCurrentTickets, "No file was selected.");
-				}
-				else if(JList_FileList.getSelectedIndex() > (numFiles-1))
-				{
-					
-				}
-				else
-				{
-					int index = JList_FileList.getSelectedIndex();
-					String source = fileListModel.getElementAt(index).getFile();
-					String filePath = directory + TicketNum + "_" + source;
-					int reply = JOptionPane.showConfirmDialog(frmCurrentTickets, "Are you sure you wish to delete " + source + "?" , "Delete File", JOptionPane.YES_NO_OPTION);
-			        if (reply == JOptionPane.YES_OPTION)
-			        {
-			        	String commandText = "DELETE FROM Files WHERE Filename = '" + source + "'";
-			        	c_Query.ExecuteQuery(commandText);
-				        fileListModel.remove(index);
-				        File file = new File(filePath);
-				        if(file.delete()){
-				        	JOptionPane.showMessageDialog(frmCurrentTickets, source + " has been deleted.");
-			    		}else{
-			    			JOptionPane.showMessageDialog(frmCurrentTickets, "Error deleting file from hard drive");
-			    		}
-
-				        JList_FileList.removeAll();
-				        JList_FileList.setModel(fileListModel);
-				        JList_FileList.revalidate();
-				        JList_FileList.repaint();
-			        }
-			        else
-			        {
-			        	JOptionPane.showMessageDialog(frmCurrentTickets, "Whew! That was close.");
-			        }
-				}
-				
-			}
-		});
-		btn_DeleteFile.setBounds(358, 271, 105, 23);
-		panel_Internal.add(btn_DeleteFile);
-		btn_DeleteFile.setEnabled(false);
-		*/
 		scrollPane_2 = new JScrollPane();
 		scrollPane_2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane_2.setBounds(0, 27, 648, 176);
 		panel_Internal.add(scrollPane_2);
 		
 		txt_Internal = new JTextArea();
+		txt_Internal.setFont(new Font("Rockwell", Font.PLAIN, 16));
 		scrollPane_2.setViewportView(txt_Internal);
 		txt_Internal.setLineWrap(true);
 		txt_Internal.setWrapStyleWord(true);
@@ -345,21 +255,6 @@ public class g_CurrentTickets {
 		lblLastUpdatedBy.setFont(new Font("Plantagenet Cherokee", Font.BOLD, 16));
 		lblLastUpdatedBy.setBounds(499, 239, 134, 20);
 		panel_Internal.add(lblLastUpdatedBy);
-		btnFileUpload.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
-				
-		        int returnValue = fileChooser.showOpenDialog(null);
-		        if (returnValue == JFileChooser.APPROVE_OPTION) {
-		          File selectedFile = fileChooser.getSelectedFile();  
-				File inputFile = new File(
-						selectedFile.getAbsoluteFile().getPath().toString());				
-					AddFilesToList(selectedFile.getName(),inputFile);
-				}
-		        
-			}
-		});
-		btnFileUpload.setEnabled(false);
 		panel_Update = new JPanel();
 		panel_Update.setBounds(10, 322, 648, 324);
 		panel_1.add(panel_Update);
@@ -384,12 +279,12 @@ public class g_CurrentTickets {
 		txt_TimeSpent.setColumns(10);
 		
 		lblDateLastUpdated = new JLabel("Last Updated:");
-		lblDateLastUpdated.setBounds(474, 255, 164, 20);
+		lblDateLastUpdated.setBounds(474, 259, 164, 20);
 		panel_Update.add(lblDateLastUpdated);
 		lblDateLastUpdated.setFont(new Font("Rockwell", Font.BOLD, 16));
 		
 		lbl_UpdateDate = new JLabel("Date");
-		lbl_UpdateDate.setBounds(474, 284, 164, 20);
+		lbl_UpdateDate.setBounds(474, 288, 164, 20);
 		panel_Update.add(lbl_UpdateDate);
 		lbl_UpdateDate.setFont(new Font("Rockwell", Font.BOLD, 16));
 		
@@ -435,7 +330,7 @@ public class g_CurrentTickets {
 		
 		lblAssignedTo = new JLabel("Assigned To:");
 		lblAssignedTo.setFont(new Font("Rockwell", Font.BOLD, 16));
-		lblAssignedTo.setBounds(25, 665, 134, 20);
+		lblAssignedTo.setBounds(25, 665, 114, 20);
 		panel_1.add(lblAssignedTo);
 		
 		cb_Assigned = new JComboBox<String>();
@@ -637,12 +532,12 @@ public class g_CurrentTickets {
 			    btn_AnalyzerGuide.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/alarmguide.png")));
 			    btn_AnalyzerGuide.setToolTipText("Analyzer Alarms Guide");
 			    btn_AnalyzerGuide.setVisible(false);
-			    btn_AnalyzerGuide.setBounds(125, 43, 24, 24);
+			    btn_AnalyzerGuide.setBounds(169, 42, 24, 24);
 			    panel_1.add(btn_AnalyzerGuide);
 			    
-			    cb_Category = new JComboBox();
+			    cb_Category = new JComboBox<String>();
 			    cb_Category.setFont(new Font("Rockwell", Font.PLAIN, 12));
-			    cb_Category.setModel(new DefaultComboBoxModel(new String[] {"", "Injection", "HMI", "PGM", "Reporting", "Safety", "Sampling", "Supply", "System", "Other"}));
+			    cb_Category.setModel(new DefaultComboBoxModel<String>(new String[] {"", "Injection", "HMI", "PGM", "Reporting", "Safety", "Sampling", "Supply", "System", "Other"}));
 			    cb_Category.setBounds(493, 694, 165, 26);
 			    panel_1.add(cb_Category);
 			    
@@ -885,17 +780,7 @@ public class g_CurrentTickets {
 			    lblHost.setBounds(255, 772, 32, 14);
 			    panel_1.add(lblHost);
 			    
-			    btnCancelEdit = new JButton("");
-			    btnCancelEdit.addActionListener(new ActionListener() {
-			    	public void actionPerformed(ActionEvent e) {
-			    		CancelAssigned();
-			    	}
-			    });
-			    btnCancelEdit.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/Actions-window-close-icon.png")));
-			    btnCancelEdit.setBounds(139, 666, 16, 16);
-			    panel_1.add(btnCancelEdit);
-			    btnCancelEdit.setVisible(false);
-			    
+			    			    
 			    JButton button = new JButton("");
 			    button.setBounds(324, 739, 32, 32);
 			    panel_1.add(button);
@@ -947,16 +832,89 @@ public class g_CurrentTickets {
 			    lblTicketStatus.setBounds(254, 665, 141, 20);
 			    panel_1.add(lblTicketStatus);
 			    
-			    btnCancelEditCategory = new JButton("");
-			    btnCancelEditCategory.addActionListener(new ActionListener() {
+			  			   
+			    btnArchive = new JButton("");
+			    btnArchive.setToolTipText("Archive");
+			    btnArchive.setFont(new Font("Rockwell", Font.PLAIN, 11));
+			    btnArchive.setSelectedIcon(new ImageIcon(g_CurrentTickets.class.getResource("/archive_hover.png")));
+			    btnArchive.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/archive.png")));
+			    btnArchive.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent e) {
+			    		SearchArchive = true;
+			    		g_ArchiveTickets.runPopup(frmCurrentTickets);			    		
+			    	}
+			    });
+			    btnArchive.setBounds(125, 42, 24, 24);
+			    panel_1.add(btnArchive);
+			    
+			    btnFlag = new JButton("");
+			    btnFlag.setToolTipText("Unflag Email Sent");
+			    btnFlag.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent arg0) {
+			    		ClearEmailFlag();
+			    	}
+			    });
+			    btnFlag.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/flag.png")));
+			    btnFlag.setBounds(589, 44, 30, 30);
+			    panel_1.add(btnFlag);
+			    btnFlag.setVisible(false);
+			    
+			    btnUnFlag = new JButton("");
+			    btnUnFlag.setToolTipText("Flag Email Sent");
+			    btnUnFlag.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent e) {
+			    		SetEmailFlag();
+			    	}
+			    });
+			    btnUnFlag.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/unflag.png")));
+			    btnUnFlag.setBounds(589, 44, 30, 30);
+			    panel_1.add(btnUnFlag);
+			    
+			    btnSaveAssign = new JButton("");
+			    btnSaveAssign.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent e) {
+			    		SaveAssign();
+			    	}
+			    });
+			    btnSaveAssign.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/ok-icon.png")));
+			    btnSaveAssign.setBounds(130, 669, 16, 16);
+			    panel_1.add(btnSaveAssign);
+			    btnSaveAssign.setVisible(false);
+			    
+			    btnCancelAssign = new JButton("");
+			    btnCancelAssign.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent arg0) {
+			    		CancelAssigned();
+			    	}
+			    });
+			    btnCancelAssign.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/Actions-window-close-icon.png")));
+			    btnCancelAssign.setBounds(155, 669, 16, 16);
+			    panel_1.add(btnCancelAssign);
+			    btnCancelAssign.setVisible(false);
+			    
+			    btnSaveCategory = new JButton("");
+			    btnSaveCategory.addActionListener(new ActionListener() {
+			    	public void actionPerformed(ActionEvent e) {
+			    		SaveCategory();
+			    	}
+			    });
+			    btnSaveCategory.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/ok-icon.png")));
+			    btnSaveCategory.setBounds(603, 669, 16, 16);
+			    panel_1.add(btnSaveCategory);
+			    btnSaveCategory.setVisible(false);
+			    
+			    btnCancelCategory = new JButton("");
+			    btnCancelCategory.addActionListener(new ActionListener() {
 			    	public void actionPerformed(ActionEvent e) {
 			    		CancelCategory();
 			    	}
 			    });
-			    btnCancelEditCategory.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/Actions-window-close-icon.png")));
-			    btnCancelEditCategory.setBounds(603, 666, 16, 16);
-			    panel_1.add(btnCancelEditCategory);
-			    btnCancelEditCategory.setVisible(false);
+			    btnCancelCategory.setIcon(new ImageIcon(g_CurrentTickets.class.getResource("/Actions-window-close-icon.png")));
+			    btnCancelCategory.setBounds(625, 669, 16, 16);
+			    panel_1.add(btnCancelCategory);			    
+			    btnUnFlag.setVisible(false);
+			    btnCancelCategory.setVisible(false);
+			    
 			    
 			    JButton btnNewButton = new JButton("Generate Email");
 			    btnNewButton.setFont(new Font("Rockwell", Font.PLAIN, 12));
@@ -1058,8 +1016,7 @@ public class g_CurrentTickets {
 	}
 	
 	int tmp2[];
-	private JLabel lblAssignedTo;
-	private JButton btn_DeleteFile;
+	private JLabel lblAssignedTo;	
 	private JScrollPane scrollPane_2;
 	private JScrollPane scrollPane_3;
 	private JPanel panel;
@@ -1070,9 +1027,10 @@ public class g_CurrentTickets {
 	private JLabel lbl_Category;
 	private JButton btnEditCategory;
 	private JLabel lblCategory;
-	private JLabel lblTicketStatus;
-	private JButton btnCancelEdit;
-	private JButton btnCancelEditCategory;
+	private JLabel lblTicketStatus;	
+	private JButton btnArchive;
+	private JButton btnSaveCategory;
+	private JButton btnCancelCategory;
 			
 	private void GetCheckboxes()
 	{
@@ -1146,7 +1104,7 @@ public class g_CurrentTickets {
 		String commandText = "";
 		
 		
-		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, a.CentralSQL, a.CentralView, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.EnteredDate, 113) as EnteredDate, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
+		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, a.CentralSQL, a.CentralView, b.EmailSent, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.EnteredDate, 113) as EnteredDate, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, b.TimeSpent, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -1169,8 +1127,9 @@ public class g_CurrentTickets {
 				highperformance = rs.getBoolean("HighPerformance");
 				centralSQL = rs.getBoolean("CentralSQL");
 				centralView = rs.getBoolean("CentralView");
-				String category = rs.getString("Category");
+				category = rs.getString("Category");
 				lbl_Category.setText(category);
+				emailSentFlag = rs.getBoolean("EmailSent");
 				if(category.compareTo("Sampling")==0)
 				{
 					btn_AnalyzerGuide.setVisible(true);
@@ -1178,6 +1137,15 @@ public class g_CurrentTickets {
 				else
 				{
 					btn_AnalyzerGuide.setVisible(false);
+				}
+				
+				if(emailSentFlag)
+				{
+					btnFlag.setVisible(true);
+				}
+				else
+				{
+					btnUnFlag.setVisible(true);
 				}
 				
 				lbl_Ticket.setText("(#" + rs.getString("Ticket") + ")");
@@ -1247,37 +1215,17 @@ public class g_CurrentTickets {
 			
 		}
 		
-		fileListModel = new DefaultListModel<c_Files>();
 		
-		commandText = "SELECT Filename FROM Files WHERE TicketNum = '" + TicketNum + "'";		
-		rs = c_Query.ExecuteResultSet(commandText);
-		
-		try
-		{
-
-			fileListModel.clear();
-		while((rs!=null) && (rs.next()))
-		{
-			c_Files fileName = new c_Files(rs.getString("Filename"));
-			fileListModel.addElement(fileName);
-		}
-		}
-		catch(Exception e)
-		{
-			//do nothing
-		}
-		
-		/*numFiles = fileListModel.getSize();
-		JList_FileList.setModel(fileListModel);
-		*/
 	}
 	
 	private void ChangeAssignment()
 	{
-		btnEdit.setVisible(false);
-		btnCancelEdit.setVisible(true);
+		btnEdit.setVisible(false);		
 		lbl_Assigned.setVisible(false);
 		cb_Assigned.setVisible(true);
+		btnCancelAssign.setVisible(true);
+		btnSaveAssign.setVisible(true);
+		
 		String commandText = "SELECT DISTINCT Name FROM EN_Employees WHERE Active = 1 ORDER BY Name Asc";       
 		
         ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -1293,16 +1241,50 @@ public class g_CurrentTickets {
 			rs.close();
 		} catch (SQLException e) {
 		
-		}
-        AssignChange = true;
+		}        
+        //AssignChange = true;
         
+	}
+	
+	private void SaveAssign()
+	{
+		btnEdit.setVisible(true);
+		btnCancelAssign.setVisible(false);
+		btnSaveAssign.setVisible(false);
+		
+		String assigned = cb_Assigned.getSelectedItem().toString();
+		cb_Assigned.setVisible(false);
+		
+		lbl_Assigned.setText(assigned);
+		String commandText = "UPDATE SupportTickets SET Assigned ='" + assigned + "' WHERE Ticket = '" + TicketNum + "'";
+		c_Query.UpdateResultSet(commandText);
+		lbl_Assigned.setVisible(true);
+		//Send update email
+		c_ConnectToDatabase.SendUpdateEmail(assigned, client, site, TicketNum, txt_Issue.getText());
+	}
+	
+	private void SaveCategory()
+	{
+		btnEditCategory.setVisible(true);
+		btnCancelCategory.setVisible(false);
+		btnSaveCategory.setVisible(false);
+		
+		String category = cb_Category.getSelectedItem().toString();
+		cb_Category.setVisible(false);
+		
+		lblCategory.setText(category);
+		String commandText = "UPDATE SupportTickets SET Category ='" + category + "' WHERE Ticket = '" + TicketNum + "'";
+		c_Query.UpdateResultSet(commandText);
+		lblCategory.setVisible(true);
+		
 	}
 	
 	
 	private void ChangeCategory()
-	{
+	{	
 		btnEditCategory.setVisible(false);
-		btnCancelEditCategory.setVisible(true);
+		btnSaveCategory.setVisible(true);
+		btnCancelCategory.setVisible(true);		
 		lbl_Category.setVisible(false);
 		cb_Category.setVisible(true);
 		String commandText = "SELECT DISTINCT Category FROM SupportTickets ORDER BY Category Asc";       
@@ -1320,10 +1302,7 @@ public class g_CurrentTickets {
 			rs.close();
 		} catch (SQLException e) {
 		
-		}
-        
-        
-        
+		}                        
 	}
 	
 	
@@ -1341,7 +1320,7 @@ public class g_CurrentTickets {
 		}
 		String commandText = "";
 		
-		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.Resolution, b.LastUpdatedBy, b.rowID "
+		 commandText = "SELECT a.Client, a.Site, a.SiteID, a.HostIP, a.ViewIP, a.SQLIP, a.DevIP, a.iDracIP, a.HighPerformance, b.EmailSent, b.Category, b.Ticket, b.Description, b.Internal, b.Assigned, b.Status, CONVERT(varchar(17), b.UpdateDate, 113) as UpdateDate, CONVERT(varchar(17), b.CCNotified, 113) as CCNotified, b.TimeSpent, b.Resolution, b.LastUpdatedBy, b.rowID "
 							+ "FROM Sites a, SupportTickets b WHERE a.Client = b.Client and a.Site = b.Site and Ticket = '" + TicketNum + "'";
 		
 		ResultSet rs = c_Query.ExecuteResultSet(commandText);
@@ -1360,7 +1339,9 @@ public class g_CurrentTickets {
 				DevIP = rs.getInt("DevIP");
 				iDracIP = rs.getInt("iDracIP");
 				hostIP = rs.getInt("HostIP");
+				category = rs.getString("Category");
 				highperformance = rs.getBoolean("HighPerformance");
+				//emailSentFlag = rs.getBoolean("EmailSent");
 				ViewSiteData.add("(#" + rs.getString("Ticket") + ")"); //Ticket # Index 1
 				ViewSiteData.add(Integer.toString(hostIP)); //Host, Index 2
 				ViewSiteData.add(Integer.toString(viewIP)); //View, Index 3
@@ -1387,8 +1368,11 @@ public class g_CurrentTickets {
 				txt_Update.setText(rs.getString("Resolution"));
 				lbl_UpdateDate.setText(rs.getString("UpdateDate"));
 				txt_Internal.setText(rs.getString("Internal"));
+				txt_TimeSpent.setText(rs.getString("TimeSpent"));
 				lblLastUpdatedByStr.setText(rs.getString("LastUpdatedBy"));		
-				rowID = rs.getInt("rowID");				
+				rowID = rs.getInt("rowID");	
+				btnFlag.setVisible(false);
+				btnUnFlag.setVisible(false);								
 			}
 		}
 		catch(Exception e)
@@ -1397,28 +1381,7 @@ public class g_CurrentTickets {
 			System.out.println(e.toString());
 		}
 		cb_Status.setEnabled(false);
-		fileListModel = new DefaultListModel<c_Files>();
-		commandText = "SELECT Filename FROM Files WHERE TicketNum = '" + TicketNum + "'";		
-		rs = c_Query.ExecuteResultSet(commandText);
 		
-		try
-		{
-
-			fileListModel.clear();
-		while((rs!=null) && (rs.next()))
-		{
-			c_Files fileName = new c_Files(rs.getString("Filename"));
-			fileListModel.addElement(fileName);
-		}
-		}
-		catch(Exception e)
-		{
-			//do nothing
-		}
-		
-		/*numFiles = fileListModel.getSize();
-		JList_FileList.setModel(fileListModel);
-		*/
 		tree_active.clearSelection();
 	
 	}
@@ -1613,12 +1576,7 @@ public class g_CurrentTickets {
 		}		
 	}
 
-	 private void AddFilesToList(String filename, File source)
-	 {		 
-		 c_Files addFile = new c_Files(filename,source);
-		 ExistingfileListModel.addElement(addFile);
-		 fileListModel.addElement(addFile);
-	 }
+	
 	 
 	 public void ClosedByETP()
 	 {
@@ -1640,7 +1598,9 @@ public class g_CurrentTickets {
 		 			 
 		 String resolution = txt_Update.getText();
 		 resolution = c_CleanString.Clean_String(resolution);
+		 String assigned = lbl_Assigned.getText();
 		 String commandText = "";
+		 String category = lbl_Category.getText();
 		 boolean CCCompilation = false;
 		 if(!CCNotifiedState && chckbxCcNotified.isSelected())
 		 {
@@ -1651,27 +1611,32 @@ public class g_CurrentTickets {
 			 CCCompilation = false;
 		 }
 		 
-		 if(cb_Assigned.isVisible() == true && CCCompilation == true)
+		
+		 
+		 //if(cb_Assigned.isVisible() == true && CCCompilation == true)
+	     if(CCCompilation == true)
 		 {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
-			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + cb_Category.getSelectedItem().toString() + "', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			// String assigned = cb_Assigned.getSelectedItem().toString();
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + category + "', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
+	     /*
 		 else if(cb_Assigned.isVisible() == true && CCCompilation == false)
 		 {
 			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + cb_Category.getSelectedItem().toString()  + ",Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + category  + ",Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 else if(cb_Assigned.isVisible() == false && CCCompilation == true)
 		 {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);
-			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Category ='" + cb_Category.getSelectedItem().toString()  + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Category ='" + category  + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
+		 */
 		 else
 		 {
-			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Category = '" + cb_Category.getSelectedItem().toString()  + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			commandText = "UPDATE SupportTickets SET Assigned = '" + assigned + "', Status = '" + cb_Status.getSelectedItem().toString() + "', Category = '" + category  + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 0, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 
 			c_Query.UpdateResultSet(commandText);
@@ -1705,6 +1670,8 @@ public class g_CurrentTickets {
 		 testDate = dateFormat.format(date);	
 		 String commandText = "";
 		 String resolution = txt_Update.getText();
+		 String assigned = lbl_Assigned.getText();
+		 String category = lbl_Category.getText();
 		 resolution = c_CleanString.Clean_String(resolution);
 		 boolean CCCompilation = false;
 		 if(!CCNotifiedState && chckbxCcNotified.isSelected())
@@ -1716,14 +1683,18 @@ public class g_CurrentTickets {
 			 CCCompilation = false;
 		 }
 		 
-		 if(cb_Assigned.isVisible() == true && CCCompilation == true)
+		 
+		 
+		// if(cb_Assigned.isVisible() == true && CCCompilation == true)
+		 if(CCCompilation == true)
 		 {
 			 Date CCdate = new Date();
 			 String ccDateTime = dateFormat.format(CCdate);			 
-			 String assigned = cb_Assigned.getSelectedItem().toString();
-			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + cb_Category.getSelectedItem().toString()  + "', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			 //String assigned = cb_Assigned.getSelectedItem().toString();
+			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + category  + "', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
-		 else if(cb_Assigned.isVisible() == true && CCCompilation == false)
+		/*else if(cb_Assigned.isVisible() == true && CCCompilation == false)
+		
 		 {
 			 String assigned = cb_Assigned.getSelectedItem().toString();
 			 commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Category = '" + cb_Category.getSelectedItem().toString()  + "', Status = '" + cb_Status.getSelectedItem().toString() + "', Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
@@ -1734,17 +1705,16 @@ public class g_CurrentTickets {
 			 String ccDateTime = dateFormat.format(CCdate);
 			 commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Category = '" + cb_Category.getSelectedItem().toString()  + "',  Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, CCNotified = '" + ccDateTime + "', LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
+		 */
 		 else
 		 {
-			commandText = "UPDATE SupportTickets SET Status = '" + cb_Status.getSelectedItem().toString() + "', Category = '" + cb_Category.getSelectedItem().toString()  + "',  Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
+			commandText = "UPDATE SupportTickets SET Assigned = '" + assigned +"', Status = '" + cb_Status.getSelectedItem().toString() + "', Category = '" + category  + "',  Resolution = '" + resolution + "', TimeSpent = '" +  txt_TimeSpent.getText() + "', UpdateDate = '" + testDate + "', Active = 1, EmailSent = 0, LastUpdatedBy = '" + g_MainMenu.CurrentUser + "' WHERE rowID = " + rowID;
 		 }
 		 
 			c_Query.UpdateResultSet(commandText);
 
 			commandText = "";
-			
-			
-			
+									
 			
 			/*Check for Internal Update */
 			if(txt_Internal.getText().compareTo("") != 0)
@@ -1757,16 +1727,13 @@ public class g_CurrentTickets {
 			PopulateActiveWindow();
 			tree_active.getExpandsSelectedPaths();
 			tree_active.setSelectionPath(tpath);
-			tree_active.scrollPathToVisible(tpath);
-
-			
-
-		 
+			tree_active.scrollPathToVisible(tpath);					 
 	 }
 	 
 	 private void CancelAssigned()
 	 {		
-		 btnCancelEdit.setVisible(false);
+		 btnCancelAssign.setVisible(false);
+		 btnSaveAssign.setVisible(false);
 		 btnEdit.setVisible(true);
 		 cb_Assigned.setVisible(false);
 		 lbl_Assigned.setVisible(true);
@@ -1774,9 +1741,29 @@ public class g_CurrentTickets {
 	 
 	 private void CancelCategory()
 	 {		
-		 btnCancelEditCategory.setVisible(false);
+		 
+		 btnCancelCategory.setVisible(false);
+		 btnSaveCategory.setVisible(false);
 		 btnEditCategory.setVisible(true);
 		 cb_Category.setVisible(false);
 		 lbl_Category.setVisible(true);
+	 }
+	 
+	 private void ClearEmailFlag()
+	 {
+		// String internal = c_CleanString.Clean_String(txt_Internal.getText());
+			String commandText = "UPDATE SupportTickets SET EmailSent = 0 WHERE Ticket = '" + TicketNum + "'";
+			c_Query.UpdateResultSet(commandText);		
+			btnFlag.setVisible(false);
+			btnUnFlag.setVisible(true);
+	 }
+	 
+	 private void SetEmailFlag()
+	 {
+		 String commandText = "UPDATE SupportTickets SET EmailSent = 1 WHERE Ticket = '" + TicketNum + "'";
+		c_Query.UpdateResultSet(commandText);	
+		btnFlag.setVisible(true);
+		btnUnFlag.setVisible(false);
+		 
 	 }
 }

@@ -7,44 +7,28 @@ import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.tree.DefaultTreeModel;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
 import java.awt.Color;
-import javax.swing.JFileChooser;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.DefaultListModel;
 import javax.swing.JTextField;
-import javax.swing.JTree;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.File;
-import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
-import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JCheckBox;
 import java.awt.Toolkit;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.JRadioButton;
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.border.LineBorder;
@@ -81,9 +65,6 @@ public class g_ArchiveTickets {
 	private JButton btn_Internal;
 	private String TicketNum;
 	public String siteID;	
-	private String client;
-	private String site;
-	private int siteid;
 	private static JLabel lblLastUpdatedByStr;
 	private static JPanel panel_3;
 	final ArrayList <c_Archive> archiveListarr = new ArrayList<c_Archive>();	
@@ -148,16 +129,31 @@ public class g_ArchiveTickets {
 			e.printStackTrace();
 		}
 	}
-
-
+	
+	public static void runPopup(JFrame frame) {				
+		try {
+			@SuppressWarnings("unused")
+			g_ArchiveTickets window = new g_ArchiveTickets();
+			g_ArchiveTickets.frmArchiveTickets.setVisible(true);						
+			g_ArchiveTickets.frmArchiveTickets.setLocation(frame.getX()+100, frame.getY()+20);
+		
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Create the application.
 	 */
 	public g_ArchiveTickets() {
-		initialize();		
-		
+		initialize();	
+		if(g_CurrentTickets.SearchArchive)
+		{
+			SearchFromTickets();
+		}
 	}
+	
 
 	/**
 	 * Initialize the contents of the frame.
@@ -168,10 +164,16 @@ public class g_ArchiveTickets {
 		frmArchiveTickets.setIconImage(Toolkit.getDefaultToolkit().getImage(g_ArchiveTickets.class.getResource("/icon.png")));		
 		frmArchiveTickets.setTitle(g_MainMenu.TitleOnline);
 		frmArchiveTickets.setBounds(100, 100, 996, 916);
-		frmArchiveTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		if(g_CurrentTickets.SearchArchive)
+		{
+			frmArchiveTickets.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		}
+		else
+		{
+			frmArchiveTickets.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
 		frmArchiveTickets.getContentPane().setLayout(null);
-		
-	
+			
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
 		panel_1.setBounds(290, 11, 668, 788);
@@ -440,9 +442,6 @@ public class g_ArchiveTickets {
 				p.put("text.month", "Month");
 				p.put("text.year", "Year");
 				datePanel = new JDatePanelImpl(model,p);
-				Border empty = BorderFactory.createEmptyBorder(0, 0, 0, 0);
-				Border dashed = BorderFactory.createDashedBorder(null, 5, 5);
-				Border compound = new CompoundBorder(empty, dashed);
 				panel_5 = new JPanel();
 				panel_5.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 				panel_5.setBounds(10, 356, 251, 384);
@@ -505,21 +504,18 @@ public class g_ArchiveTickets {
 				cb_DateRange.addItemListener(new ItemListener() {
 					public void itemStateChanged(ItemEvent e) {				
 						if(cb_DateRange.getSelectedIndex() == 0)
-						{
-							
+						{							
 							datePicker.setVisible(false);							
 							datePicker2.setVisible(false);
 							lblendDate.setVisible(false);
 							lblstartDate.setVisible(false);
 						}
 						else
-						{
-							
+						{							
 							datePicker.setVisible(true);
 							datePicker2.setVisible(true);
 							lblendDate.setVisible(true);
-							lblstartDate.setVisible(true);
-							
+							lblstartDate.setVisible(true);							
 						}
 					}
 				});
@@ -538,7 +534,7 @@ public class g_ArchiveTickets {
 				cb_OrderByType3 = new JComboBox<String>();
 				cb_OrderByType3.setBounds(160, 120, 65, 28);
 				panel_7.add(cb_OrderByType3);
-				cb_OrderByType3.setModel(new DefaultComboBoxModel(new String[] {"", "ASC", "DESC"}));
+				cb_OrderByType3.setModel(new DefaultComboBoxModel<String>(new String[] {"", "ASC", "DESC"}));
 				cb_OrderByType3.setFont(new Font("Rockwell", Font.PLAIN, 11));
 				cb_OrderByType3.setBackground(Color.LIGHT_GRAY);
 				
@@ -551,7 +547,7 @@ public class g_ArchiveTickets {
 				cb_OrderByType2 = new JComboBox<String>();
 				cb_OrderByType2.setBounds(160, 65, 65, 28);
 				panel_7.add(cb_OrderByType2);
-				cb_OrderByType2.setModel(new DefaultComboBoxModel(new String[] {"", "ASC", "DESC"}));
+				cb_OrderByType2.setModel(new DefaultComboBoxModel<String>(new String[] {"", "ASC", "DESC"}));
 				cb_OrderByType2.setFont(new Font("Rockwell", Font.PLAIN, 11));
 				cb_OrderByType2.setBackground(Color.LIGHT_GRAY);
 				
@@ -574,7 +570,7 @@ public class g_ArchiveTickets {
 				cb_OrderByType1 = new JComboBox<String>();
 				cb_OrderByType1.setBounds(160, 6, 65, 28);
 				panel_7.add(cb_OrderByType1);
-				cb_OrderByType1.setModel(new DefaultComboBoxModel(new String[] {"", "ASC", "DESC"}));
+				cb_OrderByType1.setModel(new DefaultComboBoxModel<String>(new String[] {"", "ASC", "DESC"}));
 				cb_OrderByType1.setFont(new Font("Rockwell", Font.PLAIN, 11));
 				cb_OrderByType1.setBackground(Color.LIGHT_GRAY);
 				
@@ -765,8 +761,7 @@ public class g_ArchiveTickets {
 		}
 		
 		if(cb_Site.isEnabled())
-		{
-										
+		{										
 			site = cb_Site.getSelectedItem().toString();
 			if(site.compareTo("All " + client + " Sites") != 0)
 			{
@@ -783,8 +778,7 @@ public class g_ArchiveTickets {
 			if(filters.compareTo("") != 0)
 			{
 				filters = filters + " AND";
-			}		
-			
+			}					
 			filters = filters + " Category LIKE " + "'%" + category + "%'";			
 		}
 		
@@ -793,8 +787,7 @@ public class g_ArchiveTickets {
 			if(filters.compareTo("") != 0)
 			{
 				filters = filters + " AND";
-			}		
-			
+			}					
 			filters = filters + " ( Assigned LIKE " + "'%" + assigned + "%' OR LastUpdatedBy LIKE '%" + assigned + "%')";			
 		}
 		
@@ -820,12 +813,36 @@ public class g_ArchiveTickets {
 		
 		if(txtTicketNumber.getText().compareTo("") != 0)
 		{
+
+			TicketNum = txtTicketNumber.getText();	
+			TicketNum = TicketNum.trim();						
+			if(Character.isLetter(TicketNum.charAt(0)))
+			{
+				TicketNum = TicketNum.substring(1);
+			}
+						
+			if (TicketNum.length() > 11)
+			{				
+				String temp = "";
+				if (TicketNum.startsWith("1"))
+				{
+					temp = TicketNum.replace("1000000", "1-");
+					TicketNum = temp;
+					
+				}
+				else if (TicketNum.startsWith("2"))
+				{
+					temp = TicketNum.replace("2000000", "2-");
+					
+				}
+				
+				TicketNum = temp;
+			}
 			if(filters.compareTo("") != 0)
 			{
 				filters = filters + " AND";
-			}		
-			
-			filters = filters + " Ticket LIKE '%" + txtTicketNumber.getText() + "%'";			
+			}					
+			filters = filters + " Ticket LIKE '%" + TicketNum + "%'";			
 		}
 		
 		if(lbldateRange.isSelected())
@@ -919,14 +936,10 @@ public class g_ArchiveTickets {
 		{
 			order = "Client asc, Site asc, EnteredDate desc";
 		}
-		
-				
-		
+								
 			String commandText = "SELECT Client, Site, Category, Ticket, CONVERT(varchar(17), EnteredDate, 113) as EnteredDateFormatted, Description, Assigned, Status, Resolution, Internal, Active, EmailSent, CONVERT(varchar(17), UpdateDate, 113) as UpdateDate,TimeSpent,CCNotified,LastUpdatedBy "
-					+ "FROM SupportTickets WHERE Active = 0 " + filters + " ORDER BY " + order;
-			
+					+ "FROM SupportTickets WHERE Active = 0 " + filters + " ORDER BY " + order;			
 			ResultSet rs = c_Query.ExecuteResultSet(commandText);
-			//System.out.println(commandText);
 			
 			try {
 				while ((rs!=null) && (rs.next()))
@@ -957,13 +970,9 @@ public class g_ArchiveTickets {
 				}			
 				
 				scrollPane_4.setViewportView(searchList);
-	
-				searchList.setModel(listModel);
-				
-				searchList.setSelectedIndex(0);
-				
-				lblResults.setText("<html><center>Search Results Found: " + Integer.toString(listModel.getSize()) + " </center></html>");
-			
+				searchList.setModel(listModel);				
+				searchList.setSelectedIndex(0);				
+				lblResults.setText("<html><center>Search Results Found: " + Integer.toString(listModel.getSize()) + " </center></html>");			
 			}	
 			
 			catch (SQLException e)
@@ -1104,5 +1113,85 @@ public class g_ArchiveTickets {
 		cb_DateRange.setSelectedIndex(0);
 		
 	}
+	
+	
+	private void SearchFromTickets()
+	{
+		g_CurrentTickets.SearchArchive = false;
+		long startTime = System.currentTimeMillis();
+		panel_4.setVisible(false);
+		panel_2.setVisible(true);
+		btnFilter.setText("Filter");
+		listModel.clear();
+		listModel.removeAllElements();		
+		archiveListarr.removeAll(archiveListarr);
+		
+		String filters = "";		
+		String client = g_CurrentTickets.client;
+		String site = g_CurrentTickets.site;		
+		String category = g_CurrentTickets.category;
+		
+		
+		filters = filters + " CLIENT LIKE '%" + client + "%'";
+		
+		filters = filters + "AND SITE LIKE '%" + site + "%'";					
+			
+		filters = filters + "AND Category LIKE " + "'%" + category + "%'";			
+								
+		String commandText = "SELECT Client, Site, Category, Ticket, CONVERT(varchar(17), EnteredDate, 113) as EnteredDateFormatted, Description, Assigned, Status, Resolution, Internal, Active, EmailSent, CONVERT(varchar(17), UpdateDate, 113) as UpdateDate,TimeSpent,CCNotified,LastUpdatedBy "
+				+ "FROM SupportTickets WHERE Active = 0 AND" + filters + " ORDER BY EnteredDate desc";
+		
+		ResultSet rs = c_Query.ExecuteResultSet(commandText);
+		
+		try {
+			while ((rs!=null) && (rs.next()))
+			{				
+				  c_Archive arch = new c_Archive();
+				  arch.setClient(rs.getString("Client"));
+				  arch.setSite(rs.getString("Site"));					  
+				  arch.setCategory(rs.getString("Category"));
+				  arch.setTicket(rs.getString("Ticket"));
+				  arch.setEnteredDate(rs.getString("EnteredDateFormatted"));
+				  arch.setDescription(rs.getString("Description"));
+				  arch.setAssigned(rs.getString("Assigned"));
+				  arch.setStatus(rs.getString("Status"));
+				  arch.setResolution(rs.getString("Resolution"));					  
+				  arch.setInternal(rs.getString("Internal"));
+				  if(rs.wasNull())
+				  {
+					  arch.setInternal("");
+				  }
+				  arch.setActive(rs.getString("Active"));
+				  arch.setEmailSent(rs.getString("EmailSent"));
+				  arch.setUpdateDate(rs.getString("UpdateDate"));
+				  arch.setTimeSpent(rs.getString("TimeSpent"));
+				  arch.setCCNotified(rs.getString("CCNotified"));
+				  arch.setLastUpdatedBy(rs.getString("LastUpdatedBy"));
+				  archiveListarr.add(arch);
+				  listModel.addElement(arch.getClient() + " " + arch.getSite() + " (" + arch.getTicket() + ")");	
+
+			}			
+			
+			scrollPane_4.setViewportView(searchList);
+
+			searchList.setModel(listModel);
+			
+			searchList.setSelectedIndex(0);
+			
+			lblResults.setText("<html><center>Search Results Found: " + Integer.toString(listModel.getSize()) + " </center></html>");
+		
+		}	
+		
+		catch (SQLException e)
+		{
+			
+		}	
+		
+		long stopTime = System.currentTimeMillis();
+
+		lblqueryExecutedIn.setText("<html><center><i>Query Executed In:  " + (stopTime - startTime) + " ms. </i></center></html>");
+	
+		}
+	
 }
 

@@ -1,4 +1,3 @@
-import java.awt.EventQueue;
 import java.sql.ResultSet;
 
 import javax.swing.JFrame;

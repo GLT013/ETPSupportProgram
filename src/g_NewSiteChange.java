@@ -7,15 +7,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
-
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
-
 import java.awt.Font;
 import java.util.Date;
 import java.util.Properties;
-
 import javax.swing.JTextField;
 import javax.swing.JEditorPane;
 import javax.swing.JButton;
@@ -24,11 +21,10 @@ import java.awt.GridBagLayout;
 import javax.swing.JCheckBox;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
@@ -60,9 +56,10 @@ public class g_NewSiteChange {
 	 */
 			public static void run(JFrame frame) {
 				try {
+										
 					g_NewSiteChange window = new g_NewSiteChange();
 					window.frm_NewSiteChange.setVisible(true);
-					frm_NewSiteChange.setLocationRelativeTo(frame);
+					window.frm_NewSiteChange.setLocationRelativeTo(frame);
 					frame.dispose();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -83,10 +80,11 @@ public class g_NewSiteChange {
 	private void initialize() {
 		frm_NewSiteChange = new JFrame();
 		frm_NewSiteChange.setResizable(false);
+		frm_NewSiteChange.setIconImage(Toolkit.getDefaultToolkit().getImage(g_NewSiteChange.class.getResource("/icon.png")));
 		frm_NewSiteChange.setBounds(100, 100, 776, 593);
 		frm_NewSiteChange.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frm_NewSiteChange.getContentPane().setLayout(null);
-		frm_NewSiteChange.setTitle("Automated Support Program v." + g_MainMenu.version);
+		frm_NewSiteChange.setTitle(g_MainMenu.TitleOnline);
 		
 		
 		JPanel panel = new JPanel();

@@ -81,8 +81,6 @@ public class g_ViewSites {
 	private JTextArea txt_ServerDesc;
 	private JPanel panel_4;
 	private JPanel panel_5;
-	private JButton lbl_CentralSQL;
-	private JButton lbl_CentralView;
 	private JTextField txtStateAbbrv;
 	private String sharepointURL;
 	private JButton lbl_View;
@@ -310,32 +308,22 @@ public class g_ViewSites {
 						if(result.get(list_ButaneSites.getSelectedIndex()).getCentralSQL())
 						{
 							chk_SQL.setSelected(true);
-							txtSQL.setVisible(false);
-							lbl_SQL.setVisible(false);
-							lbl_CentralSQL.setVisible(true);
+						
 						}
 						else
 						{
 							chk_SQL.setSelected(false);
-							txtSQL.setVisible(false);
-							lbl_SQL.setVisible(true);
-							lbl_CentralSQL.setVisible(false);							
+												
 						}
 						
 						if(result.get(list_ButaneSites.getSelectedIndex()).getCentralView())
 						{
-							chk_View.setSelected(true);							
-							txtView.setVisible(false);
-							lbl_View.setVisible(false);
-							
-							lbl_CentralView.setVisible(true);
+							chk_View.setSelected(true);																											
 						}
 						else
 						{
 							chk_View.setSelected(false);
-							txtView.setVisible(false);
-							lbl_View.setVisible(true);
-							lbl_CentralView.setVisible(false);
+							
 						}
 					}
 				}
@@ -432,18 +420,6 @@ public class g_ViewSites {
 		lblDev.setBounds(148, 70, 45, 14);
 		panel.add(lblDev);
 		lblDev.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		
-		lbl_CentralView = new JButton("");
-		lbl_CentralView.setIcon(new ImageIcon(g_ViewSites.class.getResource("/view.png")));
-		lbl_CentralView.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		lbl_CentralView.setBounds(28, 35, 32, 32);
-		panel.add(lbl_CentralView);
-		
-		lbl_CentralSQL = new JButton("");
-		lbl_CentralSQL.setIcon(new ImageIcon(g_ViewSites.class.getResource("/sql.png")));
-		lbl_CentralSQL.setFont(new Font("Rockwell", Font.PLAIN, 14));
-		lbl_CentralSQL.setBounds(87, 35, 32, 32);
-		panel.add(lbl_CentralSQL);
 		
 		lbl_View = new JButton("");
 		lbl_View.addMouseListener(new MouseAdapter() {

@@ -1,30 +1,29 @@
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JButton;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import java.awt.Font;
-import java.awt.Toolkit;
-import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 //icons https://icons8.com/web-app/for/all/return
 //flaticon.com
 public class g_MainMenu {
 	public static JFrame frmMainMenu;
-	public static double version = 3.15;
+	public static double version = 3.19;
 	public static int ticketMax;
 	public static boolean firstrun = true;
 	public static String TitleOnline = "EN Automation Support Program v" + version + "";	
@@ -182,6 +181,8 @@ public class g_MainMenu {
 					lblSites.setFont(new Font("Rockwell", Font.BOLD, 17));
 					lblSites.setBounds(0, 5, 215, 25);
 					panel_2.add(lblSites);
+					
+					
 					btnSiteChanges.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							g_SiteChanges.run(frmMainMenu);							
@@ -449,6 +450,14 @@ public class g_MainMenu {
 			}
 		});		
 		mnTools.add(mntmCreateChecklist);
+		
+		JMenuItem mntmVbsSetpoint = new JMenuItem("VBS Setpoints");
+		mntmVbsSetpoint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				g_Tools_VBSMain.run(frmMainMenu);
+			}
+		});
+		mnTools.add(mntmVbsSetpoint);
 	
 		
 		

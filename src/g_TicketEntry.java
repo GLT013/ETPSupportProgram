@@ -57,11 +57,9 @@ public class g_TicketEntry {
 
 
 	public g_TicketEntry() {
-		//long startTime = System.currentTimeMillis();
 		initialize();
 		PopulateClientCB();		
-		//long stopTime = System.currentTimeMillis();
-		//System.out.println("Elapsed time was " + (stopTime - startTime) + " miliseconds.");
+
 	}
 
 	/**
@@ -431,7 +429,25 @@ public class g_TicketEntry {
 	        
 	        if(count > 0)
 	        {
-	        	JOptionPane.showMessageDialog(frmTicketEntry, "Ticket Number Already Exists.");
+	        	String activecheck = "SELECT active FROM SupportTickets WHERE Ticket = '" + TicketNum + "'";
+	   		  	rs = c_Query.ExecuteResultSet(activecheck);
+	   		  	boolean active = false;
+	   		 try {
+					while((rs!=null) && (rs.next()))
+					{					
+						active = rs.getBoolean("active");
+						
+					}
+				} catch (SQLException e) {
+				}
+	   		 if(active)
+	   		 {
+	        	JOptionPane.showMessageDialog(frmTicketEntry, "Ticket Number Already Exists in Current Tickets.");
+	   		 }
+	   		 else
+	   		 {
+	   			JOptionPane.showMessageDialog(frmTicketEntry, "Ticket Number Already Exists in Archive."); 
+	   		 }
 				return;	        	
 	        }
 	       
